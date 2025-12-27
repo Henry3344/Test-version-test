@@ -236,11 +236,61 @@
     <p style="color:rgba(255,255,255,0.6); font-size:13px; margin-top:20px;" id="scan-hint"></p>
 </div>
 
-<script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", handshake: "Security Handshake...", scanHint: "Align QR code in frame", scanClose: "CLOSE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting & Sending...<br>Do not close the page.", receivingRemind: "Handshaking & Downloading...<br>Do not close the page.", guide: "Inform the other party within 10 minutes; it will self-destruct after.", adBlockMsg: "We need ad support to maintain free encrypted servers. Please disable your Ad-blocker to continue.", discP: "Decentralized transmission. No server storage.", privP: "Zero logs. Zero tracking. WebRTC encrypted.", inputErr: "Please enter the code or scan the QR code" },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", handshake: "安全连接中...", scanHint: "请将二维码对准框内", scanClose: "关闭", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", adBlockMsg: "我们需要廣告支持來維持免費的加密服務。请关闭拦截插件以繼續使用。", discP: "點對點傳輸，不經過服務器。", privP: "全程加密，無任何跟踪日誌。", inputErr: "请输入验证码或扫描二维码" }
+        en: { 
+            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], 
+            drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", 
+            handshake: "Security Handshake...", scanHint: "Align QR code in frame", scanClose: "CLOSE", exp: "Expires: ", copyLink: "📋 COPY LINK", 
+            sendingRemind: "Encrypting & Sending...<br>Do not close the page.", receivingRemind: "Handshaking & Downloading...<br>Do not close the page.", 
+            guide: "Inform the other party within 10 minutes; it will self-destruct after.", 
+            adBlockMsg: "We need ad support to maintain free encrypted servers. Please disable your Ad-blocker to continue.", 
+            discP: "Decentralized transmission. No server storage.", 
+            aboutH4: "ABOUT US", aboutP: "Tired of slow, registered, or snoopy cloud drives? FlashDrop Pro is a fast, stable P2P tool. As long as you're connected, transfer won't stop—even if our servers go down.",
+            privH4: "PRIVACY POLICY", privP: "Zero storage. Files move directly between users with encryption. No logs, no tracking. Your privacy stays yours—I'm not interested in snooping.",
+            coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Please enter the code or scan the QR code"
+        },
+        zh: { 
+            tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], 
+            drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", 
+            handshake: "安全连接中...", scanHint: "请将二维码对准框内", scanClose: "关闭", exp: "有效期: ", copyLink: "📋 复制链接", 
+            sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", 
+            guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", 
+            adBlockMsg: "我们需要廣告支持來維持免費的加密服務。请关闭拦截插件以繼續使用。", 
+            discP: "點對點傳輸，不經過服務器。", 
+            aboutH4: "关于我们", aboutP: "受够了那些限速、要注册、还偷看隐私的网盘？FlashDrop Pro 就是为了快和稳而生的点对点传输工具。只要你俩连着，传输就不停，哪怕我服务器挂了也不影响你传文件。",
+            privH4: "隐私政策", privP: "咱们这儿绝对不存任何东西，文件直接在你和对方电脑之间加密传输，连我都看不见。没日志、没跟踪、主打一个干净。你的隐私就是你的，我也懒得看。",
+            coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码或扫描二维码"
+        },
+        ja: { // 日本语
+            tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "♾️ 無制限", "⚡ 直接転送"],
+            drop: "ドロップして追加", fileLab: "クリック/ドロップ", shareF: "ファイルを共有", shareT: "テキストを共有", connect: "ダウンロード", save: "📥 保存",
+            aboutH4: "私たちについて", aboutP: "速度制限やプライバシーが心配？FlashDrop Proは、高速で安定したP2Pツールです。サーバーを介さず直接やり取りするため、プライバシーも安心です。",
+            privH4: "プライバシーポリシー", privP: "データは一切保存されません。暗号化された通信で、あなたと相手の間だけで完結します。ログもトラッキングもありません。",
+            coffee: "☕ コーヒーを奢る", contactH4: "連絡先情報", inputErr: "コードを入力するかQRをスキャンしてください"
+        },
+        ko: { // 韩语
+            tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "♾️ 무제한", "⚡ 직거래"],
+            drop: "여기에 놓기", fileLab: "클릭 / 드래그", shareF: "파일 공유", shareT: "텍스트 공유", connect: "지금 다운로드", save: "📥 파일 저장",
+            aboutH4: "회사 소개", aboutP: "속도 제한이나 프라이버시 걱정은 이제 그만! FlashDrop Pro는 빠르고 안전한 P2P 전송 도구입니다. 서버 저장 없이 직접 파일을 주고받으세요.",
+            privH4: "개인정보 처리방침", privP: "우리는 아무것도 저장하지 않습니다. 모든 전송은 종단 간 암호화되며, 로그나 추적 장치가 전혀 없는 깨끗한 환경을 제공합니다.",
+            coffee: "☕ 커피 한 잔 사기", contactH4: "연락처 정보", inputErr: "코드를 입력하거나 QR 코드를 스캔하세요"
+        },
+        es: { // 西班牙语
+            tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P Cifrado", "🕵️ Sin registros", "♾️ Ilimitado", "⚡ Directo"],
+            drop: "SOLTAR AQUÍ", fileLab: "Click / Arrastrar", shareF: "COMPARTIR ARCHIVOS", shareT: "COMPARTIR TEXTO", connect: "DESCARGAR", save: "📥 GUARDAR",
+            aboutH4: "SOBRE NOSOTROS", aboutP: "¿Cansado de la lentitud y la falta de privacidad? FlashDrop Pro es transferencia P2P rápida y segura. Tus archivos no pasan por nuestros servidores.",
+            privH4: "PRIVACIDAD", privP: "No guardamos nada. Los archivos se mueven directamente entre usuarios con cifrado. Sin rastreo, sin registros. Tu privacidad es lo primero.",
+            coffee: "☕ Invítame a un café", contactH4: "CONTACTO", inputErr: "Ingresa el código o escanea el QR"
+        },
+        hi: { // 印地语
+            tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P एन्क्रिप्टेड", "🕵️ कोई लॉग नहीं", "♾️ असीमित", "⚡ सीधा"],
+            drop: "यहाँ छोड़ें", fileLab: "क्लिक / ड्रॉप", shareF: "फ़ाइल साझा करें", shareT: "टेक्स्ट साझा करें", connect: "डाउनलोड करें", save: "📥 सुरक्षित करें",
+            aboutH4: "हमारे बारे में", aboutP: "धीमी गति और गोपनीयता की चिंता छोड़ें। FlashDrop Pro एक तेज़ और सुरक्षित P2P टूल है। आपकी फ़ाइलें सीधे भेजी जाती हैं, कहीं भी स्टोर नहीं होतीं।",
+            privH4: "गोपनीयता नीति", privP: "हम कुछ भी स्टोर नहीं करते हैं। फ़ाइलें एन्क्रिप्टेड हैं और सीधे उपयोगकर्ताओं के बीच चलती हैं। कोई ट्रैकिंग नहीं, कोई लॉग नहीं।",
+            coffee: "☕ मेरे लिए कॉफी खरीदें", contactH4: "संपर्क जानकारी", inputErr: "कोड दर्ज करें या QR स्कैन करें"
+        }
     };
+
 
     // Henry，这就是你要求的三个随机跳转链接
     const smartLinks = [
@@ -270,16 +320,45 @@
 
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
+        // 如果支持该语言则显示，否则默认英文
         currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang];
+        
+        // 顶部和标签
         document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
-        document.getElementById('tab-send').innerText = d.tabSend; document.getElementById('tab-receive').innerText = d.tabReceive;
-        document.getElementById('label-files').innerText = d.fileLab; document.getElementById('btn-share-files').innerText = d.shareF;
-        document.getElementById('btn-share-text').innerText = d.shareT; document.getElementById('btn-copy-link').innerText = d.copyLink;
-        document.getElementById('btn-connect').innerText = d.connect; document.getElementById('btn-save-file').innerText = d.save;
-        document.getElementById('scan-hint').innerText = d.scanHint; document.getElementById('btn-scan-close').innerText = d.scanClose;
-        document.getElementById('guideText').innerText = d.guide; document.getElementById('ad-block-p').innerText = d.adBlockMsg;
+        document.getElementById('tab-send').innerText = d.tabSend; 
+        document.getElementById('tab-receive').innerText = d.tabReceive;
+        document.getElementById('label-files').innerText = d.fileLab; 
+        document.getElementById('btn-share-files').innerText = d.shareF;
+        document.getElementById('btn-share-text').innerText = d.shareT; 
+        document.getElementById('btn-copy-link').innerText = d.copyLink;
+        document.getElementById('btn-connect').innerText = d.connect; 
+        document.getElementById('btn-save-file').innerText = d.save;
+        document.getElementById('scan-hint').innerText = d.scanHint; 
+        document.getElementById('btn-scan-close').innerText = d.scanClose;
+        document.getElementById('guideText').innerText = d.guide; 
+        document.getElementById('ad-block-p').innerText = d.adBlockMsg;
         document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
+
+        // 页脚文案自动切换
+        const footerAboutH4 = document.querySelector('.legal-section:nth-child(1) h4');
+        const footerAboutP = document.getElementById('foot-about-p');
+        const footerPrivH4 = document.querySelector('.legal-section:nth-child(2) h4');
+        const footerPrivP = document.getElementById('foot-priv-p');
+        const footerDiscP = document.getElementById('foot-disc-p');
+        const coffeeBtn = document.querySelector('.coffee-btn');
+        const contactH4 = document.querySelector('.legal-section:nth-child(4) h4');
+
+        if(footerAboutH4) footerAboutH4.innerText = d.aboutH4;
+        if(footerAboutP) footerAboutP.innerText = d.aboutP;
+        if(footerPrivH4) footerPrivH4.innerText = d.privH4;
+        if(footerPrivP) footerPrivP.innerText = d.privP;
+        if(footerDiscP) footerDiscP.innerText = d.discP;
+        if(coffeeBtn) {
+            // 保留图标，只换文字
+            coffeeBtn.innerHTML = `☕ ${d.coffee.replace('☕ ', '')}`;
+        }
+        if(contactH4) contactH4.innerText = d.contactH4;
     }
 
     // 随机开启一个广告链接
