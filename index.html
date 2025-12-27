@@ -344,7 +344,9 @@
                 if(d.type === 'confirm_save') { 
                     currentDownloads++; 
                     const limit = parseInt(document.getElementById('downloadLimit').value);
-                    if(currentDownloads >= limit) { resetSender(); } 
+                    if(currentDownloads >= limit) { 
+                        resetSender(); 
+                    } 
                 } 
             });
             c.on('open', async () => {
@@ -423,9 +425,17 @@
 
     function detectAdBlock() { const top = document.getElementById('top-ad-zone'); if (top && top.offsetHeight === 0) { document.getElementById('adblock-warning').style.display = 'flex'; return true; } return false; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
-    function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); if(expiryTimerIdx) clearInterval(expiryTimerIdx); }
     
-    // 接收方销毁逻辑封装
+    // 发送方重置：现在会清除 textarea 内容
+    function resetSender() { 
+        if(peer) peer.destroy(); 
+        document.getElementById('senderCodeArea').style.display = 'none'; 
+        stagedFiles = []; 
+        renderStagedList(); 
+        document.getElementById('quickText').value = ""; // 清除输入框内容
+        if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
+    }
+    
     function resetReceiver() { 
         document.getElementById('targetCode').value = ""; 
         document.getElementById('mobileDownloadArea').style.display = 'none'; 
@@ -440,15 +450,12 @@
     function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
     function renderStagedList() { const list = document.getElementById('stagedList'); list.style.display = stagedFiles.length ? 'block' : 'none'; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item">📄 ${f.name} <span onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); }
     
-    // 接收方复制并阅后即焚
     function copyReceivedText() { 
         navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
         alert("Copied!"); 
-        // 向发送方发送销毁信号
         if(activeConn && activeConn.open) {
             activeConn.send({ type: 'confirm_save' });
         }
-        // 接收方延迟销毁，确保信号发出
         setTimeout(() => {
             resetReceiver();
         }, 500);
