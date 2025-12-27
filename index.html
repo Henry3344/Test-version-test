@@ -148,7 +148,7 @@
     <div class="warning-card">
         <div class="icon">🛡️</div>
         <h3>Keep FlashDrop Free</h3>
-        <p id="ad-block-p">We use minimal ads to keep our P2P servers running for free. Please consider whitelisting us to continue using high-speed transfer.</p>
+        <p id="notice-msg"></p> 
         <button class="action-btn" onclick="location.reload()" style="background:var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">I'VE DISABLED IT, RELOAD</button>
         <div style="margin-top: 20px; font-size: 11px; color: var(--text-muted); opacity: 0.6;">Efficiency & Privacy First.</div>
     </div>
@@ -285,9 +285,65 @@
 
 <script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "⚡ Direct", "♾️ Unlimited"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", textErr: "Please enter text first." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 直连", "♾️ 无限次"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。" }
+        en: { 
+            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "⚡ Direct", "♾️ Unlimited"], 
+            drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", 
+            connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", 
+            sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", 
+            guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", 
+            hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", 
+            pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", 
+            pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", 
+            pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", 
+            orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", 
+            histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", 
+            textErr: "Please enter text first.",
+            adMsg: "FlashDrop is a free P2P tool. We rely on minimal ads to pay for our servers and domain. Please consider disabling your AdBlocker to support us! ❤️"
+        },
+        zh: { 
+            tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 直连", "♾️ 无限次"], 
+            drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", 
+            connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", 
+            sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", 
+            guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", 
+            hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", 
+            pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", 
+            pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", 
+            pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", 
+            inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", 
+            histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。",
+            adMsg: "FlashDrop 是一项免费服务。我们需要少量的广告收入来维持服务器和域名的日常运行。如果可以的话，请关闭广告拦截器来支持我们，谢谢你！❤️"
+        }
     };
+
+    function applyI18N() {
+        const userLang = navigator.language.split('-')[0];
+        currLang = I18N[userLang] ? userLang : "en";
+        const d = I18N[currLang];
+        
+        document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
+        document.getElementById('tab-send').innerText = d.tabSend; 
+        document.getElementById('tab-receive').innerText = d.tabReceive;
+        document.getElementById('label-files').innerText = d.fileLab; 
+        document.getElementById('btn-share-files').innerText = d.shareF;
+        document.getElementById('btn-share-text').innerText = d.shareT; 
+        document.getElementById('btn-connect').innerText = d.connect;
+        document.getElementById('foot-coffee').innerText = d.coffee; 
+        document.getElementById('btn-scan').innerText = d.orScan;
+        document.getElementById('foot-head-priv').innerText = d.hPriv; 
+        document.getElementById('foot-head-aboutsite').innerText = d.hAboutSite;
+        document.getElementById('foot-head-aboutus').innerText = d.hAboutUs; 
+        document.getElementById('foot-head-contact').innerText = d.hContact;
+        document.getElementById('foot-priv-p').innerText = d.pPriv; 
+        document.getElementById('foot-disc-p').innerText = d.pDisc;
+        document.getElementById('foot-about-p').innerText = d.pAbout; 
+        document.getElementById('history-title-text').innerText = d.histTitle;
+        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
+        
+        // 这里会自动填充那个不再被拦截的文案
+        const noticeEl = document.getElementById('notice-msg');
+        if(noticeEl) noticeEl.innerText = d.adMsg;
+    }
 
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
