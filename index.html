@@ -355,6 +355,7 @@
             startExpiryTimer();
         });
         peer.on('connection', c => {
+            // 这里新增了监听：不管是文件存了还是文字拷了，只要收到确认信号就计数
             c.on('data', d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
             c.on('open', async () => {
                 const text = document.getElementById('quickText').value; 
@@ -416,7 +417,19 @@
         const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
     }
-    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); resetReceiver(); }
+
+    function copyReceivedText() { 
+        navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
+        alert("Copied!"); 
+        
+        // 【这是新加的】复制完立刻给发送方发信号，触发阅后即毁
+        if(activeConn && activeConn.open) {
+            activeConn.send({ type: 'confirm_save' }); 
+        }
+        
+        resetReceiver(); 
+    }
+    // --- 覆盖到这里结束，下面紧跟着是 detectAdBlock 函数 ---
 
     function detectAdBlock() {
         setTimeout(() => {
