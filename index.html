@@ -29,20 +29,29 @@
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; }
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
+        
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; }
+        
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; margin-right: 12px; }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
+
         .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
         .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; }
 
         .main-wrapper { display: flex; width: 100%; max-width: 1200px; margin: 0 auto; justify-content: center; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
-        @media (max-width: 880px) { .ad-side { display: none !important; } .main-wrapper { display: block; } .content-area { max-width: 100%; } }
+        
+        @media (max-width: 880px) {
+            .ad-side { display: none !important; }
+            .main-wrapper { display: block; }
+            .content-area { max-width: 100%; }
+        }
+
         .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
-        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; min-height: 90px; margin-bottom: 25px; }
+        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; min-height: 90px; margin-bottom: 15px; }
 
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
@@ -51,35 +60,64 @@
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
         
-        /* 漂亮暂存区 */
-        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 12px; margin-bottom: 25px; max-height: 220px; overflow-y: auto; }
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 12px; margin-bottom: 15px; max-height: 220px; overflow-y: auto; }
         .staged-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .staged-item .file-left { display: flex; align-items: center; gap: 12px; overflow: hidden; }
         .staged-item .file-name { color: #f8fafc; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
         .staged-item .remove-btn { color: #f87171; cursor: pointer; font-size: 20px; font-weight: bold; padding: 0 5px; }
 
-        /* 发送区间距拉开 */
-        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 30px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; text-align: center; margin-bottom: 30px; }
-        #btn-share-files { margin-bottom: 40px; }
-        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 160px; margin-bottom: 30px; }
-        #btn-share-text { margin-bottom: 30px; }
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 30px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; text-align: center; }
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 160px; }
         textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        /* 接收方布局 */
-        .receive-input-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; max-width: 320px; margin: 0 auto 25px auto; background: #0f172a; border: 2px solid var(--border); border-radius: 22px; padding: 12px 15px; }
-        input[type="number"] { width: auto; max-width: 140px; border: none; background: transparent; color: white; font-size: 32px; text-align: center; outline: none; flex-grow: 1; }
-        .inline-scan-text { font-size: 10px; font-weight: 900; background: rgba(99, 102, 241, 0.2); color: var(--primary); border: 1.5px solid var(--primary); padding: 8px 12px; border-radius: 12px; cursor: pointer; white-space: nowrap; }
+        /* Henry, 核心修改：使用 Flexbox 重构接收输入框布局 */
+        .receive-input-wrap { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* 内容整体居中 */
+            gap: 15px; /* 两个元素之间的合适间距 */
+            width: 100%; 
+            max-width: 320px; 
+            margin-bottom: 20px;
+            background: #0f172a; /* 背景和边框移到容器上 */
+            border: 2px solid var(--border);
+            border-radius: 22px;
+            padding: 12px 15px;
+        }
+        input[type="number"] { 
+            width: auto; /* 宽度自适应 */
+            max-width: 140px;
+            padding: 0; 
+            border: none; /* 去掉输入框自身的边框 */
+            background: transparent; /* 背景透明 */
+            color: white; 
+            font-size: 32px; 
+            text-align: center; /* 数字居中 */
+            outline: none;
+            flex-grow: 1;
+        }
+        .inline-scan-text { 
+            position: static; /* 取消绝对定位 */
+            transform: none;
+            font-size: 11px; 
+            font-weight: 900; 
+            background: rgba(99, 102, 241, 0.2); 
+            color: var(--primary); 
+            border: 1.5px solid var(--primary); 
+            padding: 8px 12px; 
+            border-radius: 12px; 
+            cursor: pointer;
+            white-space: nowrap; /* 防止文字换行 */
+        }
 
         button.action-btn { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); text-transform: uppercase; }
         #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
         #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; }
 
-        .legal-footer { padding: 40px 20px 60px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: left; }
-        .legal-section { flex: 1; min-width: 280px; max-width: 320px; margin-bottom: 8px; }
-        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 6px; font-weight: 900; letter-spacing: 1px; }
-        .legal-section p { line-height: 1.4; opacity: 0.8; margin-bottom: 4px; }
-        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 8px; }
+        .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; }
+        .legal-section { flex: 1; min-width: 280px; max-width: 320px; margin-bottom: 20px; }
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 15px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
         #scanner-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; padding-top: 80px; }
@@ -92,12 +130,7 @@
         
         .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
-
-        /* 极速进度展示 */
-        #receiveProgressContainer { width: 100%; margin-top: 15px; text-align: center; }
-        #receiveProgressBar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin-bottom: 8px; }
-        #receiveProgressFill { width: 0%; height: 100%; background: var(--success); transition: width 0.1s; }
-        #receivePercent { font-size: 13px; font-weight: 900; color: var(--success); margin-bottom: 10px; }
+        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
     </style>
 </head>
 <body>
@@ -123,9 +156,8 @@
                         <div class="column-box"><label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label><div id="stagedList"></div><button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button></div>
                         <div class="column-box"><div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div><button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button></div>
                     </div>
-                    <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;"><span id="label-limit">Limit:</span> <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;"><option value="1">1 Time</option><option value="3">3 Times</option><option value="999">Unlimited</option></select></div>
+                    <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;"><span id="label-limit">Limit:</span> <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;"><option value="1">1 Time</option><option value="3">3 Times</option><option value="5">5 Times</option><option value="999">Unlimited</option></select></div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
-                    
                     <div id="senderCodeArea">
                         <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px; text-align:center;">🛡️ P2P ENCRYPTED</div>
                         <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5; text-align:center;"></p>
@@ -136,22 +168,17 @@
                         <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
-
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <div class="receive-input-wrap"><input type="number" id="targetCode" placeholder="000000" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6)"><div class="inline-scan-text" id="label-or-scan" onclick="openScanner()">OR SCAN</div></div>
                         <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="max-width: 320px;">DOWNLOAD</button>
-                        
-                        <div id="receiveProgressContainer" style="display:none;">
-                            <div id="receiveProgressBar"><div id="receiveProgressFill"></div></div>
-                            <div id="receivePercent">0%</div>
-                            <button class="action-btn" id="btn-save-file" style="display:none; background:var(--success); padding:22px; font-size:18px;">📥 SAVE FILES NOW</button>
-                        </div>
+                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button></div>
                     </div>
                 </div>
             </div>
             <div class="ad-space" style="margin-top:20px;"><script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script></div>
         </div>
+
         <div class="ad-side" id="right-ad-zone"><script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script></div>
     </div>
 
@@ -159,22 +186,27 @@
         <div class="legal-section"><h4 id="h4-about">ABOUT US</h4><p id="foot-about-p"></p><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" id="btn-coffee">☕ Buy me a coffee</a></div>
         <div class="legal-section"><h4 id="h4-privacy">PRIVACY POLICY</h4><p id="foot-priv-p"></p></div>
         <div class="legal-section"><h4>COPYRIGHT</h4><p>© 2025 FlashDrop Pro.</p></div>
-        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; text-align: center;"><h4 id="h4-contact">CONTACT INFO</h4><p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p></div>
+        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;"><h4 id="h4-contact">CONTACT INFO</h4><p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p></div>
     </footer>
 </div>
 
 <div class="modal-overlay" id="adModal"><div id="ad-wait-title">Handshaking...</div><div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;"><script type="text/javascript">atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script></div></div>
+
 <div id="scanner-modal"><div class="scanner-container"><video id="video-preview" playsinline></video><div class="torch-btn" onclick="toggleTorch()">⚡</div><div class="scan-frame"><div class="scan-line"></div></div></div><button class="action-btn" style="width:180px; background:#334155; margin-top:20px;" onclick="closeScanner()">CLOSE</button></div>
 
 <script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE FILES NOW", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page.", orScan: "OR SCAN", aboutP: "Built for speed. Direct transfers, no server storage.", privP: "End-to-end encrypted. Your privacy stays yours." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 立即保存文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。" }
+        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page.", orScan: "OR SCAN", aboutP: "Built for speed. Direct transfers, no server storage.", privP: "End-to-end encrypted. Your privacy stays yours." },
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。" },
+        ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "♾️ 無制限", "⚡ 直接転送"], aboutH4: "私たちについて", privH4: "プライバシー", coffee: "☕ コーヒーを奢る", contactH4: "連絡先情報", inputErr: "コードを入力してください", orScan: "スキャン" },
+        ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "♾️ 무제한", "⚡ 직거래"], aboutH4: "회사 소개", privH4: "개인정보", coffee: "☕ 커피 한 잔 사기", contactH4: "연락처 정보", inputErr: "코드를 입력하세요", orScan: "스캔하기" },
+        es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P Cifrado", "🕵️ Sin registros", "♾️ Ilimitado", "⚡ Directo"], aboutH4: "SOBRE NOSOTROS", privH4: "PRIVACIDAD", coffee: "☕ Invítame a un café", contactH4: "CONTACTO", inputErr: "Ingresa el código", orScan: "ESCANEAR" },
+        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P एन्क्रिप्टेड", "🕵️ कोई लॉग नहीं", "♾️ असीमित", "⚡ सीधा"], aboutH4: "हमारे बारे में", privH4: "गोपनीयता", coffee: "☕ मेरे लिए कॉफी खरीदें", contactH4: "संपर्क जानकारी", inputErr: "कोड दर्ज करें", orScan: "स्कैन" }
     };
 
     const smartLinks = ["https://limpfeel.com/MFoqkO", "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", "https://otieu.com/4/10380243"];
     let currLang = "en", peer = null, stagedFiles = [], expiryTimerIdx = null, videoTrack = null, isTorchOn = false, currentDownloads = 0, activeConn = null;
-    const PREFIX = "fd-pro-", CHUNK_SIZE = 1024 * 512; // Henry, 极致优化的 512KB 分片
+    const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
     function applyI18N() {
         const lang = (navigator.languages ? navigator.languages[0] : navigator.language).split('-')[0];
@@ -224,24 +256,20 @@
                 if(d.type === 'confirm_save') {
                     currentDownloads++;
                     const limit = parseInt(document.getElementById('downloadLimit').value);
-                    if(currentDownloads >= limit) resetSender();
+                    if(currentDownloads >= limit) { resetSender(); }
                 }
             });
             c.on('open', async () => {
                 const txt = document.getElementById('quickText').value; if(txt) c.send({ type: 'text', data: txt });
                 if(stagedFiles.length > 0) {
                     let fb, fn;
-                    // Henry, 极致优化：单文件直接发，不打包压缩
-                    if(stagedFiles.length === 1) { 
-                        fb = stagedFiles[0]; fn = stagedFiles[0].name; 
-                    } else { 
-                        const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); 
-                        fb = await zip.generateAsync({type:"blob", compression:"STORE"}); fn="FlashDrop_Bundle.zip"; 
-                    }
+                    if(stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
+                    else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type:"blob", compression:"STORE"}); fn="Bundle.zip"; }
                     const totalChunks = Math.ceil(fb.size / CHUNK_SIZE);
                     c.send({ type: 'meta', name: fn, size: fb.size, total: totalChunks });
                     for (let i = 0; i < fb.size; i += CHUNK_SIZE) {
-                        c.send({ type: 'chunk', index: i / CHUNK_SIZE, data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() });
+                        const chunk = await fb.slice(i, i + CHUNK_SIZE).arrayBuffer();
+                        c.send({ type: 'chunk', index: i / CHUNK_SIZE, data: chunk });
                     }
                     c.send({ type: 'done' });
                 }
@@ -253,32 +281,18 @@
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
         rPeer.on('open', () => {
-            const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+            const c = rPeer.connect(PREFIX + code); activeConn = c;
             let meta, chunks = [], receivedCount = 0;
-            const container = document.getElementById('receiveProgressContainer');
-            const fill = document.getElementById('receiveProgressFill');
-            const percentText = document.getElementById('receivePercent');
-            const saveBtn = document.getElementById('btn-save-file');
-
             c.on('data', d => {
                 if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; }
-                else if(d.type === 'meta') { 
-                    meta = d; chunks = new Array(d.total); receivedCount = 0; 
-                    container.style.display = 'block'; saveBtn.style.display = 'none';
-                }
-                else if(d.type === 'chunk') {
-                    chunks[d.index] = d.data; receivedCount++;
-                    const pct = Math.floor((receivedCount / meta.total) * 100);
-                    fill.style.width = pct + '%'; percentText.innerText = pct + '%';
-                }
+                else if(d.type === 'meta') { meta = d; chunks = new Array(d.total); receivedCount = 0; document.getElementById('mobileDownloadArea').style.display='block'; }
+                else if(d.type === 'chunk') { chunks[d.index] = d.data; receivedCount++; document.getElementById('receiveProgressBar').style.width = (receivedCount / meta.total * 100) + '%'; }
                 else if(d.type === 'done') {
-                    // Henry, 只有进度到 100% 才显示按钮
                     if(receivedCount >= meta.total) {
                         const b = new Blob(chunks); const u = URL.createObjectURL(b);
-                        saveBtn.style.display = 'block';
-                        saveBtn.onclick = () => {
-                            const a = document.createElement('a'); a.href = u; a.download = meta.name;
-                            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+                        const btn = document.getElementById('btn-save-file');
+                        btn.onclick = () => { 
+                            const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click();
                             setTimeout(() => { if(activeConn) activeConn.send({type: 'confirm_save'}); resetReceiver(); }, 500);
                         };
                     }
@@ -291,16 +305,18 @@
         document.getElementById('scanner-modal').style.display='flex'; 
         try { 
             const devices = await navigator.mediaDevices.enumerateDevices();
-            const videoDevices = devices.filter(d => d.kind === 'videoinput' && (d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('rear')));
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
             let targetId = null;
+            const backCameras = videoDevices.filter(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('rear'));
             if(backCameras.length > 0) {
                 const main = backCameras.filter(d => !d.label.toLowerCase().includes('wide') && !d.label.toLowerCase().includes('0.5') && !d.label.toLowerCase().includes('ultra'));
                 targetId = main.length > 0 ? main[0].deviceId : backCameras[0].deviceId;
             }
-            const stream = await navigator.mediaDevices.getUserMedia({ video: targetId ? { deviceId: { exact: targetId }, width: { ideal: 1920 }, height: { ideal: 1080 } } : { facingMode: "environment" } }); 
+            const constraints = { video: targetId ? { deviceId: { exact: targetId }, width: { ideal: 1920 }, height: { ideal: 1080 } } : { facingMode: "environment" } };
+            const stream = await navigator.mediaDevices.getUserMedia(constraints); 
             const video = document.getElementById('video-preview'); video.srcObject = stream; 
             videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); 
-        } catch (e) { alert("Camera error"); closeScanner(); } 
+        } catch (e) { alert("Camera failed"); closeScanner(); } 
     }
 
     async function toggleTorch() {
@@ -317,7 +333,7 @@
     function copyMyLink() { navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + document.getElementById('myCode').innerText); alert("Link Copied!"); }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `Expires: ${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; }
-    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('receiveProgressContainer').style.display = 'none'; activeConn = null; }
+    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; activeConn = null; }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(fs) { stagedFiles = stagedFiles.concat(Array.from(fs)); renderStagedList(); }
     function renderStagedList() { 
