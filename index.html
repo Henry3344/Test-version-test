@@ -291,9 +291,12 @@
         window.open(links[Math.floor(Math.random() * links.length)], '_blank');
     }
 
+    // 广告弹窗函数：包含进度条和计时逻辑
     function triggerAd(mode) {
         if(detectAdBlock()) return;
         if(mode === 'receive' && document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
+        
+        // 发送方或接收方点击后，先随机跳广告
         openRandomSmartlink();
         
         const modal = document.getElementById('adModal');
@@ -306,17 +309,20 @@
         adPg.style.width = '0%';
         title.innerHTML = msg;
 
-        let cd = 0; 
+        let elapsed = 0; 
         const totalMs = 5000;
         const itv = setInterval(() => { 
-            cd += 100;
-            const pct = (cd / totalMs) * 100;
-            const rem = Math.ceil((totalMs - cd) / 1000);
+            elapsed += 100;
+            const pct = (elapsed / totalMs) * 100;
+            const rem = Math.ceil((totalMs - elapsed) / 1000);
+            
             adPg.style.width = pct + '%';
-            timerText.innerText = `Remaining: ${rem}s`;
-            if(cd >= totalMs) { 
+            timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`;
+            
+            if(elapsed >= totalMs) { 
                 clearInterval(itv); 
                 modal.style.display = 'none'; 
+                // 倒计时结束，执行核心逻辑
                 mode.startsWith('send') ? initSender() : startReceiving(); 
             } 
         }, 100);
@@ -339,6 +345,7 @@
             document.getElementById('myCode').innerText = code;
             document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
+            // 自动滚动到验证码区域
             setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
             startExpiryTimer();
         });
@@ -399,10 +406,10 @@
                     if(meta) {
                         const pct = (totalRecv / meta.size) * 100;
                         pgBar.style.width = pct + '%';
-                        const elapsed = (Date.now() - startTime) / 1000;
-                        const speed = totalRecv / elapsed; // bytes per sec
-                        const remaining = meta.size - totalRecv;
-                        const eta = Math.ceil(remaining / (speed || 1));
+                        const elapsedSec = (Date.now() - startTime) / 1000;
+                        const speed = totalRecv / elapsedSec; // bytes per sec
+                        const remainingBytes = meta.size - totalRecv;
+                        const eta = Math.ceil(remainingBytes / (speed || 1));
                         
                         document.getElementById('nerd-speed').innerText = (speed / 1024 / 1024).toFixed(1) + " MB/s";
                         etaText.innerText = `ETA: ${eta}s`;
@@ -412,7 +419,7 @@
                     const b = new Blob(chunks); const u = window.URL.createObjectURL(b);
                     const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
                     pgBar.style.width = '100%';
-                    etaText.innerText = I18N[currLang].doneRemind;
+                    etaText.innerText = I18N[currLang].doneRemind; // 提醒点击保存
                     nerd.style.color = "var(--primary)";
                     
                     btn.onclick = () => { 
