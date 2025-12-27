@@ -29,27 +29,19 @@
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; }
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
-        
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
-        
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; margin-right: 12px; }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
-
         .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
         .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; }
-
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
-        
         .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
         @media (max-width: 880px) { .ad-side { display: none !important; } }
         .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; }
-        .ad-top { min-height: 90px; margin-bottom: 15px; }
-        .ad-bottom { min-height: 90px; margin-top: 20px; margin-bottom: 25px; }
-
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; }
@@ -57,23 +49,20 @@
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
 
-        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
-        @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
-        
+        /* 暂存区：卡片化 */
         .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; }
         #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 15px; padding: 10px; margin-bottom: 10px; max-height: 160px; overflow-y: auto; }
         .staged-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 10px 15px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
-        .staged-item .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
         .staged-item .file-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
-        .staged-item .remove-btn { color: var(--danger); cursor: pointer; font-weight: 900; padding: 5px; font-size: 16px; }
+        .remove-btn { color: var(--danger); cursor: pointer; font-weight: 900; font-size: 16px; padding-left: 10px; }
 
         .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 150px; }
         textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        /* 接收输入框容器 */
-        .receive-input-wrap { position: relative; width: 100%; max-width: 260px; margin-bottom: 15px; }
+        /* 接收输入框 */
+        .receive-input-wrap { position: relative; width: 100%; max-width: 280px; margin-bottom: 15px; }
         input[type="number"] { width: 100%; padding: 20px 85px 20px 20px; border-radius: 22px; border: 2px solid var(--border); background: #0f172a; color: white; font-size: 32px; text-align: left; outline: none; }
-        .inline-scan { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: rgba(99, 102, 241, 0.2); color: var(--primary); border: 1px solid var(--primary); padding: 6px 10px; border-radius: 10px; font-size: 11px; font-weight: 900; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .inline-scan-text { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; font-weight: 900; background: rgba(99, 102, 241, 0.2); color: var(--primary); border: 1.5px solid var(--primary); padding: 8px 10px; border-radius: 12px; cursor: pointer; }
 
         button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); text-transform: uppercase; }
         
@@ -83,30 +72,25 @@
 
         .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; }
         .legal-section { flex: 1; min-width: 240px; max-width: 320px; margin-bottom: 20px; }
-        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
         .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 15px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
+        
+        /* 扫码层 */
         #scanner-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; padding-top: 80px; }
-        .scanner-container { position: relative; width: 280px; height: 280px; background: #111; border-radius: 24px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); }
+        .scanner-container { position: relative; width: 300px; height: 300px; background: #111; border-radius: 24px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); }
         #video-preview { width: 100%; height: 100%; object-fit: cover; }
+        .torch-btn { position: absolute; top: 15px; right: 15px; width: 44px; height: 44px; background: rgba(0,0,0,0.6); border: 1px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; cursor: pointer; z-index: 100; }
         .scan-frame { position: absolute; inset: 0; border: 2px solid var(--primary); border-radius: 24px; pointer-events: none; }
         .scan-line { position: absolute; width: 100%; height: 3px; background: var(--primary); top: 0; left: 0; box-shadow: 0 0 15px var(--primary); animation: scanMove 2.5s infinite ease-in-out; }
         @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
-
+        
         .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
         @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
     </style>
 </head>
 <body>
-
-<div id="adblock-warning" style="display:none;">
-    <div class="warning-card">
-        <h3 style="color:var(--danger);">AD-BLOCK DETECTED</h3>
-        <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">REFRESH</button>
-    </div>
-</div>
 
 <div class="app-container">
     <div class="stars-container" id="stars"></div>
@@ -115,21 +99,13 @@
         <div class="trust-badges" id="trust-badges"></div>
     </nav>
 
-    <div class="ad-space ad-top">
-        <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
-    </div>
+    <div class="ad-space ad-top"><script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script></div>
 
     <div class="main-wrapper">
-        <div class="ad-side" id="left-ad-zone">
-            <script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
-        </div>
-
+        <div class="ad-side" id="left-ad-zone"><script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script></div>
         <div class="content-area">
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
-                
                 <div id="panel-send" class="panel active">
                     <div class="share-grid">
                         <div class="column-box">
@@ -137,16 +113,12 @@
                             <div id="stagedList"></div>
                             <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
                         </div>
-                        <div class="column-box">
-                            <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
-                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
-                        </div>
+                        <div class="column-box"><div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div><button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button></div>
                     </div>
                     <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;"><span id="label-limit">Limit:</span> <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;"><option value="1">1 Time</option><option value="3">3 Times</option><option value="5">5 Times</option><option value="999">Unlimited</option></select></div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
-                    
                     <div id="senderCodeArea">
-                        <div id="p2p-secure-tag" style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px; text-align:center;">🛡️ P2P ENCRYPTED</div>
+                        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px; text-align:center;">🛡️ P2P ENCRYPTED</div>
                         <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5; text-align:center;"></p>
                         <div style="text-align:center;"><div id="qrcode"></div></div>
                         <div class="code-display" id="myCode">000000</div>
@@ -155,63 +127,36 @@
                         <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
-
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <div class="receive-input-wrap">
                             <input type="number" id="targetCode" placeholder="000000" oninput="if(this.value.length > 6) this.value = this.value.slice(0, 6)">
-                            <div class="inline-scan" id="label-or-scan" onclick="openScanner()">OR SCAN</div>
+                            <div class="inline-scan-text" id="label-or-scan" onclick="openScanner()">SCAN</div>
                         </div>
                         <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="max-width: 260px;">DOWNLOAD</button>
-                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;">
-                            <div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div>
-                            <button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button>
-                        </div>
+                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button></div>
                     </div>
                 </div>
             </div>
-
-            <div class="ad-space ad-bottom">
-                <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
-                <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
-            </div>
+            <div class="ad-space ad-bottom"><script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script></div>
         </div>
-
-        <div class="ad-side" id="right-ad-zone">
-            <script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
-        </div>
+        <div class="ad-side" id="right-ad-zone"><script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script></div>
     </div>
 
     <footer class="legal-footer">
-        <div class="legal-section">
-            <h4 id="h4-about">ABOUT US</h4>
-            <p id="foot-about-p"></p>
-            <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" id="btn-coffee">☕ Buy me a coffee</a>
-        </div>
-        <div class="legal-section">
-            <h4 id="h4-privacy">PRIVACY POLICY</h4>
-            <p id="foot-priv-p"></p>
-        </div>
+        <div class="legal-section"><h4 id="h4-about">ABOUT US</h4><p id="foot-about-p"></p><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" id="btn-coffee">☕ Buy me a coffee</a></div>
+        <div class="legal-section"><h4 id="h4-privacy">PRIVACY POLICY</h4><p id="foot-priv-p"></p></div>
         <div class="legal-section"><h4 id="h4-copyright">COPYRIGHT</h4><p>© 2025 FlashDrop Pro.</p></div>
-        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;">
-            <h4 id="h4-contact">CONTACT INFO</h4>
-            <p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p>
-        </div>
+        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;"><h4 id="h4-contact">CONTACT INFO</h4><p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p></div>
     </footer>
 </div>
 
-<div class="modal-overlay" id="adModal">
-    <div id="ad-wait-title">Handshaking...</div>
-    <div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
-        <script type="text/javascript">atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
-    </div>
-</div>
+<div class="modal-overlay" id="adModal"><div id="ad-wait-title">Handshaking...</div><div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;"><script type="text/javascript">atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script><script type="text/javascript" src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script></div></div>
 
 <div id="scanner-modal">
     <div class="scanner-container">
         <video id="video-preview" playsinline></video>
+        <div class="torch-btn" onclick="toggleTorch()">⚡</div>
         <div class="scan-frame"><div class="scan-line"></div></div>
     </div>
     <button class="action-btn" style="width:180px; background:#334155; margin-top:20px;" onclick="closeScanner()">CLOSE</button>
@@ -219,16 +164,12 @@
 
 <script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page.", orScan: "OR SCAN", aboutP: "Tired of slow cloud drives? FlashDrop Pro is built for speed. Direct transfers, no server storage, no snooping.", privP: "End-to-end encrypted. No logs, no tracking. Your privacy stays yours—I can't see a thing." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。" },
-        ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "♾️ 無制限", "⚡ 直接転送"], aboutH4: "私たちについて", privH4: "プライバシー", coffee: "☕ コーヒーを奢る", contactH4: "連絡先情報", inputErr: "コードを入力してください", orScan: "スキャン" },
-        ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "♾️ 무제한", "⚡ 직거래"], aboutH4: "회사 소개", privH4: "개인정보", coffee: "☕ 커피 한 잔 사기", contactH4: "연락처 정보", inputErr: "코드를 입력하세요", orScan: "스캔하기" },
-        es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P Cifrado", "🕵️ Sin registros", "♾️ Ilimitado", "⚡ Directo"], aboutH4: "SOBRE NOSOTROS", privH4: "PRIVACIDAD", coffee: "☕ Invítame a un café", contactH4: "CONTACTO", inputErr: "Ingresa el código", orScan: "ESCANEAR" },
-        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P एन्क्रिप्टेड", "🕵️ कोई लॉग नहीं", "♾️ असीमित", "⚡ सीधा"], aboutH4: "हमारे बारे में", privH4: "गोपनीयता", coffee: "☕ मेरे लिए कॉफी खरीदें", contactH4: "संपर्क जानकारी", inputErr: "कोड दर्ज करें", orScan: "स्कैन" }
+        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page.", orScan: "SCAN", aboutP: "Tired of slow cloud drives? FlashDrop Pro is built for speed. Direct transfers, no server storage, no snooping.", privP: "End-to-end encrypted. No logs, no tracking. Your privacy stays yours." },
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见。" }
     };
 
     const smartLinks = ["https://limpfeel.com/MFoqkO", "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", "https://otieu.com/4/10380243"];
-    let currLang = "en", peer = null, stagedFiles = [], expiryTimerIdx = null, videoTrack = null;
+    let currLang = "en", peer = null, stagedFiles = [], expiryTimerIdx = null, videoTrack = null, isTorchOn = false;
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
     function applyI18N() {
@@ -285,8 +226,15 @@
                     let fb, fn;
                     if(stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
                     else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type:"blob"}); fn="Bundle.zip"; }
-                    c.send({ type: 'meta', name: fn, size: fb.size });
-                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) { c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: await fb.slice(i, i+CHUNK_SIZE).arrayBuffer() }); }
+                    
+                    // Henry, 修复点：先发送总片数，让接收端做好准备
+                    const totalChunks = Math.ceil(fb.size / CHUNK_SIZE);
+                    c.send({ type: 'meta', name: fn, size: fb.size, total: totalChunks });
+                    
+                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) {
+                        const chunk = await fb.slice(i, i + CHUNK_SIZE).arrayBuffer();
+                        c.send({ type: 'chunk', index: i / CHUNK_SIZE, data: chunk });
+                    }
                     c.send({ type: 'done' });
                 }
             });
@@ -298,29 +246,46 @@
         const rPeer = new Peer();
         rPeer.on('open', () => {
             const c = rPeer.connect(PREFIX + code);
-            let meta, chunks = [], count = 0;
+            let meta = null, chunks = [], receivedCount = 0;
             c.on('data', d => {
                 if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; }
-                else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; }
-                else if(d.type === 'chunk') { chunks[d.index] = d.data; count += d.data.byteLength; document.getElementById('receiveProgressBar').style.width = (count/meta.size*100)+'%'; }
+                else if(d.type === 'meta') { meta = d; chunks = new Array(d.total); receivedCount = 0; document.getElementById('mobileDownloadArea').style.display='block'; }
+                else if(d.type === 'chunk') {
+                    chunks[d.index] = d.data;
+                    receivedCount++;
+                    const progress = Math.min(100, (receivedCount / meta.total) * 100);
+                    document.getElementById('receiveProgressBar').style.width = progress + '%';
+                }
                 else if(d.type === 'done') {
-                    const b = new Blob(chunks); const u = URL.createObjectURL(b);
-                    document.getElementById('btn-save-file').onclick = () => { const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); };
+                    // Henry, 只有数够了才合成文件
+                    if(receivedCount >= meta.total) {
+                        const b = new Blob(chunks); const u = URL.createObjectURL(b);
+                        document.getElementById('btn-save-file').onclick = () => { const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); };
+                    } else {
+                        alert("Transfer Incomplete!");
+                    }
                 }
             });
         });
     }
 
-    // Henry，这里优化了摄像头调用逻辑，强制请求主摄并提高分辨率以辅助对焦
     async function openScanner() { 
         document.getElementById('scanner-modal').style.display='flex'; 
         try { 
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(d => d.kind === 'videoinput');
+            let targetId = null;
+            
+            // Henry, 增强版主摄定位：找分辨率最高且不带wide的
+            const backCameras = videoDevices.filter(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('rear'));
+            if(backCameras.length > 0) {
+                // 排除掉所有广角关键字
+                const mainCandidates = backCameras.filter(d => !d.label.toLowerCase().includes('wide') && !d.label.toLowerCase().includes('0.5') && !d.label.toLowerCase().includes('ultra'));
+                targetId = mainCandidates.length > 0 ? mainCandidates[0].deviceId : backCameras[0].deviceId;
+            }
+
             const constraints = { 
-                video: { 
-                    facingMode: { ideal: "environment" },
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                } 
+                video: targetId ? { deviceId: { exact: targetId }, width: { ideal: 1920 }, height: { ideal: 1080 } } : { facingMode: "environment" }
             };
             const stream = await navigator.mediaDevices.getUserMedia(constraints); 
             const video = document.getElementById('video-preview'); 
@@ -328,15 +293,21 @@
             videoTrack = stream.getVideoTracks()[0]; 
             video.play(); 
             requestAnimationFrame(tickScanner); 
-        } catch (e) { 
-            alert("Camera failed: " + e.message); 
-            closeScanner(); 
-        } 
+        } catch (e) { alert("Camera failed: " + e.message); closeScanner(); } 
+    }
+
+    async function toggleTorch() {
+        if (!videoTrack) return;
+        try {
+            const caps = videoTrack.getCapabilities();
+            if (!caps.torch) { alert("Torch not supported on this lens."); return; }
+            isTorchOn = !isTorchOn;
+            await videoTrack.applyConstraints({ advanced: [{ torch: isTorchOn }] });
+        } catch (e) { console.error(e); }
     }
     
-    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) { videoTrack.stop(); videoTrack = null; } }
+    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) { videoTrack.stop(); videoTrack = null; isTorchOn = false; } }
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
-
     function copyMyLink() { navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + document.getElementById('myCode').innerText); alert("Link Copied!"); }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `Expires: ${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); }
@@ -345,7 +316,6 @@
     function renderStagedList() { const l = document.getElementById('stagedList'); if (!stagedFiles.length) { l.style.display = 'none'; return; } l.style.display = 'block'; l.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><div class="file-info"><span>📄</span><span class="file-name">${f.name}</span></div><div class="remove-btn" onclick="removeStagedFile(${i})">✕</div></div>`).join(''); }
     function removeStagedFile(i) { stagedFiles.splice(i, 1); renderStagedList(); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<60; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = (Math.random()*20+15)+'s'; c.appendChild(s); } }
-
     window.onload = () => { applyI18N(); initStars(); const c = new URLSearchParams(window.location.search).get('c'); if(c) { switchTab('receive', {currentTarget: document.getElementById('tab-receive')}); document.getElementById('targetCode').value = c; } if (navigator.onLine) document.getElementById('status-dot').classList.add('online'); };
 </script>
 </body>
