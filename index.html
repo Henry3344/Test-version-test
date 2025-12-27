@@ -254,7 +254,7 @@
         ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P", "🕵️ ログなし", "⚡ 直結", "♾️ 無制限"], coffee: "コーヒーを奢る", hPriv: "プライバシー", hAboutSite: "サイトについて", hAboutUs: "運営", hContact: "連絡先", pPriv: "ログなし、追跡なし。すべてブラウザで暗号化されます。", pDisc: "P2P直結。ファイルはサーバーに保存されません。", pAbout: "© 2025 FlashDrop Pro. 効率を追求。", inputErr: "6桁のコードを入力してください。", orScan: "QRコードをスキャン" },
         ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P", "🕵️ 로그 없음", "⚡ 직결", "♾️ 무제한"], coffee: "커피 한 잔 사주기", hPriv: "개인정보 보호", hAboutSite: "사이트 정보", hAboutUs: "회사 정보", hContact: "연락처", pPriv: "로그 없음, 추적 없음. 브라우저 내 암호화 전송.", pDisc: "P2P 전송. 서버에 파일이 저장되지 않습니다.", pAbout: "© 2025 FlashDrop Pro. 효율적인 도구.", inputErr: "6자리 코드를 입력하세요.", orScan: "QR 코드 스캔" },
         es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P", "🕵️ Sin registros", "⚡ Directo", "♾️ Ilimitado"], coffee: "Invítame un café", hPriv: "Privacidad", hAboutSite: "Sobre el sitio", hAboutUs: "Nosotros", hContact: "Contacto", pPriv: "Sin registros ni rastreo. Todo encriptado en tu navegador.", pDisc: "P2P directo. Los archivos no tocan nuestros servidores.", pAbout: "© 2025 FlashDrop Pro. Eficiencia total.", inputErr: "Ingrese el código de 6 dígitos.", orScan: "O escanear QR" },
-        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P", "🕵️ कोई लॉग नहीं", "⚡ सीधा", "♾️ असीमित"], coffee: "कॉफी पिलाएं", hPriv: "गोपनीयता", hAboutSite: "साइट के बारे में", hAboutUs: "हमारे बारे में", hContact: "संपर्क", pPriv: "कोई लॉग नहीं, कोई ट्रैकिंग नहीं। सब कुछ सुरक्षित है।", pDisc: "सीधा P2P. फाइलें सर्वर पर नहीं जातीं।", pAbout: "© 2025 FlashDrop Pro. कुशलता पहले।", inputErr: "6 अंकों का कोड दर्ज करें।", orScan: "या क्यूआर स्कैन करें" }
+        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P", "🕵️ कोई लॉग नहीं", "⚡ सीधा", "♾️ असीमित"], coffee: "कॉफी पिलाएं", hPriv: "गोपनीयता", hAboutSite: "साइट के बारे में", hAboutUs: "हमारे बारे में", hContact: "संपर्क", pPriv: "कोई लॉग नहीं, कोई ट्रैकिंग नहीं। सब कुछ सुरक्षित है।", pDisc: "सीधा P2P. फाइलें सर्वर पर नहीं जातीं।", pAbout: "© 2025 FlashDrop Pro. कुशलता पहले।", inputErr: "6 अंकों का कोड दर्ज करें।", orScan: "या क्यूআর स्कैन करें" }
     };
 
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
@@ -311,13 +311,14 @@
             startExpiryTimer();
         });
         peer.on('connection', c => {
-            c.on('data', async d => { 
+            // 发送方监听接收方的“销毁指令”
+            c.on('data', d => { 
                 if(d.type === 'confirm_save') { 
                     currentDownloads++; 
                     const limit = parseInt(document.getElementById('downloadLimit').value);
                     if(currentDownloads >= limit) { 
-                        // 确保销毁前先断开所有连接
-                        setTimeout(() => { resetSender(); }, 200);
+                        // 强制立即销毁，不再等待
+                        resetSender(); 
                     } 
                 } 
             });
@@ -344,8 +345,8 @@
             c.on('data', d => {
                 if(d.type === 'text') { 
                     document.getElementById('receivedText').innerText=d.data; 
-                    // 接收文本后发送销毁信号并预留时间
-                    setTimeout(() => { c.send({ type: 'confirm_save' }); }, 300);
+                    // 接收文本后立刻发销毁指令
+                    setTimeout(() => { if(c.open) c.send({ type: 'confirm_save' }); }, 300);
                 }
                 else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; }
                 else if(d.type === 'chunk') { chunks[d.index] = d.data; }
@@ -354,9 +355,13 @@
                     const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
                     btn.onclick = () => { 
                         const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); 
-                        // 发送销毁信号并等待确保发送成功
-                        c.send({ type: 'confirm_save' });
-                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 500);
+                        // 接收方点保存后，强制发送销毁指令，并留出300ms确保发送方接到了再断开
+                        if(c.open) {
+                            c.send({ type: 'confirm_save' });
+                            setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300);
+                        } else {
+                            resetReceiver(); rPeer.destroy();
+                        }
                     };
                 }
             });
