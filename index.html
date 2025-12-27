@@ -158,6 +158,9 @@
             display: inline-block;
             min-width: 260px;
         }
+        /* 高级提示框 */
+        #toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: var(--primary); color: white; padding: 12px 24px; border-radius: 50px; font-weight: 800; font-size: 13px; box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5); display: none; z-index: 20000; animation: toastIn 0.3s ease-out; }
+        @keyframes toastIn { from { bottom: 80px; opacity: 0; } to { bottom: 100px; opacity: 1; } }
     </style>
 </head>
 <body>
@@ -489,7 +492,23 @@
         const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
     }
-    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); resetReceiver(); }
+    // 1. 修改后的复制函数：把 alert 换成了 showToast
+    function copyReceivedText() { 
+        navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
+        showToast("Copied! ❤️"); // 这里换成气泡提示了
+        resetReceiver(); 
+    }
+
+    // 2. 新增的 showToast 小助手
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        if(t) {
+            t.innerText = msg;
+            t.style.display = 'block';
+            // 2.5秒后自动消失，很丝滑
+            setTimeout(() => { t.style.display = 'none'; }, 2500);
+        }
+    }
 
     function detectAdBlock() {
         setTimeout(() => {
@@ -520,6 +539,11 @@
             us: {
                 en: `<h2>About Us</h2><p>Efficiency first. FlashDrop Pro is a privacy-focused tool designed for secure, high-speed data sharing.</p>`,
                 zh: `<h2>关于我们</h2><p>效率至上。FlashDrop Pro 是一款专注于安全、高速数据共享的隐私工具。</p>`
+<p style="margin-top:10px; display:flex; gap:10px;">
+    <a href="https://github.com/Henry3344/FlashDrop" target="_blank" style="color:var(--primary); text-decoration:none; font-size:11px;">📂 Open Source</a>
+    <a href="mailto:flashdroppro@gmail.com" style="color:var(--primary); text-decoration:none; font-size:11px;">💬 Feedback</a>
+</p>
+
             }
         };
         body.innerHTML = contents[type][lang] || contents[type]['en'];
@@ -540,5 +564,6 @@
     
     window.onload = () => { initStars(); applyI18N(); renderHistory(); detectAdBlock(); };
 </script>
+<div id="toast"></div>
 </body>
 </html>
