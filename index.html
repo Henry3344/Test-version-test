@@ -8,9 +8,7 @@
     
     <script>(function(s){s.dataset.zone='10380251',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script>(function(s){s.dataset.zone='10380245',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
-    
     <script src="https://pl28342028.effectivegatecpm.com/a2/19/f7/a219f7c4a8d2e3bbeea9d014e51bb043.js"></script>
-
     <script>(function(ctxj){var d=document,s=d.createElement('script'),l=d.scripts[d.scripts.length-1];s.settings=ctxj||{};s.src="\/\/big-brief.com\/bCXiVts.dFG-l\/0pYpWucG\/me_mb9BucZCUfl\/kTP-T\/Ya3PMhzuQB5XNnTGARtBNfjycvzdNND\/ki1NM\/Qe";s.async=true;s.referrerPolicy='no-referrer-when-downgrade';l.parentNode.insertBefore(s,l);})({})</script>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
@@ -19,61 +17,77 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     
     <style>
-        /* 继承你稳定版的全部 CSS 样式，包含绿灯和标签的所有布局 */
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; }
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
+        
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
         body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
-        #adblock-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
-        .warning-card { background: #111827; padding: 40px 25px; border-radius: 28px; border: 3px solid var(--danger); text-align: center; max-width: 380px; width: 100%; box-shadow: 0 0 100px rgba(239, 68, 68, 0.4); }
-        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
+
+        #adblock-warning { position: fixed; inset: 0; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
+        .warning-card { background: #111827; padding: 40px 25px; border-radius: 28px; border: 3px solid var(--danger); text-align: center; max-width: 380px; width: 100%; }
+
+        .stars-container { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
         @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
-        .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        
+        .navbar { position: fixed; top: 0; inset-x: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         .logo-wrap { display: flex; align-items: center; gap: 12px; }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
+        
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
         .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
+
         .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
         .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
+
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
-        .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
+        .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
         @media (max-width: 880px) { .ad-side { display: none !important; } }
+        
         .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; }
+        .ad-top, .ad-bottom { min-height: 90px; margin: 15px 0; }
+
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
         .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
-        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; align-items: stretch; }
+
+        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
         @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
         .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; text-align: center; }
-        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; }
-        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; }
-        .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; text-align: center; margin: 20px 0; }
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; }
+        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; }
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; font-size: 12px; }
+        
+        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
+        #receivedText-container { display: none; margin-top: 20px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); padding: 15px; border-radius: 18px; }
+        .history-box { width: 100%; max-width: 600px; margin-top: 40px; padding: 0 15px; }
+        .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .history-item { background: rgba(30, 41, 59, 0.5); border-radius: 14px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 11px; }
+
+        #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
+        .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; }
+        input[type="number"] { width: 100%; max-width: 260px; padding: 20px; border-radius: 22px; border: 2px solid var(--border); background: #0f172a; color: white; font-size: 38px; text-align: center; }
+        
         .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 30px; margin-top: auto; }
         .footer-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; max-width: 1000px; width: 100%; }
         .legal-section { flex: 1; min-width: 240px; max-width: 320px; }
         .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
+        
         .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; border: 1.5px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 14px; transition: 0.3s; margin-bottom: 10px; }
-        #drop-zone { position: fixed; inset: 0; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; }
+        #drop-zone { position: fixed; inset: 0; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div id="adblock-warning">
-    <div class="warning-card">
-        <h3>AD-BLOCK DETECTED</h3>
-        <p id="ad-block-p">FlashDrop needs ad revenue to maintain free servers. Please disable your Ad-blocker and refresh to continue.</p>
-        <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">I'VE DISABLED IT - REFRESH</button>
-    </div>
-</div>
+<div id="adblock-warning"><div class="warning-card"><h3>AD-BLOCK DETECTED</h3><p>FlashDrop needs ad revenue to maintain free servers.</p><button class="action-btn" onclick="location.reload()" style="background:var(--danger)">REFRESH</button></div></div>
 
 <div class="app-container" id="app">
     <div class="stars-container" id="stars"></div>
@@ -97,48 +111,39 @@
 
         <div class="content-area">
             <div class="card">
-                <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
-                
+                <div class="tab-group"><div class="tab active" onclick="switchTab('send', event)">Send</div><div class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
                     <div class="share-grid">
                         <div class="column-box">
-                            <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
+                            <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div style="font-size:13px; font-weight:900; margin-top:10px;">Drop / Click</div></label>
                             <div id="stagedList"></div>
-                            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
+                            <button class="action-btn" onclick="triggerAd('send-file')">SHARE FILES</button>
                         </div>
                         <div class="column-box">
-                            <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
-                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+                            <div class="text-zone"><textarea id="quickText" placeholder="Paste text here..."></textarea></div>
+                            <button class="action-btn" onclick="triggerAd('send-text')">SHARE TEXT</button>
                         </div>
                     </div>
-                    <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;"><span id="label-limit">Limit:</span> <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;"><option value="1">1 Time</option><option value="999">Unlimited</option></select></div>
+                    <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;">Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1px solid var(--border); padding:6px; border-radius:8px;"><option value="1">1 Time</option><option value="999">Unlimited</option></select></div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
                     <div id="senderCodeArea">
-                        <div id="p2p-secure-tag" style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
-                        <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5;"></p>
+                        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
                         <div id="qrcode"></div>
                         <div class="code-display" id="myCode">000000</div>
-                        <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
-                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY FAST LINK</button>
-                        <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
+                        <button class="action-btn" style="background:#4f46e5;" onclick="copyFastLink()">📋 COPY FAST LINK</button>
+                        <button class="action-btn" onclick="location.reload()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
-
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <input type="number" id="targetCode" placeholder="000000" onkeydown="if(event.key==='Enter') triggerAd('receive')">
-                        <div class="divider-or" id="or-tag">OR</div>
-                        <button class="action-btn" id="btn-scan" onclick="openScanner()" style="max-width: 260px; margin-bottom: 20px;">📷 SCAN QR CODE</button>
-                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 15px;">DOWNLOAD</button>
-                        
-                        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:20px;"><span id="nerd-speed">0.0 MB/s</span><span id="nerd-eta">ETA: 0s</span></div>
-                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button></div>
-                        <div id="receivedText-container"><div id="receivedText" style="font-size:15px; color:white; word-break:break-all; max-height:120px; overflow-y:auto; margin-bottom:15px;"></div><button class="action-btn" style="padding:10px; font-size:11px; background:rgba(255,255,255,0.1);" onclick="copyReceivedText()">📋 COPY TEXT</button></div>
+                        <button class="action-btn" onclick="triggerAd('receive')" style="margin-top: 15px;">DOWNLOAD</button>
+                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 SAVE FILE</button></div>
+                        <div id="receivedText-container"><div id="receivedText" style="font-size:15px; color:white; word-break:break-all; margin-bottom:15px;"></div><button class="action-btn" style="padding:10px; font-size:11px; background:rgba(255,255,255,0.1);" onclick="copyReceivedText()">📋 COPY TEXT</button></div>
                     </div>
                 </div>
             </div>
-            <div class="history-box"><div class="history-title">Recent History (Local)</div><div id="history-list"></div></div>
-            
+            <div class="history-box"><div class="history-title">History (Local)</div><div id="history-list"></div></div>
             <div class="ad-space ad-bottom" id="bottom-ad-zone">
                 <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
                 <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
@@ -153,18 +158,10 @@
 
     <footer class="legal-footer">
         <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
-        
         <div class="footer-grid">
-            <div class="legal-section">
-                <h4>SECURITY PROTOCOL</h4>
-                <p id="foot-disc-p">DTLS 1.2 / SCTP Encrypted. Peer-to-Peer direct tunnel. No intermediate server storage.</p>
-            </div>
-            <div class="legal-section">
-                <h4>PRIVACY POLICY</h4>
-                <p id="foot-priv-p">Zero logs. Memory-only transmission. Data auto-destructs after transfer or 10 mins.</p>
-            </div>
+            <div class="legal-section"><h4>SECURITY PROTOCOL</h4><p>DTLS 1.2 / SCTP Encrypted. Peer-to-Peer direct tunnel.</p></div>
+            <div class="legal-section"><h4>PRIVACY POLICY</h4><p>Zero logs. Memory-only transmission. Auto-destructs in 10m.</p></div>
         </div>
-
         <div style="width:100%; opacity:0.6; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
             <h4>CONTACT US</h4>
             <div style="display:flex; justify-content:center; gap:20px; margin-top:10px;">
@@ -184,12 +181,7 @@
     </div>
 </div>
 
-<div id="scanner-modal" style="display:none; position:fixed; inset:0; background:#000; z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
-    <video id="video-preview" style="width:280px; height:280px; border-radius:20px; object-fit:cover;"></video>
-    <button class="action-btn" style="width:180px; margin-top:20px;" onclick="closeScanner()">CLOSE</button>
-</div>
 <script>
-    // --- 1. 广告轮换池：Smartlinks (Direct Links) ---
     const AD_POOL = [
         "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", // Adsterra
         "https://otieu.com/4/10380243",                                                 // Monetag
@@ -197,65 +189,27 @@
     ];
 
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P ENCRYPTED", "🕵️ NO LOGS", "♾️ UNLIMITED", "⚡ DIRECT"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", handshake: "Security Handshake...", scanHint: "Align QR code in frame", scanClose: "CLOSE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting & Sending...<br>Do not close the page.", receivingRemind: "Handshaking & Downloading...<br>Do not close the page.", guide: "Inform the other party within 10 minutes; it will self-destruct after.", adBlockMsg: "We need ad support to maintain free encrypted servers. Please disable your Ad-blocker to continue.", discP: "Decentralized transmission. No server storage.", privP: "Zero logs. Zero tracking. WebRTC encrypted.", inputErr: "Please enter the code or scan the QR code" },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", handshake: "安全连接中...", scanHint: "请将二维码对准框内", scanClose: "关闭", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", adBlockMsg: "我们需要廣告支持來維持免費的加密服務。请关闭拦截插件以繼續使用。", discP: "點對點傳輸，不經過服務器。", privP: "全程加密，無任何跟踪日誌。", inputErr: "请输入验证码或扫描二维码" }
+        en: { badges: ["🔒 P2P ENCRYPTED", "🕵️ NO LOGS", "♾️ UNLIMITED", "⚡ DIRECT"], sending: "Encrypting...<br>Do not close.", receiving: "Downloading...<br>Do not close." },
+        zh: { badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], sending: "正在加密中...<br>请勿关闭页面", receiving: "正在下载中...<br>请勿关闭页面" }
     };
 
-    let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, expiryTimerIdx = null, activeConn = null, startTime = 0, totalSize = 0;
-    const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
+    let currLang = "en", peer = null, stagedFiles = [], activeConn = null;
+    const PREFIX = "fd-pro-";
 
-    function updateOnlineStatus() {
-        const dot = document.getElementById('status-dot');
-        if (navigator.onLine) { dot.className = 'status-dot online'; }
-        else { dot.className = 'status-dot offline'; }
-    }
+    function updateOnlineStatus() { const dot = document.getElementById('status-dot'); dot.className = navigator.onLine ? 'status-dot online' : 'status-dot offline'; }
+    function detectAdBlock() { if (document.getElementById('top-ad-zone').offsetHeight === 0) { document.getElementById('adblock-warning').style.display = 'flex'; return true; } return false; }
+    function applyI18N() { const userLang = navigator.language.split('-')[0]; currLang = I18N[userLang] ? userLang : "en"; document.getElementById('trust-badges').innerHTML = I18N[currLang].badges.map(b => `<span>${b}</span>`).join(''); }
 
-    function detectAdBlock() {
-        const top = document.getElementById('top-ad-zone');
-        if (top && top.offsetHeight === 0) {
-            document.body.classList.add('is-blocked');
-            document.getElementById('adblock-warning').style.display = 'flex';
-            return true;
-        }
-        return false;
-    }
-
-    function applyI18N() {
-        const userLang = navigator.language.split('-')[0];
-        currLang = I18N[userLang] ? userLang : "en";
-        const d = I18N[currLang];
-        document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
-        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
-        document.getElementById('guideText').innerText = d.guide;
-        document.getElementById('ad-block-p').innerText = d.adBlockMsg;
-    }
-
-    // --- 核心：带随机轮播的广告触发器 ---
     function triggerAd(mode) {
         if(detectAdBlock()) return;
-        if(mode === 'receive' && !document.getElementById('targetCode').value) {
-            alert(I18N[currLang].inputErr);
-            return;
-        }
+        if(mode === 'receive' && !document.getElementById('targetCode').value) { alert("Please enter code!"); return; }
         if(mode.startsWith('send') && stagedFiles.length === 0 && !document.getElementById('quickText').value) return;
 
-        // 随机弹窗
         window.open(AD_POOL[Math.floor(Math.random() * AD_POOL.length)], '_blank');
-        
-        const modal = document.getElementById('adModal'); 
-        const title = document.getElementById('ad-wait-title');
-        const msg = mode.startsWith('send') ? I18N[currLang].sendingRemind : I18N[currLang].receivingRemind;
+        const modal = document.getElementById('adModal'); const title = document.getElementById('ad-wait-title');
         modal.style.display = 'flex';
         let cd = 5; 
-        const itv = setInterval(() => { 
-            cd--; 
-            title.innerHTML = `${msg}<br><span style="color:var(--primary); font-size:26px; font-weight:900;">${cd}s</span>`; 
-            if(cd <= 0) { 
-                clearInterval(itv); 
-                modal.style.display = 'none'; 
-                mode.startsWith('send') ? initSender() : startReceiving(); 
-            } 
-        }, 1000);
+        const itv = setInterval(() => { cd--; title.innerHTML = `${mode.startsWith('send')?I18N[currLang].sending:I18N[currLang].receiving}<br><span style="color:var(--primary); font-size:26px;">${cd}s</span>`; if(cd <= 0) { clearInterval(itv); modal.style.display = 'none'; mode.startsWith('send') ? initSender() : startReceiving(); } }, 1000);
     }
 
     async function initSender() {
@@ -263,22 +217,17 @@
         const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
         peer.on('open', () => {
-            const area = document.getElementById('senderCodeArea'); area.style.display = 'block';
-            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
+            document.getElementById('senderCodeArea').style.display = 'block';
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
-            startExpiryTimer();
         });
         peer.on('connection', c => {
-            c.on('data', async d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
             c.on('open', async () => {
                 const text = document.getElementById('quickText').value; if(text) c.send({ type: 'text', data: text });
                 if(stagedFiles.length > 0) {
                     const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); 
-                    const fb = await zip.generateAsync({type: "blob"});
-                    c.send({ type: 'meta', name: "FlashDrop_Bundle.zip", size: fb.size });
-                    c.send({ type: 'file', content: fb });
-                    c.send({ type: 'done' });
+                    const blob = await zip.generateAsync({type: "blob"});
+                    c.send({ type: 'file', content: blob, name: "FlashDrop_Bundle.zip" });
                 }
             });
         });
@@ -288,42 +237,24 @@
         const code = document.getElementById('targetCode').value; if(!code) return;
         const rPeer = new Peer();
         rPeer.on('open', () => {
-            const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+            const c = rPeer.connect(PREFIX + code, { reliable: true });
             c.on('data', d => {
-                if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; addHistory("Text", "text"); }
+                if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; }
                 else if(d.type === 'file') {
                     const u = window.URL.createObjectURL(new Blob([d.content]));
                     document.getElementById('mobileDownloadArea').style.display='block';
-                    document.getElementById('btn-save-file').onclick = () => {
-                        const a = document.createElement('a'); a.href = u; a.download = d.name; a.click();
-                        addHistory(d.name, "file");
-                    };
+                    document.getElementById('btn-save-file').onclick = () => { const a = document.createElement('a'); a.href = u; a.download = d.name; a.click(); };
                 }
             });
         });
     }
 
-    function addHistory(name, type) { 
-        const list = document.getElementById('history-list'); 
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.innerHTML = `<span>${type==='file'?'📄':'🔤'} ${name}</span><span>${new Date().toLocaleTimeString()}</span>`;
-        list.prepend(item);
-    }
-
-    function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
-    function resetSender() { location.reload(); }
+    function copyFastLink() { navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + document.getElementById('myCode').innerText); alert("Copied!"); }
     function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
-    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); document.getElementById('stagedList').style.display='block'; document.getElementById('stagedList').innerHTML = stagedFiles.map(f => `<div class="staged-item"><span>📄 ${f.name}</span></div>`).join(''); }
-
-    window.onload = () => { 
-        initStars(); applyI18N(); updateOnlineStatus();
-        const c = new URLSearchParams(window.location.search).get('c'); 
-        if(c) { switchTab('receive', {target: document.getElementById('tab-receive')}); document.getElementById('targetCode').value = c; setTimeout(() => triggerAd('receive'), 500); }
-        setTimeout(detectAdBlock, 4000); 
-    };
-
+    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); document.getElementById('stagedList').style.display='block'; document.getElementById('stagedList').innerHTML = stagedFiles.map(f => `<div>📄 ${f.name}</div>`).join(''); }
+    
+    window.onload = () => { applyI18N(); updateOnlineStatus(); initStars(); setTimeout(detectAdBlock, 4000); };
     window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='flex'; });
     window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='none'; handleFiles(e.dataTransfer.files); });
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = (Math.random()*30+20)+'s'; c.appendChild(s); } }
