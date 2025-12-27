@@ -88,8 +88,7 @@
         .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 12px; transition: 0.3s; margin-top: 15px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
-        #scanner-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 80px; }
-        .scanner-container { position: relative; width: 280px; height: 280px; background: #111; border-radius: 24px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); }
+        #ad-wait-title { color:white; margin-bottom:25px; font-weight:bold; text-align:center; line-height:1.6; font-size:18px; }
         #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
     </style>
 </head>
@@ -148,7 +147,7 @@
                         <div style="text-align:center;"><div id="qrcode"></div></div>
                         <div class="code-display" id="myCode">000000</div>
                         <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px; text-align:center;">Expires: 10:00</div>
-                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY FAST LINK</button>
+                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;" onclick="copyMyLink()">📋 COPY FAST LINK</button>
                         <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
@@ -200,7 +199,7 @@
 </div>
 
 <div class="modal-overlay" id="adModal">
-    <div id="ad-wait-title" style="color:white; font-size:18px; text-align:center; margin-bottom:20px; font-weight:bold;">Handshaking...</div>
+    <div id="ad-wait-title">Handshaking...</div>
     <div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
         <script type="text/javascript">atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
         <script type="text/javascript" src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
@@ -209,8 +208,8 @@
 
 <script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please" },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码" },
+        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page." },
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面" },
         ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "♾️ 無制限", "⚡ 直接転送"], aboutH4: "私たちについて", privH4: "プライバシー", coffee: "☕ コーヒーを奢る", contactH4: "連絡先情報", inputErr: "コードを入力してください" },
         ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "♾️ 무제한", "⚡ 직거래"], aboutH4: "회사 소개", privH4: "개인정보", coffee: "☕ 커피 한 잔 사기", contactH4: "연락처 정보", inputErr: "코드를 입력하세요" },
         es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P Cifrado", "🕵️ Sin registros", "♾️ Ilimitado", "⚡ Directo"], aboutH4: "SOBRE NOSOTROS", privH4: "PRIVACIDAD", coffee: "☕ Invítame a un café", contactH4: "CONTACTO", inputErr: "Ingresa el código" },
@@ -239,15 +238,22 @@
         if (mode === 'receive' && !document.getElementById('targetCode').value) { alert(I18N[currLang].inputErr); return; }
         if (mode.startsWith('send') && stagedFiles.length === 0 && !document.getElementById('quickText').value) return;
 
-        // Henry, 点击按钮直接随机跳转广告
+        // Henry, 强制开启随机广告
         window.open(smartLinks[Math.floor(Math.random() * smartLinks.length)], '_blank');
         
         const modal = document.getElementById('adModal');
+        const title = document.getElementById('ad-wait-title');
+        const msg = mode.startsWith('send') ? I18N[currLang].sendingRemind : I18N[currLang].receivingRemind;
         modal.style.display = 'flex';
         let cd = 5;
         const itv = setInterval(() => {
             cd--;
-            if(cd <= 0) { clearInterval(itv); modal.style.display = 'none'; mode.startsWith('send') ? initSender() : startReceiving(); }
+            title.innerHTML = `${msg}<br><span style="color:var(--primary); font-size:26px;">${cd}s</span>`;
+            if(cd <= 0) { 
+                clearInterval(itv); 
+                modal.style.display = 'none'; 
+                mode.startsWith('send') ? initSender() : startReceiving(); 
+            }
         }, 1000);
     }
 
@@ -256,11 +262,14 @@
         const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
         peer.on('open', () => {
-            document.getElementById('senderCodeArea').style.display = 'block';
+            const area = document.getElementById('senderCodeArea');
+            area.style.display = 'block';
             document.getElementById('myCode').innerText = code;
             document.getElementById('qrcode').innerHTML = "";
-            new QRCode(document.getElementById('qrcode'), { text: window.location.href + "?c=" + code, width: 140, height: 140 });
+            new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             startExpiryTimer();
+            // Henry, 关键在这里：自动平滑滚动到二维码区域
+            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
         });
         peer.on('connection', c => {
             c.on('open', async () => {
@@ -295,11 +304,18 @@
         });
     }
 
+    function copyMyLink() {
+        const code = document.getElementById('myCode').innerText;
+        const url = window.location.origin + window.location.pathname + "?c=" + code;
+        navigator.clipboard.writeText(url);
+        alert("Link Copied!");
+    }
+
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `Expires: ${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(fs) { stagedFiles = stagedFiles.concat(Array.from(fs)); renderStagedList(); }
-    function renderStagedList() { const l = document.getElementById('stagedList'); l.style.display = stagedFiles.length ? 'block' : 'none'; l.innerHTML = stagedFiles.map(f => `<div>📄 ${f.name}</div>`).join(''); }
+    function renderStagedList() { const l = document.getElementById('stagedList'); l.style.display = stagedFiles.length ? 'block' : 'none'; l.innerHTML = stagedFiles.map(f => `<div style="color:white; font-size:12px; margin-bottom:4px;">📄 ${f.name}</div>`).join(''); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<60; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = (Math.random()*20+15)+'s'; c.appendChild(s); } }
 
     window.onload = () => {
