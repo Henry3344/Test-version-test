@@ -24,76 +24,83 @@
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
         body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
 
+        /* 隐藏区 */
         #adblock-warning { position: fixed; inset: 0; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
-        .warning-card { background: #111827; padding: 40px 25px; border-radius: 28px; border: 3px solid var(--danger); text-align: center; max-width: 380px; width: 100%; }
+        #drop-zone { position: fixed; inset: 0; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none !important; align-items: center; justify-content: center; pointer-events: none; }
+        #drop-zone.active { display: flex !important; }
 
         .stars-container { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
         @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
         
-        .navbar { position: fixed; top: 0; inset-x: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        /* 导航栏 */
+        .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; }
         .logo-wrap { display: flex; align-items: center; gap: 12px; }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
-        
-        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
         .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
-
-        .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
-        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
+        .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; }
+        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; }
 
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
         @media (max-width: 880px) { .ad-side { display: none !important; } }
-        
-        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; }
-        .ad-top, .ad-bottom { min-height: 90px; margin: 15px 0; }
+        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; min-height: 90px; margin: 15px 0; }
 
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
-        .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
+        .tab.active { background: var(--primary); color: white; }
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
 
         .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
         @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
         .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; text-align: center; }
-        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; }
-        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; }
-        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; font-size: 12px; }
+        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; min-height: 100px; font-size: 14px; }
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border-radius: 12px; padding: 10px; margin-bottom: 10px; font-size: 12px; }
         
         button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
         #receivedText-container { display: none; margin-top: 20px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); padding: 15px; border-radius: 18px; }
         .history-box { width: 100%; max-width: 600px; margin-top: 40px; padding: 0 15px; }
-        .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
         .history-item { background: rgba(30, 41, 59, 0.5); border-radius: 14px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 11px; }
 
         #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; }
         input[type="number"] { width: 100%; max-width: 260px; padding: 20px; border-radius: 22px; border: 2px solid var(--border); background: #0f172a; color: white; font-size: 38px; text-align: center; }
         
+        /* 页脚样式 */
         .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 30px; margin-top: auto; }
         .footer-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; max-width: 1000px; width: 100%; }
         .legal-section { flex: 1; min-width: 240px; max-width: 320px; }
-        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
-        
-        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; border: 1.5px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 14px; transition: 0.3s; margin-bottom: 10px; }
+        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; }
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border: 1.5px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 14px; transition: 0.3s; }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; }
-        #drop-zone { position: fixed; inset: 0; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
     </style>
 </head>
 <body>
 
-<div id="adblock-warning"><div class="warning-card"><h3>AD-BLOCK DETECTED</h3><p>FlashDrop needs ad revenue to maintain free servers.</p><button class="action-btn" onclick="location.reload()" style="background:var(--danger)">REFRESH</button></div></div>
+<div id="adblock-warning"><div class="warning-card"><h3>AD-BLOCK DETECTED</h3><button class="action-btn" onclick="location.reload()" style="background:var(--danger)">REFRESH</button></div></div>
 
 <div class="app-container" id="app">
     <div class="stars-container" id="stars"></div>
+    
     <nav class="navbar">
-        <div class="logo-wrap"><div id="status-dot" class="status-dot"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
-        <div id="trust-badges" class="trust-badges"></div>
+        <div class="logo-wrap">
+            <div id="status-dot" class="status-dot online"></div>
+            <div class="logo">⚡ Flash<span>Drop</span> Pro</div>
+            <div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div>
+        </div>
+        <div id="trust-badges" class="trust-badges">
+            <span>🔒 P2P ENCRYPTED</span>
+            <span>🕵️ NO LOGS</span>
+            <span>♾️ UNLIMITED</span>
+            <span>⚡ DIRECT</span>
+        </div>
     </nav>
 
     <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;">DROP TO STAGE</h2></div>
@@ -111,7 +118,8 @@
 
         <div class="content-area">
             <div class="card">
-                <div class="tab-group"><div class="tab active" onclick="switchTab('send', event)">Send</div><div class="tab" onclick="switchTab('receive', event)">Receive</div></div>
+                <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
+                
                 <div id="panel-send" class="panel active">
                     <div class="share-grid">
                         <div class="column-box">
@@ -126,6 +134,7 @@
                     </div>
                     <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;">Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1px solid var(--border); padding:6px; border-radius:8px;"><option value="1">1 Time</option><option value="999">Unlimited</option></select></div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
+                    
                     <div id="senderCodeArea">
                         <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
                         <div id="qrcode"></div>
@@ -134,16 +143,18 @@
                         <button class="action-btn" onclick="location.reload()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
+
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <input type="number" id="targetCode" placeholder="000000" onkeydown="if(event.key==='Enter') triggerAd('receive')">
                         <button class="action-btn" onclick="triggerAd('receive')" style="margin-top: 15px;">DOWNLOAD</button>
-                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 SAVE FILE</button></div>
+                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div id="receiveProgressBar" style="width:0%; height:10px; background:var(--success); transition:0.1s;"></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 SAVE FILE</button></div>
                         <div id="receivedText-container"><div id="receivedText" style="font-size:15px; color:white; word-break:break-all; margin-bottom:15px;"></div><button class="action-btn" style="padding:10px; font-size:11px; background:rgba(255,255,255,0.1);" onclick="copyReceivedText()">📋 COPY TEXT</button></div>
                     </div>
                 </div>
             </div>
             <div class="history-box"><div class="history-title">History (Local)</div><div id="history-list"></div></div>
+            
             <div class="ad-space ad-bottom" id="bottom-ad-zone">
                 <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
                 <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
@@ -159,16 +170,15 @@
     <footer class="legal-footer">
         <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
         <div class="footer-grid">
-            <div class="legal-section"><h4>SECURITY PROTOCOL</h4><p>DTLS 1.2 / SCTP Encrypted. Peer-to-Peer direct tunnel.</p></div>
-            <div class="legal-section"><h4>PRIVACY POLICY</h4><p>Zero logs. Memory-only transmission. Auto-destructs in 10m.</p></div>
+            <div class="legal-section"><h4>SECURITY PROTOCOL</h4><p>DTLS 1.2 / SCTP Encrypted. Peer-to-Peer tunnel.</p></div>
+            <div class="legal-section"><h4>PRIVACY POLICY</h4><p>Zero logs. Data auto-destructs after transfer.</p></div>
         </div>
         <div style="width:100%; opacity:0.6; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);">
             <h4>CONTACT US</h4>
-            <div style="display:flex; justify-content:center; gap:20px; margin-top:10px;">
+            <div style="display:flex; justify-content:center; gap:25px; margin-top:10px;">
                 <a href="tel:9292664485" style="color:var(--primary); text-decoration:none; font-weight:800;">📞 +1 (929) 266-4485</a>
                 <a href="mailto:flashdroppro@gmail.com" style="color:var(--primary); text-decoration:none; font-weight:800;">✉️ flashdroppro@gmail.com</a>
             </div>
-            <p style="margin-top:20px; font-size:10px;">© 2025 FlashDrop Pro. Designed for high-risk workspace security.</p>
         </div>
     </footer>
 </div>
@@ -188,28 +198,44 @@
         "https://limpfeel.com/MFoqkO"                                                   // HilltopAds
     ];
 
-    const I18N = {
-        en: { badges: ["🔒 P2P ENCRYPTED", "🕵️ NO LOGS", "♾️ UNLIMITED", "⚡ DIRECT"], sending: "Encrypting...<br>Do not close.", receiving: "Downloading...<br>Do not close." },
-        zh: { badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], sending: "正在加密中...<br>请勿关闭页面", receiving: "正在下载中...<br>请勿关闭页面" }
-    };
-
-    let currLang = "en", peer = null, stagedFiles = [], activeConn = null;
+    let peer = null, stagedFiles = [], activeConn = null;
     const PREFIX = "fd-pro-";
 
-    function updateOnlineStatus() { const dot = document.getElementById('status-dot'); dot.className = navigator.onLine ? 'status-dot online' : 'status-dot offline'; }
-    function detectAdBlock() { if (document.getElementById('top-ad-zone').offsetHeight === 0) { document.getElementById('adblock-warning').style.display = 'flex'; return true; } return false; }
-    function applyI18N() { const userLang = navigator.language.split('-')[0]; currLang = I18N[userLang] ? userLang : "en"; document.getElementById('trust-badges').innerHTML = I18N[currLang].badges.map(b => `<span>${b}</span>`).join(''); }
+    function updateOnlineStatus() {
+        const dot = document.getElementById('status-dot');
+        dot.className = navigator.onLine ? 'status-dot online' : 'status-dot offline';
+    }
+
+    function detectAdBlock() {
+        const top = document.getElementById('top-ad-zone');
+        if (top && top.offsetHeight === 0) {
+            document.getElementById('adblock-warning').style.display = 'flex';
+            return true;
+        }
+        return false;
+    }
 
     function triggerAd(mode) {
         if(detectAdBlock()) return;
         if(mode === 'receive' && !document.getElementById('targetCode').value) { alert("Please enter code!"); return; }
         if(mode.startsWith('send') && stagedFiles.length === 0 && !document.getElementById('quickText').value) return;
 
+        // 随机开启 Smartlink
         window.open(AD_POOL[Math.floor(Math.random() * AD_POOL.length)], '_blank');
-        const modal = document.getElementById('adModal'); const title = document.getElementById('ad-wait-title');
+        
+        const modal = document.getElementById('adModal'); 
+        const title = document.getElementById('ad-wait-title');
         modal.style.display = 'flex';
         let cd = 5; 
-        const itv = setInterval(() => { cd--; title.innerHTML = `${mode.startsWith('send')?I18N[currLang].sending:I18N[currLang].receiving}<br><span style="color:var(--primary); font-size:26px;">${cd}s</span>`; if(cd <= 0) { clearInterval(itv); modal.style.display = 'none'; mode.startsWith('send') ? initSender() : startReceiving(); } }, 1000);
+        const itv = setInterval(() => { 
+            cd--; 
+            title.innerHTML = `Security Handshake...<br><span style="color:var(--primary); font-size:26px;">${cd}s</span>`; 
+            if(cd <= 0) { 
+                clearInterval(itv); 
+                modal.style.display = 'none'; 
+                mode.startsWith('send') ? initSender() : startReceiving(); 
+            } 
+        }, 1000);
     }
 
     async function initSender() {
@@ -239,8 +265,10 @@
         rPeer.on('open', () => {
             const c = rPeer.connect(PREFIX + code, { reliable: true });
             c.on('data', d => {
-                if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; }
-                else if(d.type === 'file') {
+                if(d.type === 'text') { 
+                    document.getElementById('receivedText-container').style.display='block'; 
+                    document.getElementById('receivedText').innerText=d.data; 
+                } else if(d.type === 'file') {
                     const u = window.URL.createObjectURL(new Blob([d.content]));
                     document.getElementById('mobileDownloadArea').style.display='block';
                     document.getElementById('btn-save-file').onclick = () => { const a = document.createElement('a'); a.href = u; a.download = d.name; a.click(); };
@@ -249,14 +277,20 @@
         });
     }
 
-    function copyFastLink() { navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + document.getElementById('myCode').innerText); alert("Copied!"); }
-    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); }
+    function copyFastLink() { navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + document.getElementById('myCode').innerText); alert("Link Copied!"); }
+    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Text Copied!"); }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
-    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); document.getElementById('stagedList').style.display='block'; document.getElementById('stagedList').innerHTML = stagedFiles.map(f => `<div>📄 ${f.name}</div>`).join(''); }
+    function handleFiles(files) { 
+        stagedFiles = stagedFiles.concat(Array.from(files)); 
+        const list = document.getElementById('stagedList');
+        list.style.display='block'; 
+        list.innerHTML = stagedFiles.map(f => `<div>📄 ${f.name}</div>`).join(''); 
+    }
     
-    window.onload = () => { applyI18N(); updateOnlineStatus(); initStars(); setTimeout(detectAdBlock, 4000); };
-    window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='flex'; });
-    window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='none'; handleFiles(e.dataTransfer.files); });
+    window.onload = () => { updateOnlineStatus(); initStars(); setTimeout(detectAdBlock, 4000); };
+    window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-zone').classList.add('active'); });
+    window.addEventListener('dragleave', () => { document.getElementById('drop-zone').classList.remove('active'); });
+    window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('drop-zone').classList.remove('active'); handleFiles(e.dataTransfer.files); });
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = (Math.random()*30+20)+'s'; c.appendChild(s); } }
 </script>
 </body>
