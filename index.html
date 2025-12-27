@@ -31,87 +31,84 @@
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
-        body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
-
-        #adblock-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
-        .warning-card { background: #111827; padding: 40px 25px; border-radius: 28px; border: 3px solid var(--danger); text-align: center; max-width: 380px; width: 100%; box-shadow: 0 0 100px rgba(239, 68, 68, 0.4); }
-        
-        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
-        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
         
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
-        .logo-wrap { display: flex; align-items: center; gap: 12px; }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
-        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; }
+        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; margin-right: 12px; }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
-        .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
 
         .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
-        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
+        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; }
 
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         
+        /* 侧边广告 */
         .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
         @media (max-width: 880px) { .ad-side { display: none !important; } }
-        
         .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; }
         .ad-top { min-height: 90px; margin-bottom: 15px; }
         .ad-bottom { min-height: 90px; margin-top: 20px; margin-bottom: 25px; }
 
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
-        .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
+        .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; }
         .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
 
-        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; align-items: stretch; }
+        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; }
         @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
-        .column-box { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
-        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
-        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
+        .column-box { display: flex; flex-direction: column; gap: 10px; }
+        
+        /* 暂存区样式还原 - 核心修改 */
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; }
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 15px; padding: 10px; margin-bottom: 10px; max-height: 160px; overflow-y: auto; }
+        .staged-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 10px 15px; background: rgba(255,255,255,0.05); border-radius: 12px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
+        .staged-item:hover { background: rgba(255,255,255,0.1); }
+        .staged-item .file-info { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+        .staged-item .file-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; }
+        .staged-item .remove-btn { color: var(--danger); cursor: pointer; font-weight: 900; padding: 5px; font-size: 16px; line-height: 1; }
+
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 150px; }
         textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); margin-top: auto; text-transform: uppercase; }
+        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); text-transform: uppercase; }
         
         #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
-        #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; box-shadow: 0 0 30px rgba(255,255,255,0.15); }
+        #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; }
 
-        .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; margin-top: auto; }
+        .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; }
         .legal-section { flex: 1; min-width: 240px; max-width: 320px; margin-bottom: 20px; }
         .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
-        .legal-section p { line-height: 1.6; opacity: 0.8; }
-        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 12px; transition: 0.3s; margin-top: 15px; }
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 15px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
-        #ad-wait-title { color:white; margin-bottom:25px; font-weight:bold; text-align:center; line-height:1.6; font-size:18px; }
-        #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
+        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
+        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
     </style>
 </head>
 <body>
 
-<div id="adblock-warning">
+<div id="adblock-warning" style="display:none;">
     <div class="warning-card">
-        <h3>AD-BLOCK DETECTED</h3>
-        <p id="ad-block-p">FlashDrop needs ad revenue to maintain free servers.</p>
-        <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">I'VE DISABLED IT - REFRESH</button>
+        <h3 style="color:var(--danger);">AD-BLOCK DETECTED</h3>
+        <p>FlashDrop needs ad revenue to maintain free servers.</p>
+        <button class="action-btn" onclick="location.reload()" style="background:var(--danger)">REFRESH</button>
     </div>
 </div>
 
-<div class="app-container" id="app">
+<div class="app-container">
     <div class="stars-container" id="stars"></div>
     <nav class="navbar">
-        <div class="logo-wrap"><div id="status-dot" class="status-dot"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
+        <div style="display:flex; align-items:center;"><div id="status-dot" class="status-dot"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
         <div class="trust-badges" id="trust-badges"></div>
     </nav>
 
-    <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;">DROP TO STAGE</h2></div>
-
-    <div class="ad-space ad-top" id="top-ad-zone">
+    <div class="ad-space ad-top">
         <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
         <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
     </div>
@@ -130,7 +127,7 @@
                     <div class="share-grid">
                         <div class="column-box">
                             <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
-                            <div id="stagedList" style="display:none; background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 12px; margin-bottom: 10px; max-height: 120px; overflow-y: auto;"></div>
+                            <div id="stagedList"></div>
                             <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
                         </div>
                         <div class="column-box">
@@ -156,19 +153,15 @@
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <input type="number" id="targetCode" placeholder="000000" style="width:100%; max-width:260px; padding:20px; border-radius:22px; border:2px solid var(--border); background:#0f172a; color:white; font-size:38px; text-align:center; margin-bottom:15px;">
                         <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="max-width:260px;">DOWNLOAD</button>
-                        
                         <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;">
                             <div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div>
                             <button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button>
-                        </div>
-                        <div id="receivedText-container" style="display:none; margin-top:20px; background:rgba(99,102,241,0.15); border:1px solid var(--primary); padding:15px; border-radius:18px; width:100%;">
-                            <div id="receivedText" style="font-size:15px; color:white; word-break:break-all;"></div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="ad-space ad-bottom" id="bottom-ad-zone">
+            <div class="ad-space ad-bottom">
                 <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
                 <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
             </div>
@@ -183,15 +176,15 @@
     <footer class="legal-footer">
         <div class="legal-section">
             <h4 id="h4-about">ABOUT US</h4>
-            <p id="foot-about-p">受够了限速网盘？FlashDrop Pro 是为了快和稳而生的点对点工具。只要连着就能传，文件不经过我，我也懒得看。</p>
+            <p id="foot-about-p">受够了限速网盘？FlashDrop Pro 是纯粹的点对点工具。文件直传，不经过我，我也懒得看。</p>
             <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" id="btn-coffee">☕ Buy me a coffee</a>
         </div>
         <div class="legal-section">
             <h4 id="h4-privacy">PRIVACY POLICY</h4>
-            <p id="foot-priv-p">全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。</p>
+            <p id="foot-priv-p">全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见。</p>
         </div>
         <div class="legal-section"><h4 id="h4-copyright">COPYRIGHT</h4><p>© 2025 FlashDrop Pro.</p></div>
-        <div class="legal-section" style="width: 100%; max-width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;">
+        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;">
             <h4 id="h4-contact">CONTACT INFO</h4>
             <p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p>
         </div>
@@ -238,9 +231,7 @@
         if (mode === 'receive' && !document.getElementById('targetCode').value) { alert(I18N[currLang].inputErr); return; }
         if (mode.startsWith('send') && stagedFiles.length === 0 && !document.getElementById('quickText').value) return;
 
-        // Henry, 强制开启随机广告
         window.open(smartLinks[Math.floor(Math.random() * smartLinks.length)], '_blank');
-        
         const modal = document.getElementById('adModal');
         const title = document.getElementById('ad-wait-title');
         const msg = mode.startsWith('send') ? I18N[currLang].sendingRemind : I18N[currLang].receivingRemind;
@@ -250,8 +241,7 @@
             cd--;
             title.innerHTML = `${msg}<br><span style="color:var(--primary); font-size:26px;">${cd}s</span>`;
             if(cd <= 0) { 
-                clearInterval(itv); 
-                modal.style.display = 'none'; 
+                clearInterval(itv); modal.style.display = 'none'; 
                 mode.startsWith('send') ? initSender() : startReceiving(); 
             }
         }, 1000);
@@ -268,7 +258,6 @@
             document.getElementById('qrcode').innerHTML = "";
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             startExpiryTimer();
-            // Henry, 关键在这里：自动平滑滚动到二维码区域
             setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
         });
         peer.on('connection', c => {
@@ -306,8 +295,7 @@
 
     function copyMyLink() {
         const code = document.getElementById('myCode').innerText;
-        const url = window.location.origin + window.location.pathname + "?c=" + code;
-        navigator.clipboard.writeText(url);
+        navigator.clipboard.writeText(window.location.origin + window.location.pathname + "?c=" + code);
         alert("Link Copied!");
     }
 
@@ -315,7 +303,23 @@
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.currentTarget.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(fs) { stagedFiles = stagedFiles.concat(Array.from(fs)); renderStagedList(); }
-    function renderStagedList() { const l = document.getElementById('stagedList'); l.style.display = stagedFiles.length ? 'block' : 'none'; l.innerHTML = stagedFiles.map(f => `<div style="color:white; font-size:12px; margin-bottom:4px;">📄 ${f.name}</div>`).join(''); }
+    
+    // Henry，还原漂亮的暂存区逻辑
+    function renderStagedList() { 
+        const l = document.getElementById('stagedList'); 
+        if (stagedFiles.length === 0) { l.style.display = 'none'; return; } 
+        l.style.display = 'block'; 
+        l.innerHTML = stagedFiles.map((f, i) => `
+            <div class="staged-item">
+                <div class="file-info">
+                    <span>📄</span>
+                    <span class="file-name">${f.name}</span>
+                </div>
+                <div class="remove-btn" onclick="removeStagedFile(${i})">✕</div>
+            </div>`).join(''); 
+    }
+    function removeStagedFile(index) { stagedFiles.splice(index, 1); renderStagedList(); }
+
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<60; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = (Math.random()*20+15)+'s'; c.appendChild(s); } }
 
     window.onload = () => {
