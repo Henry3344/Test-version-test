@@ -8,53 +8,115 @@
     
     <script>(function(s){s.dataset.zone='10380251',s.src='https://gizokraijaw.net/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script>(function(s){s.dataset.zone='10380245',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+    
     <script src="https://pl28342028.effectivegatecpm.com/a2/19/f7/a219f7c4a8d2e3bbeea9d014e51bb043.js"></script>
-    <script>(function(ctxj){var d=document,s=d.createElement('script'),l=d.scripts[d.scripts.length-1];s.settings=ctxj||{};s.src="\/\/big-brief.com\/bCXiVts.dFG-l\/0pYpWucG\/me_mb9BucZCUfl\/kTP-T\/Ya3PMhzuQB5XNnTGARtBNfjycvzdNND\/ki1NM\/Qe";s.async=true;s.referrerPolicy='no-referrer-when-downgrade';l.parentNode.insertBefore(s,l);})({})</script>
+
+    <script>
+    (function(ctxj){
+    var d = document, s = d.createElement('script'), l = d.scripts[d.scripts.length - 1];
+    s.settings = ctxj || {};
+    s.src = "\/\/big-brief.com\/bCXiVts.dFG-l\/0pYpWucG\/me_mb9BucZCUfl\/kTP-T\/Ya3PMhzuQB5XNnTGARtBNfjycvzdNND\/ki1NM\/Qe";
+    s.async = true;
+    s.referrerPolicy = 'no-referrer-when-downgrade';
+    l.parentNode.insertBefore(s, l);
+    })({})
+    </script>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     
     <style>
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; }
-        * { box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        * { box-sizing: border-box; outline: none; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
-        /* 强制隐藏初始组件 */
-        #adblock-warning, #senderCodeArea, #receivedText-container, #stagedList { display: none !important; }
+        .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
+        body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
 
-        .app-container { flex: 1; padding-top: 130px; width: 100%; position: relative; }
-        .stars-container { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); }
+        #adblock-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
+        .warning-card { background: #111827; padding: 40px 25px; border-radius: 28px; border: 3px solid var(--danger); text-align: center; max-width: 380px; width: 100%; box-shadow: 0 0 100px rgba(239, 68, 68, 0.4); }
+        .warning-card h3 { color: var(--danger); margin: 0 0 15px 0; font-size: 24px; font-weight: 900; }
+        .warning-card p { font-size: 15px; color: #cbd5e1; line-height: 1.6; margin-bottom: 30px; }
+
+        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
+        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
         
-        .navbar { position: fixed; top: 0; inset-x: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(20px); }
-        .logo { font-size: 28px; font-weight: 900; }
+        .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        .logo-wrap { display: flex; align-items: center; gap: 12px; }
+        .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
-
-        .main-wrapper { display: flex; width: 100%; max-width: 1200px; margin: 0 auto; justify-content: center; gap: 20px; padding: 0 15px; }
-        .content-area { flex: 1; max-width: 550px; display: flex; flex-direction: column; align-items: center; }
         
-        .card { background: var(--card); padding: 25px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.6); }
-        .ad-space { width: 100%; min-height: 90px; margin: 20px 0; border: 1px dashed var(--border); border-radius: 12px; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
 
-        /* 页脚样式：确保只显示一份 */
-        .legal-footer { padding: 50px 20px; border-top: 1px solid var(--border); background: #030712; display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-top: 50px; }
-        .legal-section { flex: 1; min-width: 200px; max-width: 280px; font-size: 11px; color: var(--text-muted); }
-        .legal-section h4 { color: white; margin-bottom: 10px; font-size: 12px; text-transform: uppercase; }
-        .coffee-btn { border: 1.5px solid var(--primary); padding: 8px 16px; border-radius: 10px; color: var(--primary); text-decoration: none; font-weight: 900; display: inline-block; margin-bottom: 15px; }
+        .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
+        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
+
+        .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
+        .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
+        .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
+        @media (max-width: 880px) { .ad-side { display: none !important; } }
         
-        /* 交互组件样式 */
-        .tab-group { display: flex; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 15px; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: 800; color: var(--text-muted); transition: 0.3s; }
-        .tab.active { background: var(--primary); color: white; }
-        .panel { display: none; }
+        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; }
+        .ad-top { min-height: 90px; margin-bottom: 15px; }
+        .ad-bottom { min-height: 90px; margin-top: 20px; margin-bottom: 25px; }
+
+        .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
+        .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
+        .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
+        .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
+        .panel { display: none; width: 100%; }
         .panel.active { display: block; }
-        .share-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 500px) { .share-grid { grid-template-columns: 1fr; } }
-        .action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 15px; width: 100%; font-weight: 800; cursor: pointer; margin-top: 10px; }
-        .code-display { font-size: 52px; letter-spacing: 6px; font-weight: 900; color: #a5b4fc; text-align: center; margin: 15px 0; }
+
+        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; align-items: stretch; }
+        @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
+        .column-box { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
+        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
+
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; }
+        .staged-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 6px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 5px; }
+
+        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); margin-top: auto; text-transform: uppercase; }
+        button.action-btn:active { transform: scale(0.97); }
+
+        .nerd-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--success); font-family: monospace; font-weight: 900; margin-bottom: 10px; }
+        #receivedText-container { display: none; margin-top: 20px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); padding: 15px; border-radius: 18px; }
+        
+        .history-box { width: 100%; max-width: 600px; margin-top: 40px; padding: 0 15px; }
+        .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .history-title::after { content:""; flex:1; height:1px; background: rgba(255,255,255,0.1); }
+        .history-item { background: rgba(30, 41, 59, 0.5); border-radius: 14px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+
+        #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
+        .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
+        #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; box-shadow: 0 0 30px rgba(255,255,255,0.15); }
+
+        input[type="number"] { width: 100%; max-width: 260px; padding: 20px; border-radius: 22px; border: 2px solid var(--border); background: #0f172a; color: white; font-size: 38px; text-align: center; outline: none; margin-bottom: 15px; }
+        .divider-or { display: flex; align-items: center; width: 100%; max-width: 260px; text-align: center; font-size: 13px; font-weight: 900; color: var(--text-muted); margin: 15px 0; }
+        .divider-or::before, .divider-or::after { content: ""; flex: 1; border-bottom: 1px solid rgba(79, 70, 229, 0.5); }
+        .divider-or:not(:empty)::before { margin-right: 25px; }
+        .divider-or:not(:empty)::after { margin-left: 25px; }
+
+        /* 修复页脚排版 */
+        .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 30px; margin-top: auto; }
+        .footer-grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; max-width: 1000px; width: 100%; }
+        .legal-section { flex: 1; min-width: 240px; max-width: 320px; }
+        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 12px; font-weight: 900; letter-spacing: 1px; }
+
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 24px; border: 1.5px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 900; font-size: 14px; transition: 0.3s; margin-bottom: 10px; }
+        .coffee-btn:hover { background: var(--primary); color: white; box-shadow: 0 0 20px var(--primary); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
+        #ad-wait-title { color:white; margin-bottom:25px; font-weight:bold; text-align:center; line-height:1.6; font-size:18px; }
     </style>
 </head>
-
+<body>
 
 <div id="adblock-warning">
     <div class="warning-card">
@@ -68,35 +130,35 @@
     <div class="stars-container" id="stars"></div>
     <nav class="navbar">
         <div class="logo-wrap"><div id="status-dot" class="status-dot"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
-        <div class="trust-badges" id="trust-badges"></div>
+        <div id="trust-badges" class="trust-badges"></div>
     </nav>
 
     <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;">DROP TO STAGE</h2></div>
 
-    <div class="ad-space ad-top" id="top-ad-zone"></div>
+    <div class="ad-space ad-top" id="top-ad-zone">
+        <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
+        <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+    </div>
 
     <div class="main-wrapper">
-        <div class="ad-side" id="left-ad-zone"></div>
+        <div class="ad-side" id="left-ad-zone">
+            <script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+        </div>
 
         <div class="content-area">
-            
-            <a href="mailto:flashdroppro@gmail.com" class="github-ad-box" id="notice-zone">
-                <img src="ad_banner.jpg" alt="Notice" onerror="this.style.display='none'">
-            </a>
-
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
-                
                 <div id="panel-send" class="panel active">
                     <div class="share-grid">
                         <div class="column-box">
                             <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
                             <div id="stagedList"></div>
-                            <button class="action-btn" id="btn-share-files" onclick="handleAdAndAction('send-file')">SHARE FILES</button>
+                            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
                         </div>
                         <div class="column-box">
                             <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
-                            <button class="action-btn" id="btn-share-text" onclick="handleAdAndAction('send-text')">SHARE TEXT</button>
+                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
                         </div>
                     </div>
                     <div style="margin: 12px 0; font-size:12px; color:var(--text-muted); text-align:center;"><span id="label-limit">Limit:</span> <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;"><option value="1">1 Time</option><option value="3">3 Times</option><option value="5">5 Times</option><option value="7">7 Times</option><option value="999">Unlimited</option></select></div>
@@ -115,273 +177,220 @@
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <div class="receive-input-wrap">
-                            <input type="number" id="targetCode" placeholder="000000" onkeydown="if(event.key==='Enter') handleAdAndAction('receive')">
+                            <input type="number" id="targetCode" placeholder="000000" onkeydown="if(event.key==='Enter') triggerAd('receive')">
                             <div class="divider-or" id="or-tag">OR</div>
                             <button class="action-btn" id="btn-scan" onclick="openScanner()" style="max-width: 260px; margin-bottom: 20px;">📷 SCAN QR CODE</button>
                         </div>
-                        <button class="action-btn" id="btn-connect" onclick="handleAdAndAction('receive')" style="margin-top: 15px;">DOWNLOAD</button>
+                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 15px;">DOWNLOAD</button>
                         
-                        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:20px;"><span id="nerd-speed">0.0 MB/s</span><span id="nerd-speed-label">MB/s</span></div>
+                        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:20px;"><span id="nerd-speed">0.0 MB/s</span><span id="nerd-eta">ETA: 0s</span></div>
                         <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><div id="receiveProgress" style="width:100%; height:10px; background:rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; margin-bottom:15px;"><div id="receiveProgressBar" style="width:0%; height:100%; background:var(--success); transition:0.1s;"></div></div><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px; font-size:18px;">📥 DOWNLOAD FILE NOW</button></div>
-                        
-                        <div id="receivedText-container">
-                            <div style="font-size:11px; color:var(--text-muted); font-weight:900; margin-bottom:10px;">RECEIVED TEXT:</div>
-                            <div id="receivedText" style="font-size:15px; color:white; word-break:break-all; max-height:120px; overflow-y:auto; margin-bottom:15px;"></div>
-                            <button class="action-btn" style="padding:10px; font-size:11px; background:rgba(255,255,255,0.1);" onclick="copyReceivedText()">📋 COPY TEXT</button>
-                        </div>
+                        <div id="receivedText-container"><div style="font-size:11px; color:var(--text-muted); font-weight:900; margin-bottom:10px;">RECEIVED TEXT:</div><div id="receivedText" style="font-size:15px; color:white; word-break:break-all; max-height:120px; overflow-y:auto; margin-bottom:15px;"></div><button class="action-btn" style="padding:10px; font-size:11px; background:rgba(255,255,255,0.1);" onclick="copyReceivedText()">📋 COPY TEXT</button></div>
                     </div>
                 </div>
             </div>
             <div class="history-box"><div class="history-title">Recent History (Local)</div><div id="history-list"></div></div>
             
-            <div class="ad-space ad-bottom" id="bottom-ad-zone"></div>
+            <div class="ad-space ad-bottom" id="bottom-ad-zone">
+                <script type="text/javascript">atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
+                <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+            </div>
         </div>
 
-        <div class="ad-side" id="right-ad-zone"></div>
+        <div class="ad-side" id="right-ad-zone">
+            <script type="text/javascript">atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
+            <script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+        </div>
     </div>
 
     <footer class="legal-footer">
-        <div class="legal-section" style="flex-basis: 100%; text-align: center; margin-bottom: 30px;">
-            <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
+        <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ Buy me a coffee</a>
+
+        <div class="footer-grid">
+            <div class="legal-section">
+                <h4>SECURITY PROTOCOL</h4>
+                <p id="foot-disc-p">DTLS 1.2 / SCTP Encrypted. Peer-to-Peer direct tunnel. No intermediate server storage.</p>
+            </div>
+            <div class="legal-section">
+                <h4>PRIVACY POLICY</h4>
+                <p id="foot-priv-p">Zero logs. Memory-only transmission. Data auto-destructs after transfer or 10 mins.</p>
+            </div>
         </div>
 
-        <div class="legal-section">
-            <h4>SECURITY PROTOCOL</h4>
-            <p id="sec-protocol-p">DTLS 1.2 / SCTP Encrypted. Peer-to-Peer direct tunnel. No intermediate server storage.</p>
-        </div>
-        <div class="legal-section">
-            <h4>PRIVACY POLICY</h4>
-            <p id="foot-priv-p">Zero logs. Memory-only transmission. Data auto-destructs after transfer or 10 mins.</p>
-        </div>
-
-        <div class="legal-section">
-            <h4>DEVELOPER</h4>
-            <p>© 2025 FlashDrop Pro. Designed for high-risk, high-speed workspace security.</p>
-        </div>
-        <div class="legal-section">
+        <div style="width:100%; opacity:0.6; padding-top:20px; border-top:1px solid rgba(255,255,255,0.05);">
             <h4>CONTACT US</h4>
-            <a href="tel:9292664485" class="contact-pill">📞 +1 (929) 266-4485</a>
-            <a href="mailto:flashdroppro@gmail.com" class="contact-pill">✉️ flashdroppro@gmail.com</a>
+            <div style="display:flex; justify-content:center; gap:15px; margin-top:10px;">
+                <a href="tel:9292664485" style="color:var(--primary); text-decoration:none; font-weight:800;">📞 +1 (929) 266-4485</a>
+                <a href="mailto:flashdroppro@gmail.com" style="color:var(--primary); text-decoration:none; font-weight:800;">✉️ flashdroppro@gmail.com</a>
+            </div>
+            <p style="margin-top:20px; font-size:10px;">© 2025 FlashDrop Pro. Designed for high-risk workspace security.</p>
         </div>
     </footer>
 </div>
 <script>
-// --- 广告池配置 ---
-const SMART_LINKS = [
-    "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", // Adsterra
-    "https://otieu.com/4/10380243",                                                 // Monetag
-    "https://limpfeel.com/MFoqkO"                                                   // HilltopAds
-];
+    // --- 广告轮播池：Smartlinks (Direct Links) ---
+    const AD_POOL = [
+        "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", // Adsterra
+        "https://otieu.com/4/10380243",                                                 // Monetag
+        "https://limpfeel.com/MFoqkO"                                                   // HilltopAds
+    ];
 
-// --- 广告与动作处理逻辑 ---
-function handleAdAndAction(actionType) {
-    // 1. 随机挑选一个广告链接并弹出
-    const randomLink = SMART_LINKS[Math.floor(Math.random() * SMART_LINKS.length)];
-    window.open(randomLink, '_blank');
-
-    // 2. 根据按钮类型执行对应的功能
-    if (actionType === 'send-file') {
-        shareFiles(); // 执行分享文件逻辑
-    } else if (actionType === 'send-text') {
-        shareText();  // 执行分享文字逻辑
-    } else if (actionType === 'receive') {
-        connectToPeer(); // 执行接收逻辑
-    }
-}
-
-// --- 动态加载 Banner 广告 ---
-function loadBanners() {
-    const topZone = document.getElementById('top-ad-zone');
-    const bottomZone = document.getElementById('bottom-ad-zone');
-    const leftZone = document.getElementById('left-ad-zone');
-    const rightZone = document.getElementById('right-ad-zone');
-
-    // Adsterra 728x90 Banner 代码注入 (上下)
-    const banner728 = `
-        <script type="text/javascript">
-            atOptions = { 'key' : 'fabada29768bc51cc0a6a76937a99ba9', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
-        <\/script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"><\/script>
-    `;
-
-    // Adsterra 160x600 Banner 代码注入 (左右)
-    const banner160 = `
-        <script type="text/javascript">
-            atOptions = { 'key' : 'bd9abdb5a8bd5a53648a9afb54343727', 'format' : 'iframe', 'height' : 600, 'width' : 160, 'params' : {} };
-        <\/script>
-        <script type="text/javascript" src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"><\/script>
-    `;
-
-    if(topZone) topZone.innerHTML = banner728;
-    if(bottomZone) bottomZone.innerHTML = banner728;
-    if(leftZone) leftZone.innerHTML = banner160;
-    if(rightZone) rightZone.innerHTML = banner160;
-}
-
-// --- 接收文字后的 UI 联动 (修复蓝圈问题) ---
-function displayReceivedText(text) {
-    const container = document.getElementById('receivedText-container');
-    const displayArea = document.getElementById('receivedText');
-    
-    if (text) {
-        displayArea.innerText = text;
-        container.style.display = 'block'; // 只有收到内容才显示
-    } else {
-        container.style.display = 'none';
-    }
-}
-
-// --- 标签页切换逻辑 ---
-function switchTab(type, e) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById('panel-' + type).classList.add('active');
-}
-
-// 初始化加载
-window.addEventListener('DOMContentLoaded', () => {
-    loadBanners(); // 页面加载后立即填充广告
-});
-</script>
-<script>
-let peer = null;
-let conn = null;
-let stagedFiles = [];
-let myID = "";
-
-// --- 初始化 PeerJS ---
-function initPeer() {
-    const statusDot = document.getElementById('status-dot');
-    peer = new Peer(Math.floor(100000 + Math.random() * 900000).toString(), {
-        debug: 1,
-        config: { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] }
-    });
-
-    peer.on('open', (id) => {
-        myID = id;
-        statusDot.className = 'status-dot online';
-    });
-
-    peer.on('connection', (c) => {
-        conn = c;
-        setupConnHandlers();
-    });
-
-    peer.on('error', () => {
-        statusDot.className = 'status-dot offline';
-        setTimeout(initPeer, 3000);
-    });
-}
-
-// --- 文件处理与打包 ---
-function handleFiles(files) {
-    stagedFiles = Array.from(files);
-    const list = document.getElementById('stagedList');
-    list.innerHTML = stagedFiles.map(f => `<div style="font-size:12px; margin-top:5px;">📄 ${f.name}</div>`).join('');
-    list.style.display = 'block';
-}
-
-async function shareFiles() {
-    if (stagedFiles.length === 0) return alert("Select files first!");
-    
-    // UI 转换到显示验证码界面
-    document.getElementById('senderCodeArea').style.display = 'block';
-    document.getElementById('myCode').innerText = myID;
-    document.getElementById('guideText').innerText = "Scan or enter code to download.";
-    
-    // 生成二维码
-    const qrDiv = document.getElementById('qrcode');
-    qrDiv.innerHTML = "";
-    new QRCode(qrDiv, { text: `https://flashdrop-pro.com/?c=${myID}`, width: 180, height: 180 });
-
-    // 复制链接功能
-    document.getElementById('btn-copy-link').onclick = () => {
-        navigator.clipboard.writeText(`https://flashdrop-pro.com/?c=${myID}`);
-        alert("Link Copied!");
+    const I18N = {
+        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", handshake: "Security Handshake...", scanHint: "Align QR code in frame", scanClose: "CLOSE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting & Sending...<br>Do not close the page.", receivingRemind: "Handshaking & Downloading...<br>Do not close the page.", guide: "Inform the other party within 10 minutes; it will self-destruct after.", adBlockMsg: "We need ad support to maintain free encrypted servers. Please disable your Ad-blocker to continue.", discP: "Decentralized transmission. No server storage.", privP: "Zero logs. Zero tracking. WebRTC encrypted.", inputErr: "Please enter the code or scan the QR code" },
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", handshake: "安全连接中...", scanHint: "请将二维码对准框内", scanClose: "关闭", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", adBlockMsg: "我们需要廣告支持來維持免費的加密服務。请关闭拦截插件以繼續使用。", discP: "點對點傳輸，不經過服務器。", privP: "全程加密，無任何跟踪日誌。", inputErr: "请输入验证码或扫描二维码" }
     };
-}
 
-async function shareText() {
-    const text = document.getElementById('quickText').value;
-    if (!text) return alert("Enter text!");
-    shareFiles(); // 复用 ID 显示逻辑
-}
+    let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, expiryTimerIdx = null, activeConn = null, startTime = 0, totalSize = 0;
+    const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
-// --- 连接与接收逻辑 ---
-function connectToPeer() {
-    const targetID = document.getElementById('targetCode').value;
-    if (!targetID) return alert("Enter 6-digit code!");
-    
-    conn = peer.connect(targetID);
-    setupConnHandlers();
-}
-
-function setupConnHandlers() {
-    conn.on('open', () => {
-        // 如果我有暂存文件/文字，连接成功后立刻发出
-        const textData = document.getElementById('quickText').value;
-        if (stagedFiles.length > 0) {
-            sendDataAsZip();
-        } else if (textData) {
-            conn.send({ type: 'text', content: textData });
-        }
-    });
-
-    conn.on('data', (data) => {
-        if (data.type === 'text') {
-            displayReceivedText(data.content); // 调用 Part 3 的 UI 函数
-            addToHistory('Text', 'Received');
-        } else if (data.type === 'file') {
-            const blob = new Blob([data.content], { type: 'application/zip' });
-            const url = URL.createObjectURL(blob);
-            const btn = document.getElementById('btn-save-file');
-            document.getElementById('mobileDownloadArea').style.display = 'block';
-            btn.onclick = () => {
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `FlashDrop_${data.name}.zip`;
-                a.click();
-            };
-            addToHistory('Files', 'Received');
-        }
-    });
-}
-
-async function sendDataAsZip() {
-    const zip = new JSZip();
-    stagedFiles.forEach(f => zip.file(f.name, f));
-    const content = await zip.generateAsync({ type: "blob" });
-    conn.send({ type: 'file', content: content, name: Date.now() });
-    addToHistory('Files', 'Sent');
-}
-
-function addToHistory(type, action) {
-    const list = document.getElementById('history-list');
-    const entry = document.createElement('div');
-    entry.style = "font-size:12px; padding:8px; border-bottom:1px solid #333; display:flex; justify-content:space-between;";
-    entry.innerHTML = `<span>${action} ${type}</span><span style="color:var(--text-muted);">${new Date().toLocaleTimeString()}</span>`;
-    list.prepend(entry);
-}
-
-function resetSender() { location.reload(); }
-
-function copyReceivedText() {
-    const text = document.getElementById('receivedText').innerText;
-    navigator.clipboard.writeText(text);
-    alert("Copied!");
-}
-
-// 自动填充 URL 中的 Code
-window.onload = () => {
-    initPeer();
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('c');
-    if (code) {
-        document.getElementById('tab-receive').click();
-        document.getElementById('targetCode').value = code;
+    function updateOnlineStatus() {
+        const dot = document.getElementById('status-dot');
+        if (navigator.onLine) { dot.classList.add('online'); dot.classList.remove('offline'); }
+        else { dot.classList.add('offline'); dot.classList.remove('online'); }
     }
-};
+
+    function detectAdBlock() {
+        const top = document.getElementById('top-ad-zone');
+        if (top && top.offsetHeight === 0) {
+            document.body.classList.add('is-blocked');
+            document.getElementById('adblock-warning').style.display = 'flex';
+            return true;
+        }
+        return false;
+    }
+
+    function applyI18N() {
+        const userLang = navigator.language.split('-')[0];
+        currLang = I18N[userLang] ? userLang : "en";
+        const d = I18N[currLang];
+        document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
+        document.getElementById('tab-send').innerText = d.tabSend; document.getElementById('tab-receive').innerText = d.tabReceive;
+        document.getElementById('label-files').innerText = d.fileLab; document.getElementById('btn-share-files').innerText = d.shareF;
+        document.getElementById('btn-share-text').innerText = d.shareT; document.getElementById('btn-copy-link').innerText = d.copyLink;
+        document.getElementById('btn-connect').innerText = d.connect; document.getElementById('btn-save-file').innerText = d.save;
+        document.getElementById('foot-disc-p').innerText = d.discP; document.getElementById('foot-priv-p').innerText = d.privP;
+        document.getElementById('scan-hint').innerText = d.scanHint; document.getElementById('btn-scan-close').innerText = d.scanClose;
+        document.getElementById('guideText').innerText = d.guide; document.getElementById('ad-block-p').innerText = d.adBlockMsg;
+        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
+    }
+
+    // --- 修正后的广告触发逻辑 (带随机轮播) ---
+    function triggerAd(mode) {
+        if(detectAdBlock()) return;
+        if(mode === 'receive' && !document.getElementById('targetCode').value) {
+            alert(I18N[currLang].inputErr);
+            return;
+        }
+        if(mode.startsWith('send') && stagedFiles.length === 0 && !document.getElementById('quickText').value) return;
+
+        // 1. 随机挑选一个三方 Smartlink 并静默弹出
+        const randomAdUrl = AD_POOL[Math.floor(Math.random() * AD_POOL.length)];
+        window.open(randomAdUrl, '_blank');
+
+        // 2. 维持原有的 5 秒倒计时体验
+        const modal = document.getElementById('adModal'); 
+        const title = document.getElementById('ad-wait-title');
+        const msg = mode.startsWith('send') ? I18N[currLang].sendingRemind : I18N[currLang].receivingRemind;
+        modal.style.display = 'flex';
+        let cd = 5; 
+        const itv = setInterval(() => { 
+            cd--; 
+            title.innerHTML = `${msg}<br><span style="color:var(--primary); font-size:26px; font-weight:900;">${cd}s</span>`; 
+            if(cd <= 0) { 
+                clearInterval(itv); 
+                modal.style.display = 'none'; 
+                mode.startsWith('send') ? initSender() : startReceiving(); 
+            } 
+        }, 1000);
+    }
+
+    // 后续传输逻辑保持原样，仅做少量合并优化以防止代码冲突
+    async function initSender() {
+        if(peer) peer.destroy();
+        const code = Math.floor(100000 + Math.random() * 900000);
+        peer = new Peer(PREFIX + code);
+        peer.on('open', () => {
+            const area = document.getElementById('senderCodeArea'); area.style.display = 'block';
+            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
+            document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
+            const shareUrl = window.location.origin + window.location.pathname + "?c=" + code;
+            new QRCode(document.getElementById('qrcode'), { text: shareUrl, width: 140, height: 140 });
+            startExpiryTimer();
+        });
+        peer.on('connection', c => {
+            c.on('data', async d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
+            c.on('open', async () => {
+                const text = document.getElementById('quickText').value; if(text) c.send({ type: 'text', data: text });
+                if(stagedFiles.length > 0) {
+                    let fb, fn;
+                    if (stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
+                    else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); fn = "FlashDrop_Bundle.zip"; }
+                    c.send({ type: 'meta', name: fn, size: fb.size });
+                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) { c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() }); }
+                    c.send({ type: 'done' });
+                }
+            });
+        });
+    }
+
+    function startReceiving() {
+        const code = document.getElementById('targetCode').value; if(!code) return;
+        const rPeer = new Peer();
+        rPeer.on('open', () => {
+            const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+            let meta = null, chunks = [], count = 0;
+            c.on('data', d => {
+                if(d.type === 'text') { document.getElementById('receivedText-container').style.display='block'; document.getElementById('receivedText').innerText=d.data; addHistory("Shared Text", "text"); }
+                else if(d.type === 'meta') { meta = d; chunks = []; count = 0; totalSize = d.size; startTime = performance.now(); document.getElementById('mobileDownloadArea').style.display='block'; document.getElementById('receiveNerdStats').style.display='flex'; }
+                else if(d.type === 'chunk') {
+                    chunks[d.index] = d.data; count += d.data.byteLength;
+                    const elapsed = (performance.now() - startTime) / 1000;
+                    const mbps = ((count / 1024 / 1024) / (elapsed || 1)).toFixed(1);
+                    document.getElementById('nerd-speed').innerText = `${mbps} MB/s`;
+                    document.getElementById('receiveProgressBar').style.width = Math.min(100, (count/meta.size)*100) + '%';
+                }
+                else if(d.type === 'done') {
+                    const b = new Blob(chunks); const u = window.URL.createObjectURL(b);
+                    const btn = document.getElementById('btn-save-file'); btn.innerText = "📥 SAVE: " + meta.name;
+                    btn.onclick = () => {
+                        const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click();
+                        setTimeout(() => { c.send({ type: 'confirm_save' }); addHistory(meta.name, "file"); resetReceiver(); }, 200);
+                    };
+                }
+            });
+        });
+    }
+
+    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); if(activeConn) { activeConn.send({ type: 'confirm_save' }); } alert("Copied!"); setTimeout(resetReceiver, 1000); }
+    function addHistory(name, type) { let h = JSON.parse(localStorage.getItem('fd_history') || "[]"); h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type }); h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory(); }
+    function renderHistory() { const list = document.getElementById('history-list'); const h = JSON.parse(localStorage.getItem('fd_history') || "[]"); list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join(''); }
+    function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
+    function resetSender() { if(peer) peer.destroy(); if(expiryTimerIdx) clearInterval(expiryTimerIdx); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; }
+    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; document.getElementById('receiveNerdStats').style.display = 'none'; document.getElementById('receivedText-container').style.display='none'; activeConn = null; }
+    function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); const t = e ? (e.currentTarget || e.target) : document.getElementById(`tab-${m}`); t.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
+    
+    window.addEventListener('dragover', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='flex'; });
+    window.addEventListener('drop', e => { e.preventDefault(); document.getElementById('drop-zone').style.display='none'; handleFiles(e.dataTransfer.files); });
+    
+    function handleFiles(files) { if(!files) return; stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
+    function renderStagedList() { 
+        const list = document.getElementById('stagedList'); 
+        if (stagedFiles.length === 0) { list.style.display = 'none'; return; } 
+        list.style.display = 'block'; 
+        list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>📄 ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="removeStagedFile(${index})">✕</span></div>`).join(''); 
+    }
+    function removeStagedFile(index) { stagedFiles.splice(index, 1); renderStagedList(); }
+
+    window.onload = () => { 
+        initStars(); applyI18N(); renderHistory(); updateOnlineStatus();
+        window.addEventListener('online', updateOnlineStatus); window.addEventListener('offline', updateOnlineStatus);
+        const c = new URLSearchParams(window.location.search).get('c'); 
+        if(c) { switchTab('receive'); document.getElementById('targetCode').value = c; setTimeout(() => triggerAd('receive'), 500); }
+        setTimeout(detectAdBlock, 4000); 
+    };
+
+    async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { alert("Camera failed"); closeScanner(); } }
+    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) { videoTrack.stop(); videoTrack = null; } }
+    function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
+    function initStars() { const c = document.getElementById('stars'); for(let i=0; i<100; i++) { const s = document.createElement('div'); s.className = 'star'; const size = Math.random() * 2 + 'px'; s.style.width = size; s.style.height = size; s.style.left = Math.random() * 100 + '%'; s.style.top = Math.random() * 100 + '%'; s.style.animationDuration = (Math.random() * 30 + 20) + 's'; c.appendChild(s); } }
 </script>
-</body>
-</html>
