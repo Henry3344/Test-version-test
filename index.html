@@ -11,14 +11,9 @@
     <script>(function(s){s.dataset.zone='10380245',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
     <script>  
         (function(ctxj){  
-        var d = document,  
-            s = d.createElement('script'),  
-            l = d.scripts[d.scripts.length - 1];  
-        s.settings = ctxj || {};  
-        s.src = "\/\/big-brief.com\/bCXiVts.dFG-l\/0pYpWucG\/me_mb9BucZCUfl\/kTP-T\/Ya3PMhzuQB5XNnTGARtBNfjycvzdNND\/ki1NM\/Qe";  
-        s.async = true;  
-        s.referrerPolicy = 'no-referrer-when-downgrade';  
-        l.parentNode.insertBefore(s, l);  
+        var d = document, s = d.createElement('script'), l = d.scripts[d.scripts.length - 1];  
+        s.settings = ctxj || {}; s.src = "\/\/big-brief.com\/bCXiVts.dFG-l\/0pYpWucG\/me_mb9BucZCUfl\/kTP-T\/Ya3PMhzuQB5XNnTGARtBNfjycvzdNND\/ki1NM\/Qe";  
+        s.async = true; s.referrerPolicy = 'no-referrer-when-downgrade'; l.parentNode.insertBefore(s, l);  
         })({})  
     </script>
 
@@ -55,28 +50,33 @@
         select#downloadLimit { background: #0f172a; color: #fff; border: 1.8px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 12px) center; padding-right: 35px; }
         .limit-hint { font-size: 11px; color: var(--text-muted); font-style: italic; opacity: 0.8; margin-top: 5px; }
 
-        /* --- 场景建议区：移动端强制并排 --- */
+        /* --- 场景建议区：标题加大，强制并排 --- */
         .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
-        .scenario-card { flex: 1; border-radius: 20px; padding: 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
+        .scenario-card { flex: 1; border-radius: 20px; padding: 18px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
         .scenario-green { border-color: rgba(16, 185, 129, 0.3); }
         .scenario-red { border-color: rgba(239, 68, 68, 0.3); }
-        .scenario-title { font-size: 14px; font-weight: 900; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .scenario-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
         .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
-        .scenario-list li { position: relative; padding-left: 10px; margin-bottom: 4px; }
+        .scenario-list li { position: relative; padding-left: 10px; margin-bottom: 5px; }
         .scenario-list li::before { content: '•'; position: absolute; left: 0; color: inherit; }
         
         @media (max-width: 550px) { 
             .scenarios-wrap { gap: 8px; padding: 0 10px; }
             .scenario-card { padding: 12px 10px; }
-            .scenario-title { font-size: 11px; }
+            .scenario-title { font-size: 14px; }
             .scenario-list { font-size: 9px; }
         }
 
-        /* --- FAQ 样式 --- */
+        /* --- FAQ 交互样式 --- */
         .faq-wrap { width: 100%; max-width: 600px; margin: 10px auto 30px auto; padding: 0 15px; text-align: left; }
-        .faq-item { margin-bottom: 20px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); }
-        .faq-q { color: var(--primary); font-weight: 900; font-size: 13px; margin-bottom: 8px; display: block; }
-        .faq-a { color: var(--text-muted); font-size: 12px; line-height: 1.6; display: block; }
+        .faq-item { margin-bottom: 12px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: 0.3s; }
+        .faq-item:hover { border-color: var(--primary); }
+        .faq-q { color: var(--primary); font-weight: 900; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+        .faq-q::after { content: '+'; font-size: 18px; opacity: 0.5; transition: 0.3s; }
+        .faq-a { color: var(--text-muted); font-size: 12px; line-height: 1.6; display: none; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; }
+        .faq-item.active .faq-a { display: block; animation: fadeIn 0.3s ease; }
+        .faq-item.active .faq-q::after { transform: rotate(45deg); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         @media (max-width: 650px) { .intro-section h1 { font-size: 20px; } .intro-section p.desc { font-size: 12px; } .intro-card h4 { font-size: 11px; } .intro-card p { font-size: 9px; } }
 
@@ -180,10 +180,6 @@
         
         @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
         #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
-        button.action-btn:hover { box-shadow: 0 0 30px rgba(99, 102, 241, 0.8); transform: translateY(-3px); filter: brightness(1.1); }
-        .steps-bar { display: flex; justify-content: space-between; width: 100%; max-width: 500px; margin-bottom: 25px; opacity: 0.8; }
-        .step-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); font-weight: 800; }
-        .step-dot { width: 8px; height: 8px; background: var(--border); border-radius: 50%; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -267,20 +263,13 @@
                             <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
                         </div>
                     </div>
-                    
                     <div class="limit-config-box">
                         <div class="limit-label-wrap">
                             <span class="limit-label" id="label-limit">Download Limit:</span>
-                            <select id="downloadLimit">
-                                <option value="1">Only 1 Time</option>
-                                <option value="3">Only 3 Times</option>
-                                <option value="5">Only 5 Times</option>
-                                <option value="999">Unlimited</option>
-                            </select>
+                            <select id="downloadLimit"><option value="1">Only 1 Time</option><option value="3">Only 3 Times</option><option value="5">Only 5 Times</option><option value="999">Unlimited</option></select>
                         </div>
-                        <div class="limit-hint" id="limit-hint-text">Default 1 download and 10 mins validity, aimed at minimizing leakage risk.</div>
+                        <div class="limit-hint" id="limit-hint-text">Default 1 download and 10 mins validity.</div>
                     </div>
-
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
                     <div id="senderCodeArea">
                         <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
@@ -292,7 +281,6 @@
                         <button class="action-btn" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
-
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <div class="receive-input-container">
@@ -308,7 +296,6 @@
                 </div>
             </div>
             <div class="history-box"><div class="history-title" id="history-title-text">Recent History</div><div id="history-list"></div></div>
-            
             <div class="ad-space ad-bottom" id="bottom-ad-zone">
                 <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
                 <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
@@ -335,21 +322,19 @@
     <div class="faq-wrap" id="faq-list"></div>
 
     <footer class="legal-footer">
-        <div>
-            <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a>
-        </div>
+        <div><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a></div>
         <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; width: 100%; text-align: left;">
             <div class="legal-section">
                 <h4 id="foot-head-priv" class="clickable-footer-link" onclick="showPolicy('priv')">Privacy</h4>
-                <p id="foot-priv-p">Zero logs. Click for details.</p>
+                <p id="foot-priv-p">Zero logs.</p>
             </div>
             <div class="legal-section">
                 <h4 id="foot-head-aboutsite" class="clickable-footer-link" onclick="showPolicy('site')">About Site</h4>
-                <p id="foot-disc-p">P2P technology. How it works?</p>
+                <p id="foot-disc-p">P2P technology.</p>
             </div>
             <div class="legal-section">
                 <h4 id="foot-head-aboutus" class="clickable-footer-link" onclick="showPolicy('us')">About Us</h4>
-                <p id="foot-about-p">Efficiency first. Learn more.</p>
+                <p id="foot-about-p">Efficiency first.</p>
             </div>
         </div>
         <div style="width: 100%; max-width: 600px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-top: 20px; text-align: center; opacity: 0.7;">
@@ -360,18 +345,13 @@
 </div>
 
 <div id="policyModal" class="policy-modal" onclick="closePolicy()">
-    <div class="policy-content" onclick="event.stopPropagation()">
-        <span class="close-policy" onclick="closePolicy()">×</span>
-        <div id="policyBody"></div>
-    </div>
+    <div class="policy-content" onclick="event.stopPropagation()"><span class="close-policy" onclick="closePolicy()">×</span><div id="policyBody"></div></div>
 </div>
 
 <div class="modal-overlay" id="adModal">
     <div id="ad-wait-title">Checking Security...</div>
     <div style="font-size: 13px; color: var(--primary); font-weight: 800; margin-bottom: 5px;" id="ad-timer-text">Remaining: 5s</div>
-    <div style="width: 300px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 20px;">
-        <div id="ad-pg-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.1s linear;"></div>
-    </div>
+    <div style="width: 300px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 20px;"><div id="ad-pg-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.1s linear;"></div></div>
     <div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
         <script>atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
         <script src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
@@ -379,28 +359,16 @@
 </div>
 
 <div id="scanner-modal">
-    <div class="scanner-container">
-        <video id="video-preview" playsinline></video>
-        <div class="scan-frame"><div class="scan-line"></div></div>
-        <button id="btn-torch" onclick="toggleTorch()">🔦</button>
-    </div>
+    <div class="scanner-container"><video id="video-preview" playsinline></video><div class="scan-frame"><div class="scan-line"></div></div><button id="btn-torch" onclick="toggleTorch()">🔦</button></div>
     <button class="action-btn" style="width:180px; background:#334155;" onclick="closeScanner()">CLOSE</button>
 </div>
 
 <script>
     const I18N = {
         en: { 
-            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", textErr: "Please enter text first.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary, Vanishing Transfer Tool", introD: "Files connect directly between sender and receiver. Data is physically erased immediately after transfer or page closure.", f1T: "10-Min Auto-Destruct", f1D: "Link expires automatically.", f2T: "Visits Choice", f2D: "Supports 1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click cut-off all.", labLimit: "Download Limit:", hintLimit: "Default 1 download and 10 mins validity, aimed at minimizing leakage risk.", optL: "Only ", optU: "Unlimited",
-            scTG: "✔ Suitable", scTR: "✖ Unsuitable", scLG: ["Cross-device temporary transfer", "Sensitive files on public PCs", "Self-destructing delivery"], scLR: ["Long-term cloud storage", "Team collaboration space", "Permanently retained links"],
-            faq: [
-                {q: "What is FlashDrop Pro?", a: "It's a temporary, secure transfer tool. Content self-destructs within 10 mins or after usage. No registration needed."},
-                {q: "Is it secure? Can others see?", a: "Only those with the code/link can access. Data is physically erased immediately after session closure."},
-                {q: "Why visit limits?", a: "To prevent secondary leakage. Choose 1 time for maximum security."},
-                {q: "Can I cancel transfer early?", a: "Yes, click 'Stop' or close the tab. The session ends immediately."},
-                {q: "What file types can I send?", a: "Almost any type including images, videos, docs, and zips."},
-                {q: "Suitable for long-term storage?", a: "No. It's designed for temporary, vanishing transfers only."},
-                {q: "Need an account?", a: "No. Everything is anonymous and fast."}
-            ]
+            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs.", pDisc: "Direct P2P.", pAbout: "© 2025 FlashDrop Pro.", inputErr: "6-digit code.", orScan: "scan 📷", doneRemind: "DONE!", histTitle: "History", fileErr: "Select files.", textErr: "Enter text.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary Transfer Tool", introD: "Direct connect. Erased after transfer.", f1T: "10-Min Auto-Destruct", f1D: "Expires automatically.", f2T: "Visits Choice", f2D: "1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click stop.", labLimit: "Limit:", hintLimit: "Default 1 download and 10 mins validity.", optL: "Only ", optU: "Unlimited",
+            scTG: "✔ Suitable", scTR: "✖ Unsuitable", scLG: ["Cross-device transfer", "Public PCs sharing", "Self-destruct message"], scLR: ["Long-term cloud", "Team collaboration", "Permanent links"],
+            faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}, {q: "Is it secure?", a: "P2P connection. Data physically wiped after session ends."}, {q: "Why visit limits?", a: "To prevent secondary leakage. 1 time is safest."}, {q: "Can I cancel early?", a: "Yes, click 'Stop' or close tab."}, {q: "What file types?", a: "Almost any file format supported."}, {q: "For long-term use?", a: "No, designed for vanishing transfers."}, {q: "Need account?", a: "No registration required."}]
         },
         zh: { 
             tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。", introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "文件在发送者与接收者之间直连，传输完成或页面关闭后，数据即刻物理抹除。", f1T: "10分钟自动销毁", f1D: "过期后链接自动失效", f2T: "访问次数可选", f2D: "支持 1/3/5/无限次", f3T: "随时手动终止", f3D: "一键切断所有传输", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期，旨在最大限度降低泄露风险", optL: "仅限 ", optU: "无限次",
@@ -446,9 +414,9 @@
         document.getElementById('limit-hint-text').innerText = d.hintLimit;
 
         const sel = document.getElementById('downloadLimit');
-        sel.options[0].text = `${d.optL}1${currLang==='en'?' Time':' 次下载'}`;
-        sel.options[1].text = `${d.optL}3${currLang==='en'?' Times':' 次下载'}`;
-        sel.options[2].text = `${d.optL}5${currLang==='en'?' Times':' 次下载'}`;
+        sel.options[0].text = `${d.optL}1${currLang==='en'?' Time':' 次'}`;
+        sel.options[1].text = `${d.optL}3${currLang==='en'?' Times':' 次'}`;
+        sel.options[2].text = `${d.optL}5${currLang==='en'?' Times':' 次'}`;
         sel.options[3].text = d.optU;
 
         document.getElementById('sc-title-g').innerText = d.scTG;
@@ -456,22 +424,21 @@
         document.getElementById('sc-list-g').innerHTML = d.scLG.map(t => `<li>${t}</li>`).join('');
         document.getElementById('sc-list-r').innerHTML = d.scLR.map(t => `<li>${t}</li>`).join('');
 
-        // 渲染 FAQ
-        document.getElementById('faq-list').innerHTML = d.faq.map(f => `<div class="faq-item"><span class="faq-q">${f.q}</span><span class="faq-a">${f.a}</span></div>`).join('');
+        // FAQ 渲染：增加 onclick 事件
+        document.getElementById('faq-list').innerHTML = d.faq.map(f => `
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <span class="faq-q">${f.q}</span>
+                <span class="faq-a">${f.a}</span>
+            </div>
+        `).join('');
     }
 
     function triggerAd(mode) {
         if(detectAdBlock()) return;
-        if(mode === 'receive' && document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
-        if(mode === 'send-file' && stagedFiles.length === 0) { alert(I18N[currLang].fileErr); return; }
-        if(mode === 'send-text' && !document.getElementById('quickText').value.trim()) { alert(I18N[currLang].textErr); return; }
-
         const modal = document.getElementById('adModal');
         const adPg = document.getElementById('ad-pg-bar');
         const timerText = document.getElementById('ad-timer-text');
-        const title = document.getElementById('ad-wait-title');
-        const msg = mode.startsWith('send') ? I18N[currLang].sendingRemind : I18N[currLang].receivingRemind;
-        modal.style.display = 'flex'; adPg.style.width = '0%'; title.innerHTML = msg;
+        modal.style.display = 'flex'; adPg.style.width = '0%';
         let elapsed = 0; const totalMs = 5000;
         const itv = setInterval(() => { 
             elapsed += 100; const pct = (elapsed / totalMs) * 100;
@@ -490,14 +457,12 @@
             document.getElementById('myCode').innerText = code;
             document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
-            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
             startExpiryTimer();
         });
         peer.on('connection', c => {
             c.on('data', d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
             c.on('open', async () => {
-                const text = document.getElementById('quickText').value; 
-                if(text) { c.send({ type: 'text', data: text }); addHistory("Sent: Text", "text"); }
+                const text = document.getElementById('quickText').value; if(text) c.send({ type: 'text', data: text });
                 if(stagedFiles.length > 0) {
                     let fb, fn;
                     if (stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
@@ -512,34 +477,19 @@
 
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
-        const rPeer = new Peer();
-        const pgContainer = document.getElementById('receive-pg-container');
+        const rPeer = new Peer(); activeConn = null;
         const pgBar = document.getElementById('receive-pg-bar');
-        const nerd = document.getElementById('receiveNerdStats');
-        pgContainer.style.display = 'block'; nerd.style.display = 'flex'; pgBar.style.width = '0%';
         rPeer.on('open', () => {
             const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
-            let meta = null, chunks = [], totalRecv = 0, startTime = Date.now();
+            let meta = null, chunks = [], totalRecv = 0;
             c.on('data', d => {
-                if(d.type === 'text') { document.getElementById('receivedText').innerText = d.data; document.getElementById('receivedText-container').style.display = 'block'; pgBar.style.width = '100%'; }
-                else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; startTime = Date.now(); }
-                else if(d.type === 'chunk') { 
-                    chunks[d.index] = d.data; totalRecv += d.data.byteLength;
-                    if(meta) {
-                        const pct = (totalRecv / meta.size) * 100; pgBar.style.width = pct + '%';
-                        const speed = totalRecv / ((Date.now() - startTime) / 1000);
-                        document.getElementById('nerd-speed').innerText = (speed / 1024 / 1024).toFixed(1) + " MB/s";
-                        document.getElementById('nerd-eta').innerText = `ETA: ${Math.ceil((meta.size - totalRecv) / (speed || 1))}s`;
-                    }
-                }
+                if(d.type === 'text') { document.getElementById('receivedText').innerText = d.data; document.getElementById('receivedText-container').style.display = 'block'; }
+                else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; }
+                else if(d.type === 'chunk') { chunks[d.index] = d.data; totalRecv += d.data.byteLength; if(meta) pgBar.style.width = (totalRecv / meta.size * 100) + '%'; }
                 else if(d.type === 'done') {
                     const b = new Blob(chunks); const u = window.URL.createObjectURL(b);
                     const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
-                    btn.onclick = () => { 
-                        const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); 
-                        if(c.open) c.send({ type: 'confirm_save' }); addHistory("Received: " + meta.name, "file");
-                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300);
-                    };
+                    btn.onclick = () => { const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); if(c.open) c.send({ type: 'confirm_save' }); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300); };
                 }
             });
         });
@@ -555,60 +505,26 @@
         const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
     }
-
-    function copyReceivedText() { 
-        navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
-        alert("Copied!"); 
-        if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); }
-        resetReceiver(); 
-    }
-
+    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); if(activeConn && activeConn.open) activeConn.send({ type: 'confirm_save' }); resetReceiver(); }
     function detectAdBlock() {
         setTimeout(() => {
             const topAd = document.getElementById('top-ad-zone');
-            const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
-            if (topAd.offsetHeight < 20 || !hasContent) {
-                document.getElementById('safety-notice-view').style.display = 'flex';
-                document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
-            }
-        }, 1500);
-        return false;
+            if (topAd.offsetHeight < 20) { document.getElementById('safety-notice-view').style.display = 'flex'; }
+        }, 1500); return false;
     }
-
-    function showPolicy(type) {
-        const modal = document.getElementById('policyModal');
-        const body = document.getElementById('policyBody');
-        const lang = currLang || 'en';
-        const contents = {
-            priv: {
-                en: `<h2>Privacy Policy</h2><p><strong>1. Zero Logs:</strong> We do not track IP addresses.<br><strong>2. P2P Encryption:</strong> Transfers happen in browser.<br><strong>3. Transient:</strong> Closing tab wipes data.</p>`,
-                zh: `<h2>隐私政策</h2><p><strong>1. 零日志：</strong> 我们不记录 IP 地址或元数据。<br><strong>2. P2P 加密：</strong> 所有传输都在浏览器内通过 WebRTC 完成。<br><strong>3. 瞬时性：</strong> 关闭标签页即刻抹除所有会话数据。</p>`
-            },
-            site: {
-                en: `<h2>Technical Details</h2><p>Direct Peer-to-Peer technology. No server storage ensures privacy.</p>`,
-                zh: `<h2>技术细节</h2><p>FlashDrop Pro 使用点对点技术。文件在用户间直接传输，不经过服务器存储，确保极致隐私与速度。</p>`
-            },
-            us: {
-                en: `<h2>About Us</h2><p>Efficiency first tool for secure data sharing.</p>`,
-                zh: `<h2>关于我们</h2><p>效率至上。FlashDrop Pro 是一款专注于安全、高速数据共享的隐私工具。</p>`
-            }
-        };
-        body.innerHTML = contents[type][lang] || contents[type]['en'];
-        modal.style.display = 'flex';
-    }
+    function showPolicy(type) { document.getElementById('policyModal').style.display = 'flex'; }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; if(expiryTimerIdx) clearInterval(expiryTimerIdx); }
-    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receiveNerdStats').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; activeConn = null; }
-    function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
+    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; }
+    function switchTab(m, e) { document.querySelectorAll('.tab, .panel').forEach(el => el.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
-    function renderStagedList() { const list = document.getElementById('stagedList'); list.style.display = stagedFiles.length ? 'block' : 'none'; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>📄 ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); }
-    async function toggleTorch() { if (!videoTrack) return; torchOn = !torchOn; try { await videoTrack.applyConstraints({ advanced: [{ torch: torchOn }] }); } catch (e) {} }
-    async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { alert("Camera failed"); closeScanner(); } }
-    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
-    function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
+    function renderStagedList() { const list = document.getElementById('stagedList'); list.style.display = stagedFiles.length ? 'block' : 'none'; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>📄 ${f.name.substring(0,12)}</span><span onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); }
+    async function toggleTorch() { if (videoTrack) await videoTrack.applyConstraints({ advanced: [{ torch: torchOn=!torchOn }] }); }
+    async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { closeScanner(); } }
+    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); }
+    function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const data = jsQR(cvs.getContext("2d").getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { document.getElementById('targetCode').value = new URL(data.data).searchParams.get("c"); closeScanner(); triggerAd('receive'); return; } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
-    
     window.onload = () => { initStars(); applyI18N(); renderHistory(); detectAdBlock(); };
 </script>
 </body>
