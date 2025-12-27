@@ -132,8 +132,36 @@
         .policy-content h2 { color: var(--primary); margin-top: 0; font-size: 20px; }
         .policy-content p { line-height: 1.8; color: var(--text-muted); font-size: 14px; text-align: left; }
         .close-policy { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-muted); font-weight: bold; }
-        .clickable-footer-link { cursor: pointer; transition: 0.3s; }
-        .clickable-footer-link:hover { color: var(--primary); text-decoration: underline; }
+        /* --- 增强版页脚点击感：让用户知道能点 --- */
+        .clickable-footer-link { 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 6px; 
+            transition: 0.3s; 
+            color: var(--text); 
+            font-weight: 900;
+        }
+        .clickable-footer-link:hover { 
+            color: var(--primary) !important; 
+            transform: translateX(5px); /* 鼠标移上去文字会往右滑一下，很灵动 */
+        }
+        .clickable-footer-link::after { 
+            content: '➔'; /* 增加箭头图标 */
+            font-size: 12px; 
+            opacity: 0.5; 
+            transition: 0.3s; 
+        }
+        .clickable-footer-link:hover::after { 
+            opacity: 1; 
+        }
+        .legal-section p { 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        .legal-section p:hover { 
+            color: var(--text); /* 鼠标指到文字也变白，暗示能点 */
+        }
     </style>
 </head>
 <body>
