@@ -33,7 +33,7 @@
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
-        .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 120px; transition: opacity 0.5s; }
+        .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 130px; transition: opacity 0.5s; }
         body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
 
         #adblock-warning { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(0, 0, 0, 0.92); }
@@ -50,6 +50,7 @@
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         
+        /* 红绿指示灯恢复 */
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
         .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
@@ -98,10 +99,10 @@
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
         #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; box-shadow: 0 0 30px rgba(255,255,255,0.15); }
 
-        /* 接收页改动 */
-        .receive-input-wrap { display: flex; gap: 10px; align-items: center; width: 100%; max-width: 400px; }
-        input[type="number"] { flex: 1; padding: 15px; border-radius: 18px; border: 2px solid var(--border); background: #0f172a; color: white; font-size: 32px; text-align: center; outline: none; }
-        #btn-scan { width: auto; min-width: 60px; height: 68px; padding: 0 15px; margin: 0; font-size: 20px; border-radius: 18px; background: #334155; }
+        /* 接收页输入框排版修复 */
+        .receive-input-wrap { display: flex; flex-direction: column; gap: 15px; align-items: center; width: 100%; max-width: 400px; }
+        input[type="number"] { width: 100%; padding: 18px; border-radius: 20px; border: 2.5px solid var(--border); background: #0f172a; color: white; font-size: 42px; text-align: center; outline: none; }
+        #btn-scan { width: 100%; min-height: 55px; padding: 10px 20px; font-size: 14px; font-weight: 900; border-radius: 18px; background: rgba(51, 65, 85, 0.8); border: 1px solid rgba(255,255,255,0.1); color: var(--text); }
 
         .legal-footer { padding: 30px 20px 80px 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; text-align: left; margin-top: auto; }
         .legal-section { flex: 1; min-width: 180px; max-width: 260px; margin-bottom: 10px; }
@@ -119,8 +120,6 @@
         #video-preview { width: 100%; height: 100%; object-fit: cover; }
         .scan-frame { position: absolute; inset: 0; border: 2px solid var(--primary); border-radius: 24px; pointer-events: none; }
         .scan-line { position: absolute; width: 100%; height: 3px; background: var(--primary); top: 0; left: 0; box-shadow: 0 0 15px var(--primary); animation: scanMove 2.5s infinite ease-in-out; }
-        
-        /* 手电筒按钮 */
         #btn-torch { position: absolute; bottom: 15px; right: 15px; width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 10; }
         
         @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
@@ -140,7 +139,7 @@
 <div class="app-container" id="app">
     <div class="stars-container" id="stars"></div>
     <nav class="navbar">
-        <div class="logo-wrap"><div id="status-dot" class="status-dot"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
+        <div class="logo-wrap"><div id="status-dot" class="status-dot online"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
         <div class="trust-badges" id="trust-badges"></div>
     </nav>
 
@@ -189,9 +188,9 @@
                     <div style="display:flex; flex-direction:column; align-items:center;">
                         <div class="receive-input-wrap">
                             <input type="number" id="targetCode" placeholder="000000" oninput="if(this.value.length>6) this.value=this.value.slice(0,6)" onkeydown="if(event.key==='Enter') triggerAd('receive')">
-                            <button class="action-btn" id="btn-scan" onclick="openScanner()">📷</button>
+                            <button class="action-btn" id="btn-scan" onclick="openScanner()">Or Scan QR Code</button>
                         </div>
-                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 15px;">DOWNLOAD</button>
+                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
                         <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:20px;"><span id="nerd-speed">0.0 MB/s</span></div>
                         <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px;">📥 SAVE</button></div>
                         <div id="receivedText-container"><div id="receivedText" style="color:white; margin-bottom:15px;"></div><button class="action-btn" onclick="copyReceivedText()">📋 COPY</button></div>
@@ -251,13 +250,14 @@
 </div>
 
 <script>
+    // 四个特性不准减少
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "⚡ Direct"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Downloading...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 直连"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "正在下载中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。" },
-        ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P", "🕵️ ログなし", "⚡ 直結"], coffee: "コーヒーを奢る", hPriv: "プライバシー", hAboutSite: "サイトについて", hAboutUs: "運営", hContact: "連絡先", pPriv: "ログなし、追跡なし。すべてブラウザで暗号化されます。", pDisc: "P2P直結。ファイルはサーバーに保存されません。", pAbout: "© 2025 FlashDrop Pro. 効率を追求。", inputErr: "6桁のコードを入力してください。" },
-        ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P", "🕵️ 로그 없음", "⚡ 직결"], coffee: "커피 한 잔 사주기", hPriv: "개인정보 보호", hAboutSite: "사이트 정보", hAboutUs: "회사 정보", hContact: "연락처", pPriv: "로그 없음, 추적 없음. 브라우저 내 암호화 전송.", pDisc: "P2P 전송. 서버에 파일이 저장되지 않습니다.", pAbout: "© 2025 FlashDrop Pro. 효율적인 도구.", inputErr: "6자리 코드를 입력하세요." },
-        es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P", "🕵️ Sin registros", "⚡ Directo"], coffee: "Invítame un café", hPriv: "Privacidad", hAboutSite: "Sobre el sitio", hAboutUs: "Nosotros", hContact: "Contacto", pPriv: "Sin registros ni rastreo. Todo encriptado en tu navegador.", pDisc: "P2P directo. Los archivos no tocan nuestros servidores.", pAbout: "© 2025 FlashDrop Pro. Eficiencia total.", inputErr: "Ingrese el código de 6 dígitos." },
-        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P", "🕵️ कोई लॉग नहीं", "⚡ सीधा"], coffee: "कॉफी पिलाएं", hPriv: "गोपनीयता", hAboutSite: "साइट के बारे में", hAboutUs: "हमारे बारे में", hContact: "संपर्क", pPriv: "कोई लॉग नहीं, कोई ट्रैकिंग नहीं। सब कुछ सुरक्षित है।", pDisc: "सीधा P2P. फाइलें सर्वर पर नहीं जातीं।", pAbout: "© 2025 FlashDrop Pro. कुशलता पहले।", inputErr: "6 अंकों का कोड दर्ज करें।" }
+        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "⚡ Direct", "♾️ Unlimited"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Downloading...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "Or Scan QR Code" },
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 直连", "♾️ 无限次"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "正在下载中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫描二维码" },
+        ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P", "🕵️ ログなし", "⚡ 直結", "♾️ 無制限"], coffee: "コーヒーを奢る", hPriv: "プライバシー", hAboutSite: "サイトについて", hAboutUs: "運営", hContact: "連絡先", pPriv: "ログなし、追跡なし。すべてブラウザで暗号化されます。", pDisc: "P2P直結。ファイルはサーバーに保存されません。", pAbout: "© 2025 FlashDrop Pro. 効率を追求。", inputErr: "6桁のコードを入力してください。", orScan: "QRコードをスキャン" },
+        ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P", "🕵️ 로그 없음", "⚡ 직결", "♾️ 무제한"], coffee: "커피 한 잔 사주기", hPriv: "개인정보 보호", hAboutSite: "사이트 정보", hAboutUs: "회사 정보", hContact: "연락처", pPriv: "로그 없음, 추적 없음. 브라우저 내 암호화 전송.", pDisc: "P2P 전송. 서버에 파일이 저장되지 않습니다.", pAbout: "© 2025 FlashDrop Pro. 효율적인 도구.", inputErr: "6자리 코드를 입력하세요.", orScan: "QR 코드 스캔" },
+        es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P", "🕵️ Sin registros", "⚡ Directo", "♾️ Ilimitado"], coffee: "Invítame un café", hPriv: "Privacidad", hAboutSite: "Sobre el sitio", hAboutUs: "Nosotros", hContact: "Contacto", pPriv: "Sin registros ni rastreo. Todo encriptado en tu navegador.", pDisc: "P2P directo. Los archivos no tocan nuestros servidores.", pAbout: "© 2025 FlashDrop Pro. Eficiencia total.", inputErr: "Ingrese el código de 6 dígitos.", orScan: "O escanear QR" },
+        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P", "🕵️ कोई लॉग नहीं", "⚡ सीधा", "♾️ असीमित"], coffee: "कॉफी पिलाएं", hPriv: "गोपनीयता", hAboutSite: "साइट के बारे में", hAboutUs: "हमारे बारे में", hContact: "संपर्क", pPriv: "कोई लॉग नहीं, कोई ट्रैकिंग नहीं। सब कुछ सुरक्षित है।", pDisc: "सीधा P2P. फाइलें सर्वर पर नहीं जातीं।", pAbout: "© 2025 FlashDrop Pro. कुशलता पहले।", inputErr: "6 अंकों का कोड दर्ज करें।", orScan: "या क्यूआर स्कैन करें" }
     };
 
     let currLang = "en", peer = null, stagedFiles = [], videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
@@ -271,7 +271,7 @@
         document.getElementById('tab-send').innerText = d.tabSend; document.getElementById('tab-receive').innerText = d.tabReceive;
         document.getElementById('label-files').innerText = d.fileLab; document.getElementById('btn-share-files').innerText = d.shareF;
         document.getElementById('btn-share-text').innerText = d.shareT; document.getElementById('btn-connect').innerText = d.connect;
-        document.getElementById('foot-coffee').innerText = d.coffee;
+        document.getElementById('foot-coffee').innerText = d.coffee; document.getElementById('btn-scan').innerText = d.orScan;
         document.getElementById('foot-head-priv').innerText = d.hPriv; document.getElementById('foot-head-aboutsite').innerText = d.hAboutSite;
         document.getElementById('foot-head-aboutus').innerText = d.hAboutUs; document.getElementById('foot-head-contact').innerText = d.hContact;
         document.getElementById('foot-priv-p').innerText = d.pPriv; document.getElementById('foot-disc-p').innerText = d.pDisc;
@@ -304,10 +304,13 @@
         const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
         peer.on('open', () => {
-            document.getElementById('senderCodeArea').style.display = 'block';
+            const area = document.getElementById('senderCodeArea');
+            area.style.display = 'block';
             document.getElementById('myCode').innerText = code;
             document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
+            // 自动滑动到验证码界面
+            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
             startExpiryTimer();
         });
         peer.on('connection', c => {
