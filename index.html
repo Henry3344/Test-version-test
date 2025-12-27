@@ -126,6 +126,14 @@
         
         @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
         #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
+         /* --- 新增政策弹窗样式 --- */
+        .policy-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .policy-content { background: #111827; border: 1px solid var(--border); border-radius: 24px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 0 50px rgba(99, 102, 241, 0.2); }
+        .policy-content h2 { color: var(--primary); margin-top: 0; font-size: 20px; }
+        .policy-content p { line-height: 1.8; color: var(--text-muted); font-size: 14px; text-align: left; }
+        .close-policy { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-muted); font-weight: bold; }
+        .clickable-footer-link { cursor: pointer; transition: 0.3s; }
+        .clickable-footer-link:hover { color: var(--primary); text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -220,22 +228,29 @@
     <footer class="legal-footer">
         <div class="legal-section">
             <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a>
-            <h4 id="foot-head-priv">Privacy</h4>
-            <p id="foot-priv-p">Zero logs. Zero tracking. WebRTC encrypted.</p>
+            <h4 id="foot-head-priv" class="clickable-footer-link" onclick="showPolicy('priv')">Privacy</h4>
+            <p id="foot-priv-p">Zero logs. WebRTC encrypted. <span style="color:var(--primary); cursor:pointer;" onclick="showPolicy('priv')">[Read More]</span></p>
         </div>
         <div class="legal-section">
-            <h4 id="foot-head-aboutsite">About Site</h4>
-            <p id="foot-disc-p">Decentralized P2P transmission. No server storage.</p>
+            <h4 id="foot-head-aboutsite" class="clickable-footer-link" onclick="showPolicy('site')">About Site</h4>
+            <p id="foot-disc-p">No server storage. <span style="color:var(--primary); cursor:pointer;" onclick="showPolicy('site')">[Technical Detail]</span></p>
         </div>
         <div class="legal-section">
-            <h4 id="foot-head-aboutus">About Us</h4>
-            <p id="foot-about-p">© 2025 FlashDrop Pro. Fast & Private.</p>
+            <h4 id="foot-head-aboutus" class="clickable-footer-link" onclick="showPolicy('us')">About Us</h4>
+            <p id="foot-about-p">© 2025 FlashDrop Pro. <span style="color:var(--primary); cursor:pointer;" onclick="showPolicy('us')">[Identity]</span></p>
         </div>
         <div class="legal-section" style="width: 100%; max-width: 100%; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
             <h4 id="foot-head-contact">Contact</h4>
             <p>Tel: 9292664485<br>Email: flashdroppro@gmail.com</p>
         </div>
     </footer>
+
+    <div id="policyModal" class="policy-modal" onclick="closePolicy()">
+        <div class="policy-content" onclick="event.stopPropagation()">
+            <span class="close-policy" onclick="closePolicy()">×</span>
+            <div id="policyBody"></div>
+        </div>
+    </div>
 </div>
 
 <div class="modal-overlay" id="adModal">
@@ -441,6 +456,29 @@
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
     window.onload = () => { initStars(); applyI18N(); renderHistory(); };
+    // 新增：处理底部政策弹窗
+    function showPolicy(type) {
+        const modal = document.getElementById('policyModal');
+        const body = document.getElementById('policyBody');
+        const lang = currLang || 'en';
+        const contents = {
+            priv: {
+                en: `<h2>Privacy Policy</h2><p><strong>1. Zero Logs:</strong> We do not track IP addresses, file names, or metadata. Your privacy is our priority.<br><strong>2. End-to-End:</strong> All encryption happens directly in your browser using WebRTC technology.<br><strong>3. No Persistence:</strong> Once the browser tab is closed, all session data is permanently wiped from memory.</p>`,
+                zh: `<h2>隐私政策</h2><p><strong>1. 零日志：</strong> 我们不记录 IP 地址、文件名或任何元数据。您的隐私是我们的首要任务。<br><strong>2. 端到端加密：</strong> 所有加密均通过 WebRTC 技术在您的浏览器中直接完成。<br><strong>3. 无残留：</strong> 一旦关闭浏览器标签页，所有会话数据将从内存中永久抹除。</p>`
+            },
+            site: {
+                en: `<h2>Technical Details</h2><p>FlashDrop Pro utilizes Peer-to-Peer (P2P) technology for high-speed transfers. Since files are sent directly between devices, there is no intermediate server storage. This design ensures maximum speed (limited only by your bandwidth) and ultimate data sovereignty.</p>`,
+                zh: `<h2>技术细节</h2><p>FlashDrop Pro 利用 P2P（点对点）技术进行高速传输。由于文件是在设备之间直接发送的，因此没有中间服务器存储。这种设计确保了极高的速度（仅受限于您的带宽）和数据主权。</p>`
+            },
+            us: {
+                en: `<h2>About Us</h2><p>Built for efficiency and privacy. FlashDrop Pro is a lightweight solution for power users who need to share data securely and quickly without the bloat of traditional cloud services.</p>`,
+                zh: `<h2>关于我们</h2><p>为效率和隐私而生。FlashDrop Pro 是为需要安全、快速共享数据，且不希望受到传统云服务冗余功能干扰的高级用户打造的轻量级解决方案。</p>`
+            }
+        };
+        body.innerHTML = (contents[type][lang] || contents[type]['en']);
+        modal.style.display = 'flex';
+    }
+    function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
 </script>
 </body>
 </html>
