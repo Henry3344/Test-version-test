@@ -51,7 +51,7 @@
         }
 
         .ad-side { width: 160px; min-width: 160px; height: 600px; position: sticky; top: 130px; border: 1px dashed var(--border); border-radius: 12px; background: rgba(30, 41, 59, 0.2); overflow: hidden; }
-        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; min-height: 90px; margin-bottom: 15px; }
+        .ad-space { background: rgba(30, 41, 59, 0.5); display: flex; justify-content: center; align-items: center; border: 1px dashed var(--border); border-radius: 12px; overflow: hidden; width: 100%; min-height: 90px; margin-bottom: 25px; }
 
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
@@ -60,64 +60,36 @@
         .panel { display: none; width: 100%; }
         .panel.active { display: block; }
         
-        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 12px; margin-bottom: 15px; max-height: 220px; overflow-y: auto; }
+        /* 暂存区：根据 Henry 截图 3 完美还原 */
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 20px; padding: 12px; margin-bottom: 25px; max-height: 220px; overflow-y: auto; }
         .staged-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: rgba(255,255,255,0.03); border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05); }
         .staged-item .file-left { display: flex; align-items: center; gap: 12px; overflow: hidden; }
         .staged-item .file-name { color: #f8fafc; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
         .staged-item .remove-btn { color: #f87171; cursor: pointer; font-size: 20px; font-weight: bold; padding: 0 5px; }
 
-        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 30px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; text-align: center; }
-        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 160px; }
+        /* Henry, 模块间距拉开（对标图1） */
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 30px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 160px; text-align: center; margin-bottom: 25px; }
+        #btn-share-files { margin-bottom: 35px; }
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; min-height: 160px; margin-bottom: 25px; }
+        #btn-share-text { margin-bottom: 25px; }
         textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        /* Henry, 核心修改：使用 Flexbox 重构接收输入框布局 */
-        .receive-input-wrap { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; /* 内容整体居中 */
-            gap: 15px; /* 两个元素之间的合适间距 */
-            width: 100%; 
-            max-width: 320px; 
-            margin-bottom: 20px;
-            background: #0f172a; /* 背景和边框移到容器上 */
-            border: 2px solid var(--border);
-            border-radius: 22px;
-            padding: 12px 15px;
-        }
-        input[type="number"] { 
-            width: auto; /* 宽度自适应 */
-            max-width: 140px;
-            padding: 0; 
-            border: none; /* 去掉输入框自身的边框 */
-            background: transparent; /* 背景透明 */
-            color: white; 
-            font-size: 32px; 
-            text-align: center; /* 数字居中 */
-            outline: none;
-            flex-grow: 1;
-        }
-        .inline-scan-text { 
-            position: static; /* 取消绝对定位 */
-            transform: none;
-            font-size: 11px; 
-            font-weight: 900; 
-            background: rgba(99, 102, 241, 0.2); 
-            color: var(--primary); 
-            border: 1.5px solid var(--primary); 
-            padding: 8px 12px; 
-            border-radius: 12px; 
-            cursor: pointer;
-            white-space: nowrap; /* 防止文字换行 */
-        }
+        .receive-input-wrap { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; max-width: 320px; margin-bottom: 25px; background: #0f172a; border: 2px solid var(--border); border-radius: 22px; padding: 12px 15px; }
+        input[type="number"] { width: auto; max-width: 140px; padding: 0; border: none; background: transparent; color: white; font-size: 32px; text-align: center; outline: none; flex-grow: 1; }
+        .inline-scan-text { font-size: 11px; font-weight: 900; background: rgba(99, 102, 241, 0.2); color: var(--primary); border: 1.5px solid var(--primary); padding: 8px 12px; border-radius: 12px; cursor: pointer; white-space: nowrap; }
 
         button.action-btn { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); text-transform: uppercase; }
+        
         #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
         #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; }
 
-        .legal-footer { padding: 60px 20px 100px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; text-align: left; }
-        .legal-section { flex: 1; min-width: 280px; max-width: 320px; margin-bottom: 20px; }
-        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 15px; }
+        /* Henry, 页脚声明间距调窄 */
+        .legal-footer { padding: 40px 20px 60px 20px; font-size: 11px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; justify-content: center; gap: 25px; flex-wrap: wrap; text-align: left; }
+        .legal-section { flex: 1; min-width: 280px; max-width: 320px; margin-bottom: 10px; }
+        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 8px; font-weight: 900; letter-spacing: 1px; }
+        .legal-section p { line-height: 1.5; opacity: 0.8; margin-bottom: 5px; }
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; margin-top: 10px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
         #scanner-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; padding-top: 80px; }
@@ -186,7 +158,7 @@
         <div class="legal-section"><h4 id="h4-about">ABOUT US</h4><p id="foot-about-p"></p><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" id="btn-coffee">☕ Buy me a coffee</a></div>
         <div class="legal-section"><h4 id="h4-privacy">PRIVACY POLICY</h4><p id="foot-priv-p"></p></div>
         <div class="legal-section"><h4>COPYRIGHT</h4><p>© 2025 FlashDrop Pro.</p></div>
-        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center;"><h4 id="h4-contact">CONTACT INFO</h4><p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p></div>
+        <div class="legal-section" style="width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; text-align: center;"><h4 id="h4-contact">CONTACT INFO</h4><p style="color:var(--primary); font-weight:bold;">Phone: 9292664485 &nbsp; | &nbsp; Email: flashdroppro@gmail.com</p></div>
     </footer>
 </div>
 
@@ -197,11 +169,7 @@
 <script>
     const I18N = {
         en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "♾️ Unlimited", "⚡ Direct"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 DOWNLOAD", guide: "Inform the other party within 10 minutes; it will self-destruct after.", aboutH4: "ABOUT US", privH4: "PRIVACY POLICY", coffee: "☕ Buy me a coffee", contactH4: "CONTACT INFO", inputErr: "Enter code please", sendingRemind: "Securing & Sending...<br>Don't close the page.", receivingRemind: "Handshaking & Downloading...<br>Don't close the page.", orScan: "OR SCAN", aboutP: "Built for speed. Direct transfers, no server storage.", privP: "End-to-end encrypted. Your privacy stays yours." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。" },
-        ja: { tabSend: "送信", tabReceive: "受信", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "♾️ 無制限", "⚡ 直接転送"], aboutH4: "私たちについて", privH4: "プライバシー", coffee: "☕ コーヒーを奢る", contactH4: "連絡先情報", inputErr: "コードを入力してください", orScan: "スキャン" },
-        ko: { tabSend: "보내기", tabReceive: "받기", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "♾️ 무제한", "⚡ 직거래"], aboutH4: "회사 소개", privH4: "개인정보", coffee: "☕ 커피 한 잔 사기", contactH4: "연락처 정보", inputErr: "코드를 입력하세요", orScan: "스캔하기" },
-        es: { tabSend: "Enviar", tabReceive: "Recibir", badges: ["🔒 P2P Cifrado", "🕵️ Sin registros", "♾️ Ilimitado", "⚡ Directo"], aboutH4: "SOBRE NOSOTROS", privH4: "PRIVACIDAD", coffee: "☕ Invítame a un café", contactH4: "CONTACTO", inputErr: "Ingresa el código", orScan: "ESCANEAR" },
-        hi: { tabSend: "भेजें", tabReceive: "प्राप्त करें", badges: ["🔒 P2P एन्क्रिप्टेड", "🕵️ कोई लॉग नहीं", "♾️ असीमित", "⚡ सीधा"], aboutH4: "हमारे बारे में", privH4: "गोपनीयता", coffee: "☕ मेरे लिए कॉफी खरीदें", contactH4: "संपर्क जानकारी", inputErr: "कोड दर्ज करें", orScan: "स्कैन" }
+        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "♾️ 无限次", "⚡ 直连传输"], drop: "松手即可添加", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 下载文件", guide: "请在10分钟内将此码告知对方，10分钟后该传输将自動销毀。", aboutH4: "关于我们", privH4: "隐私政策", coffee: "☕ 请我喝杯咖啡", contactH4: "联系信息", inputErr: "请输入验证码", sendingRemind: "正在加密发送中...<br>请勿关闭当前页面", receivingRemind: "正在安全下載中...<br>请勿关闭当前页面", orScan: "扫码接收", aboutP: "受够了限速网盘？FlashDrop Pro 是为了快和稳而生的工具。文件直传，不经过我，我也懒得看。", privP: "全程加密直连，不存日志，没跟踪。你的隐私就是你的，我也看不见，大可放心用。" }
     };
 
     const smartLinks = ["https://limpfeel.com/MFoqkO", "https://www.effectivegatecpm.com/p5akr5b1e?key=f3d45de493bf7cfb65c663950a6dfc8d", "https://otieu.com/4/10380243"];
