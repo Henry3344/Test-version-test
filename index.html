@@ -49,54 +49,24 @@
         .intro-card h4 { margin: 0 0 5px 0; font-size: 13px; color: #fff; font-weight: 900; }
         .intro-card p { margin: 0; font-size: 10px; color: var(--text-muted); line-height: 1.3; }
 
-        /* --- 下载限制区域定制样式 --- */
-        .limit-config-box { 
-            background: rgba(15, 23, 42, 0.6); 
-            border-radius: 20px; 
-            padding: 15px; 
-            margin: 15px 0; 
-            border: 1px solid rgba(255,255,255,0.05);
-            text-align: center;
-        }
-        .limit-label-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
+        .limit-config-box { background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .limit-label-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
         .limit-label { font-size: 14px; color: var(--text); font-weight: 800; }
-        select#downloadLimit { 
-            background: #0f172a; 
-            color: #fff; 
-            border: 1.8px solid var(--border); 
-            padding: 8px 16px; 
-            border-radius: 12px; 
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
-            appearance: none;
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: calc(100% - 12px) center;
-            padding-right: 35px;
-        }
-        .limit-hint { 
-            font-size: 11px; 
-            color: var(--text-muted); 
-            font-style: italic; 
-            opacity: 0.8; 
-            margin-top: 5px;
-        }
+        select#downloadLimit { background: #0f172a; color: #fff; border: 1.8px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 12px) center; padding-right: 35px; }
+        .limit-hint { font-size: 11px; color: var(--text-muted); font-style: italic; opacity: 0.8; margin-top: 5px; }
 
-        @media (max-width: 650px) { 
-            .intro-section h1 { font-size: 20px; }
-            .intro-section p.desc { font-size: 12px; }
-            .intro-card h4 { font-size: 11px; }
-            .intro-card p { font-size: 9px; }
-        }
+        /* --- 场景建议区样式 4242.jpg --- */
+        .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto; padding: 0 15px; }
+        .scenario-card { flex: 1; border-radius: 24px; padding: 20px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
+        .scenario-green { border-color: rgba(16, 185, 129, 0.3); }
+        .scenario-red { border-color: rgba(239, 68, 68, 0.3); }
+        .scenario-title { font-size: 15px; font-weight: 900; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 12px; color: var(--text-muted); line-height: 1.8; }
+        .scenario-list li { position: relative; padding-left: 12px; margin-bottom: 6px; }
+        .scenario-list li::before { content: '•'; position: absolute; left: 0; color: inherit; }
+        @media (max-width: 550px) { .scenarios-wrap { flex-direction: column; } }
+
+        @media (max-width: 650px) { .intro-section h1 { font-size: 20px; } .intro-section p.desc { font-size: 12px; } .intro-card h4 { font-size: 11px; } .intro-card p { font-size: 9px; } }
 
         #safety-notice-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(8px); }
         .safety-card { background: #111827; padding: 40px 30px; border-radius: 32px; border: 1px solid var(--border); text-align: center; max-width: 420px; width: 100%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
@@ -290,9 +260,9 @@
                         <div class="limit-label-wrap">
                             <span class="limit-label" id="label-limit">Download Limit:</span>
                             <select id="downloadLimit">
-                                <option value="1">1 Time</option>
-                                <option value="3">3 Times</option>
-                                <option value="5">5 Times</option>
+                                <option value="1">Only 1 Time</option>
+                                <option value="3">Only 3 Times</option>
+                                <option value="5">Only 5 Times</option>
                                 <option value="999">Unlimited</option>
                             </select>
                         </div>
@@ -336,6 +306,17 @@
         <div class="ad-side" id="right-ad-zone">
             <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
             <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+        </div>
+    </div>
+
+    <div class="scenarios-wrap">
+        <div class="scenario-card scenario-green">
+            <div class="scenario-title" id="sc-title-g" style="color:var(--success)">✔ Suitable</div>
+            <ul class="scenario-list" id="sc-list-g"></ul>
+        </div>
+        <div class="scenario-card scenario-red">
+            <div class="scenario-title" id="sc-title-r" style="color:var(--danger)">✖ Unsuitable</div>
+            <ul class="scenario-list" id="sc-list-r"></ul>
         </div>
     </div>
 
@@ -394,8 +375,14 @@
 
 <script>
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", textErr: "Please enter text first.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary, Vanishing Transfer Tool", introD: "Files connect directly between sender and receiver. Data is physically erased immediately after transfer or page closure.", f1T: "10-Min Auto-Destruct", f1D: "Link expires automatically.", f2T: "Visits Choice", f2D: "Supports 1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click cut-off all.", labLimit: "Download Limit:", hintLimit: "Default 1 download and 10 mins validity, aimed at minimizing leakage risk." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。", introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "文件在发送者与接收者之间直连，传输完成或页面关闭后，数据即刻物理抹除。", f1T: "10分钟自动销毁", f1D: "过期后链接自动失效", f2T: "访问次数可选", f2D: "支持 1/3/5/无限次", f3T: "随时手动终止", f3D: "一键切断所有传输", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期，旨在最大限度降低泄露风险" }
+        en: { 
+            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", textErr: "Please enter text first.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary, Vanishing Transfer Tool", introD: "Files connect directly between sender and receiver. Data is physically erased immediately after transfer or page closure.", f1T: "10-Min Auto-Destruct", f1D: "Link expires automatically.", f2T: "Visits Choice", f2D: "Supports 1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click cut-off all.", labLimit: "Download Limit:", hintLimit: "Default 1 download and 10 mins validity, aimed at minimizing leakage risk.", optL: "Only ", optU: "Unlimited",
+            scTG: "✔ Suitable", scTR: "✖ Unsuitable", scLG: ["Cross-device temporary file transfer", "Sharing sensitive files on public PCs", "Self-destructing message delivery"], scLR: ["Long-term cloud storage", "Team long-term collaboration space", "Permanently retained download links"]
+        },
+        zh: { 
+            tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。", introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "文件在发送者与接收者之间直连，传输完成或页面关闭后，数据即刻物理抹除。", f1T: "10分钟自动销毁", f1D: "过期后链接自动失效", f2T: "访问次数可选", f2D: "支持 1/3/5/无限次", f3T: "随时手动终止", f3D: "一键切断所有传输", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期，旨在最大限度降低泄露风险", optL: "仅限 ", optU: "无限次",
+            scTG: "✔ 适合场景", scTR: "✖ 不适合场景", scLG: ["跨设备临时传输图片或文字", "在公共电脑分享敏感文件", "阅后即毁的一次性信息传递"], scLR: ["作为长期云盘存储资料", "团队长期协作共享空间", "需要永久保留下载链接"]
+        }
     };
 
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
@@ -423,9 +410,21 @@
         document.getElementById('f2-d').innerText = d.f2D; document.getElementById('f3-t').innerText = d.f3T;
         document.getElementById('f3-d').innerText = d.f3D;
 
-        // 下载限制区域多语言
         document.getElementById('label-limit').innerText = d.labLimit;
         document.getElementById('limit-hint-text').innerText = d.hintLimit;
+
+        // 更新下拉框文字
+        const sel = document.getElementById('downloadLimit');
+        sel.options[0].text = `${d.optL}1${currLang==='en'?' Time':' 次下载'}`;
+        sel.options[1].text = `${d.optL}3${currLang==='en'?' Times':' 次下载'}`;
+        sel.options[2].text = `${d.optL}5${currLang==='en'?' Times':' 次下载'}`;
+        sel.options[3].text = d.optU;
+
+        // 更新场景区
+        document.getElementById('sc-title-g').innerText = d.scTG;
+        document.getElementById('sc-title-r').innerText = d.scTR;
+        document.getElementById('sc-list-g').innerHTML = d.scLG.map(t => `<li>${t}</li>`).join('');
+        document.getElementById('sc-list-r').innerHTML = d.scLR.map(t => `<li>${t}</li>`).join('');
     }
 
     function triggerAd(mode) {
