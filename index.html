@@ -492,36 +492,46 @@
         const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
     }
-    // 1. 修改后的复制函数：把 alert 换成了 showToast
+    // 1. 复制文本并弹出紫色小气泡
     function copyReceivedText() { 
-        navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
-        showToast("Copied! ❤️"); // 这里换成气泡提示了
-        resetReceiver(); 
+        const txt = document.getElementById('receivedText').innerText;
+        if(txt) {
+            navigator.clipboard.writeText(txt); 
+            showToast("Copied! ❤️"); 
+            setTimeout(resetReceiver, 1000); 
+        }
     }
 
-    // 2. 新增的 showToast 小助手
+    // 2. 气泡提示助手（核心逻辑）
     function showToast(msg) {
         const t = document.getElementById('toast');
         if(t) {
             t.innerText = msg;
             t.style.display = 'block';
-            // 2.5秒后自动消失，很丝滑
             setTimeout(() => { t.style.display = 'none'; }, 2500);
         }
     }
 
+    // 3. 广告拦截检测
     function detectAdBlock() {
         setTimeout(() => {
             const topAd = document.getElementById('top-ad-zone');
-            const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
-            if (topAd.offsetHeight < 20 || !hasContent) {
-                // 这里的 ID 改成新的了
-                document.getElementById('safety-notice-view').style.display = 'flex';
+            const hasContent = topAd && (topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0);
+            if (!topAd || topAd.offsetHeight < 20 || !hasContent) {
+                const notice = document.getElementById('safety-notice-view');
+                if(notice) notice.style.display = 'flex';
                 document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
             }
         }, 1500);
-        return false;
     }
+
+    // 4. 初始化（一定要保留这一块！）
+    window.onload = () => { 
+        initStars(); 
+        applyI18N(); 
+        renderHistory(); 
+        detectAdBlock(); 
+    };
 
     function showPolicy(type) {
         const modal = document.getElementById('policyModal');
