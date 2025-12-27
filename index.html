@@ -140,6 +140,12 @@
         
         @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
         #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
+        /* 按钮悬停发光与步骤条 */
+        button.action-btn:hover { box-shadow: 0 0 30px rgba(99, 102, 241, 0.8); transform: translateY(-3px); filter: brightness(1.1); }
+        @keyframes pulse-glow { 0%, 100% { box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); } 50% { box-shadow: 0 4px 25px rgba(99, 102, 241, 0.6); } }
+        .steps-bar { display: flex; justify-content: space-between; width: 100%; max-width: 500px; margin-bottom: 25px; opacity: 0.8; }
+        .step-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); font-weight: 800; }
+        .step-dot { width: 8px; height: 8px; background: var(--border); border-radius: 50%; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -175,6 +181,14 @@
         </div>
 
         <div class="content-area">
+            <div class="steps-bar">
+                <div class="step-item"><div class="step-dot" style="background:var(--primary); box-shadow:0 0 10px var(--primary);"></div><span>Select Files</span></div>
+                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
+                <div class="step-item"><div class="step-dot"></div><span>Get Code</span></div>
+                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
+                <div class="step-item"><div class="step-dot"></div><span>Download</span></div>
+            </div>
+
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
@@ -338,6 +352,10 @@
         document.getElementById('foot-disc-p').innerText = d.pDisc;
         document.getElementById('foot-about-p').innerText = d.pAbout; 
         document.getElementById('history-title-text').innerText = d.histTitle;
+        const badgeIcons = ["🔒", "🕵️", "☁️", "🛠️"];
+        const newBadges = currLang === 'zh' ? ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"] : ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"];
+        document.getElementById('trust-badges').innerHTML = newBadges.map((b, i) => `<span>${badgeIcons[i]} ${b}</span>`).join('');
+
         document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
         
         // 这里会自动填充那个不再被拦截的文案
