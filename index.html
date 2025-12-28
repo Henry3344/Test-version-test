@@ -113,75 +113,24 @@
         .pg-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; position: relative; }
         .pg-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; box-shadow: 0 0 10px var(--primary); }
 
-/* --- 最终优化版页脚：特性图标 + 大标题 + 箭头动效 --- */
-.legal-footer { 
-    padding: 20px 20px 30px 20px; 
-    background: #030712; 
-    border-top: 1px solid var(--border);
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    gap: 20px; 
-}
+/* --- FAQ 与页脚联合样式 (包含特性图标与动效) --- */
+.faq-container { max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: left; }
+.faq-container h3 { font-size: 16px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
+details { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 10px; padding: 12px 15px; transition: 0.3s; }
+details[open] { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+summary { font-size: 14px; font-weight: 800; color: white; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+summary::after { content: '+'; color: var(--primary); font-size: 18px; transition: 0.3s; }
+details[open] summary::after { content: '-'; transform: rotate(90deg); }
+.faq-answer { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-/* 特性图标布局 */
-.trust-signals-grid {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 5px;
-}
-
-.signal-item {
-    text-align: center;
-    font-size: 11px;
-    color: var(--text-muted);
-}
-
-.signal-item div {
-    font-size: 22px;
-    margin-bottom: 5px;
-    filter: drop-shadow(0 0 5px var(--primary));
-}
-
-/* 链接标题加大 + 箭头动效 */
-.clickable-footer-link { 
-    cursor: pointer; 
-    display: inline-flex; 
-    align-items: center; 
-    gap: 8px; 
-    transition: 0.3s; 
-    color: var(--text); 
-    font-weight: 900; 
-    font-size: 18px; 
-}
-
-/* 箭头持续微动吸引注意 */
-.clickable-footer-link::after { 
-    content: '➔'; 
-    font-size: 14px; 
-    opacity: 0.8; 
-    animation: arrowMove 1.5s infinite ease-in-out; 
-}
-
-@keyframes arrowMove {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(5px); color: var(--primary); }
-}
-
-/* 合并后的版权与联系信息 */
-.footer-info-block {
-    width: 100%; 
-    max-width: 600px; 
-    border-top: 1px dashed rgba(255,255,255,0.1); 
-    padding-top: 15px; 
-    margin-top: 10px; 
-    text-align: center; 
-    opacity: 0.7;
-    font-size: 11px;
-}
+.legal-footer { padding: 20px 20px 30px 20px; background: #030712; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.trust-signals-grid { display: flex; justify-content: center; gap: 30px; width: 100%; max-width: 600px; margin-bottom: 5px; }
+.signal-item { text-align: center; font-size: 11px; color: var(--text-muted); }
+.signal-item div { font-size: 22px; margin-bottom: 5px; filter: drop-shadow(0 0 5px var(--primary)); }
+.clickable-footer-link { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; color: white; font-weight: 900; font-size: 18px; }
+.clickable-footer-link::after { content: '➔'; font-size: 14px; opacity: 0.8; animation: arrowMove 1.5s infinite ease-in-out; }
+@keyframes arrowMove { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); color: var(--primary); } }
+.footer-info-block { width: 100%; max-width: 600px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-top: 10px; text-align: center; opacity: 0.7; font-size: 11px; }
 
         .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 12px; transition: 0.3s; margin-bottom: 25px; box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
         .coffee-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
@@ -337,22 +286,28 @@
 </div>
 
 <footer class="legal-footer">
-    <div>
-        <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a>
-    </div>
+<div class="faq-container">
+    <h3>Common Questions</h3>
+    <details><summary>Do my files ever touch your servers?</summary><div class="faq-answer">No. FlashDrop Pro uses peer-to-peer (P2P) connections powered by WebRTC. Files and text are sent directly between browsers and are never uploaded to or stored on our servers.</div></details>
+    <details><summary>Do you store logs or track users?</summary><div class="faq-answer">No. FlashDrop Pro does not store IP addresses, transfer logs, file names, or user identities. We do not use tracking cookies or build user profiles.</div></details>
+    <details><summary>How is the data secured during transfer?</summary><div class="faq-answer">Transfers are encrypted using standard WebRTC security mechanisms. Data is encrypted in transit and is never decrypted by FlashDrop Pro servers.</div></details>
+    <details><summary>Can the recipient see my IP address?</summary><div class="faq-answer">Because FlashDrop Pro uses direct peer-to-peer connections, your IP address may be visible to the receiving peer. We recommend using a VPN if this is a concern.</div></details>
+    <details><summary>Is FlashDrop Pro suitable for sharing sensitive files?</summary><div class="faq-answer">FlashDrop Pro is designed for privacy-conscious transfers. Since files are not stored on servers, it reduces exposure risk. However, users are responsible for deciding what they share.</div></details>
+    <details><summary>Can I recover a file after the session ends?</summary><div class="faq-answer">No. Once a session ends or the browser tab is closed, the data is destroyed and cannot be recovered by anyone.</div></details>
+</div>
 
+<footer class="legal-footer">
+    <div><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a></div>
     <div class="trust-signals-grid">
         <div class="signal-item"><div>⚡</div><p>No Upload Limits</p></div>
         <div class="signal-item"><div>🔐</div><p>Client-Side Only</p></div>
         <div class="signal-item"><div>📂</div><p>Auto-Destruct</p></div>
     </div>
-
     <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; width: 100%;">
-        <h4 id="foot-head-priv" class="clickable-footer-link" onclick="window.location.href='privacy.html'">Privacy</h4>
-        <h4 id="foot-head-aboutsite" class="clickable-footer-link" onclick="window.location.href='about-side.html'">About Site</h4>
-        <h4 id="foot-head-aboutus" class="clickable-footer-link" onclick="window.location.href='about-us.html'">About Us</h4>
+        <h4 class="clickable-footer-link" onclick="window.location.href='privacy.html'">Privacy</h4>
+        <h4 class="clickable-footer-link" onclick="window.location.href='about-side.html'">About Site</h4>
+        <h4 class="clickable-footer-link" onclick="window.location.href='about-us.html'">About Us</h4>
     </div>
-
     <div class="footer-info-block">
         <p style="margin: 5px 0; font-weight: 800;">© 2025-2026 FlashDrop Pro. All rights reserved.</p>
         <p style="margin: 5px 0; opacity: 0.8;">Privacy-first P2P Workspace.</p>
