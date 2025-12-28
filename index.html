@@ -123,12 +123,47 @@ summary::after { content: '+'; color: var(--primary); font-size: 18px; transitio
 details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .faq-answer { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-.legal-footer { padding: 20px 20px 30px 20px; background: #030712; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 20px; }
-.trust-signals-grid { display: flex; justify-content: center; gap: 30px; width: 100%; max-width: 600px; margin-bottom: 5px; }
-.signal-item { text-align: center; font-size: 11px; color: var(--text-muted); }
-.signal-item div { font-size: 22px; margin-bottom: 5px; filter: drop-shadow(0 0 5px var(--primary)); }
-.clickable-footer-link { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; color: white; font-weight: 900; font-size: 18px; }
-.clickable-footer-link::after { content: '➔'; font-size: 14px; opacity: 0.8; animation: arrowMove 1.5s infinite ease-in-out; }
+/* --- 最终版横向页脚样式 --- */
+.legal-footer { 
+    padding: 15px 10px 25px 10px; /* 进一步收窄上下间距 */
+    background: #030712; 
+    border-top: 1px solid var(--border);
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 15px; 
+}
+
+/* 链接容器：强制横向不换行 */
+.footer-links-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* 间距调小一点，防止手机端挤不下 */
+    width: 100%;
+    flex-wrap: nowrap; /* 强制不换行 */
+}
+
+.clickable-footer-link { 
+    cursor: pointer; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 4px; 
+    transition: 0.3s; 
+    color: white; 
+    font-weight: 800; 
+    font-size: 14px; /* 稍微缩小字号，保证横向排布 */
+    white-space: nowrap; /* 文本不换行 */
+}
+
+/* 箭头动效微调 */
+.clickable-footer-link::after { 
+    content: '➔'; 
+    font-size: 11px; 
+    opacity: 0.7; 
+    animation: arrowMove 1.5s infinite ease-in-out; 
+}
+
 @keyframes arrowMove { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(5px); color: var(--primary); } }
 .footer-info-block { width: 100%; max-width: 600px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-top: 10px; text-align: center; opacity: 0.7; font-size: 11px; }
 
