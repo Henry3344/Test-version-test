@@ -163,6 +163,44 @@
         .steps-bar { display: flex; justify-content: space-between; width: 100%; max-width: 500px; margin-bottom: 25px; opacity: 0.8; }
         .step-item { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 11px; color: var(--text-muted); font-weight: 800; }
         .step-dot { width: 8px; height: 8px; background: var(--border); border-radius: 50%; margin-bottom: 5px; }
+/* --- 强制显示所有广告位 --- */
+.main-wrapper {
+    max-width: 1400px !important; /* 调大总宽度，给侧边留位置 */
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.content-area {
+    flex: 0 1 600px !important; /* 固定中间宽度，不让它乱挤 */
+    min-width: 350px !important;
+}
+
+.ad-side {
+    display: flex !important; /* 强制唤醒 */
+    width: 160px !important;
+    min-width: 160px !important;
+    height: 600px !important;
+    background: rgba(255, 255, 255, 0.05) !important; /* 没广告时的底色 */
+    border: 1px dashed #4f46e5 !important;
+    flex-shrink: 0 !important; /* 绝对不许收缩 */
+}
+
+.ad-top, .ad-bottom {
+    display: flex !important;
+    width: 728px !important;
+    height: 90px !important;
+    min-height: 90px !important;
+    margin: 20px auto !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px dashed #4f46e5 !important;
+    clear: both;
+}
+
+/* 屏幕太小时的特殊处理 */
+@media (max-width: 1100px) {
+    .ad-side { display: none !important; } /* 侧边还是藏起来吧，不然重叠了 */
+    .main-wrapper { flex-direction: column; align-items: center; }
+}
     </style>
 </head>
 <body>
