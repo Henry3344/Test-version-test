@@ -262,30 +262,29 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    gap: 6px; 
-    margin-top: 12px; 
+    gap: 5px; /* 极小的间距 */
+    margin-top: 8px; /* 离 Logo 近一点 */
     width: 100%; 
-    flex-wrap: nowrap; 
-    padding: 5px 0; /* 核心修复：给上下留出 5px 空间，露出蓝色边框 */
+    flex-wrap: nowrap; /* 核心：强制不换行 */
 ">
-    <span class="status-tag" style="font-size: 10px; font-weight: 800; color: #94a3b8; background: rgba(99, 102, 241, 0.05); padding: 4px 8px; border-radius: 20px; border: 1.5px solid rgba(99, 102, 241, 0.4); white-space: nowrap; box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);">
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
         <span class="lang-en">🔒 P2P</span>
         <span class="lang-zh" style="display:none;">🔒 P2P 加密</span>
     </span>
 
-    <span class="status-tag" style="font-size: 10px; font-weight: 800; color: #94a3b8; background: rgba(99, 102, 241, 0.05); padding: 4px 8px; border-radius: 20px; border: 1.5px solid rgba(99, 102, 241, 0.4); white-space: nowrap; box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);">
-        <span class="lang-en">🕵️ NO LOGS</span>
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">🕵️ No Logs</span>
         <span class="lang-zh" style="display:none;">🕵️ 零日志</span>
     </span>
 
-    <span class="status-tag" style="font-size: 10px; font-weight: 800; color: #94a3b8; background: rgba(99, 102, 241, 0.05); padding: 4px 8px; border-radius: 20px; border: 1.5px solid rgba(99, 102, 241, 0.4); white-space: nowrap; box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);">
-        <span class="lang-en">☁️ CF SECURED</span>
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">☁️ CF Secured</span>
         <span class="lang-zh" style="display:none;">☁️ CF 加速</span>
     </span>
 
-    <span class="status-tag" style="font-size: 10px; font-weight: 800; color: #94a3b8; background: rgba(99, 102, 241, 0.05); padding: 4px 8px; border-radius: 20px; border: 1.5px solid rgba(99, 102, 241, 0.4); white-space: nowrap; box-shadow: 0 0 8px rgba(99, 102, 241, 0.2);">
-        <span class="lang-en">🛠️ GITHUB SYNC</span>
-        <span class="lang-zh" style="display:none;">🛠️ GITHUB 部署</span>
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">🛠️ GitHub Sync</span>
+        <span class="lang-zh" style="display:none;">🛠️ GitHub 部署</span>
     </span>
 </div>
     </nav>
