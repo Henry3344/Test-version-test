@@ -29,7 +29,8 @@
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 130px; transition: opacity 0.5s; }
-        
+        body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
+
         .intro-section { width: 100%; max-width: 900px; margin: 0 auto 30px auto; padding: 0 15px; text-align: center; }
         .intro-badges { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .intro-badges span { color: #10b981; font-size: 11px; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 20px; background: rgba(16, 185, 129, 0.05); white-space: nowrap; }
@@ -38,64 +39,169 @@
         
         .intro-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
         .intro-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.3); padding: 15px 8px; border-radius: 18px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .intro-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
         .intro-card .icon { font-size: 20px; margin-bottom: 8px; }
         .intro-card h4 { margin: 0 0 5px 0; font-size: 13px; color: #fff; font-weight: 900; }
         .intro-card p { margin: 0; font-size: 10px; color: var(--text-muted); line-height: 1.3; }
 
+        .limit-config-box { background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .limit-label-wrap { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 8px; }
+        .limit-label { font-size: 14px; color: var(--text); font-weight: 800; }
+        select#downloadLimit { background: #0f172a; color: #fff; border: 1.8px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 12px) center; padding-right: 35px; }
+        .limit-hint { font-size: 11px; color: var(--text-muted); font-style: italic; opacity: 0.8; margin-top: 5px; }
+
+        /* --- 场景建议区：标题加大，强制并排 --- */
+        .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
+        .scenario-card { flex: 1; border-radius: 20px; padding: 18px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
+        .scenario-green { border-color: rgba(16, 185, 129, 0.3); }
+        .scenario-red { border-color: rgba(239, 68, 68, 0.3); }
+        .scenario-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+        .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .scenario-list li { position: relative; padding-left: 10px; margin-bottom: 5px; }
+        .scenario-list li::before { content: '•'; position: absolute; left: 0; color: inherit; }
+        
+        @media (max-width: 550px) { 
+            .scenarios-wrap { gap: 8px; padding: 0 10px; }
+            .scenario-card { padding: 12px 10px; }
+            .scenario-title { font-size: 14px; }
+            .scenario-list { font-size: 9px; }
+        }
+
+        /* --- FAQ 交互样式 --- */
+        .faq-wrap { width: 100%; max-width: 600px; margin: 10px auto 30px auto; padding: 0 15px; text-align: left; }
+        .faq-item { margin-bottom: 12px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: 0.3s; }
+        .faq-item:hover { border-color: var(--primary); }
+        .faq-q { color: var(--primary); font-weight: 900; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+        .faq-q::after { content: '+'; font-size: 18px; opacity: 0.5; transition: 0.3s; }
+        .faq-a { color: var(--text-muted); font-size: 12px; line-height: 1.6; display: none; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; }
+        .faq-item.active .faq-a { display: block; animation: fadeIn 0.3s ease; }
+        .faq-item.active .faq-q::after { transform: rotate(45deg); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 650px) { .intro-section h1 { font-size: 20px; } .intro-section p.desc { font-size: 12px; } .intro-card h4 { font-size: 11px; } .intro-card p { font-size: 9px; } }
+
+        #safety-notice-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px; background: rgba(3, 7, 18, 0.9); backdrop-filter: blur(8px); }
+        .safety-card { background: #111827; padding: 40px 30px; border-radius: 32px; border: 1px solid var(--border); text-align: center; max-width: 420px; width: 100%; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
+        .safety-card .icon { font-size: 48px; margin-bottom: 20px; }
+        .safety-card h3 { color: var(--text); margin: 0 0 15px 0; font-size: 22px; font-weight: 900; letter-spacing: 1px; }
+        .safety-card p.safety-text { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-bottom: 30px; display: block !important; visibility: visible !important; }
+
+        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
+        @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
+        
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
+        .logo-wrap { display: flex; align-items: center; gap: 12px; }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
+        
+        .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+        .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
+        .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
+
+        .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
+        .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
 
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         
+        .ad-side { width: 160px; min-width: 160px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border-radius: 12px; background: transparent; overflow: hidden; transition: 0.3s; }
+        .ad-space { background: transparent; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden; width: 100%; transition: 0.3s; }
+        .ad-top { min-height: 0; margin-bottom: 15px; }
+        .ad-bottom { min-height: 0; margin-top: 20px; margin-bottom: 25px; }
+        @media (max-width: 880px) { .ad-side { display: none !important; } }
+        
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
-        .tab.active { background: var(--primary); color: white; }
+        .tab.active { background: var(--primary); color: white; box-shadow: 0 4px 20px rgba(99, 102, 241, 0.5); }
+        .panel { display: none; width: 100%; }
+        .panel.active { display: block; }
 
-        /* --- 场景建议区：列表文字加大 --- */
-        .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
-        .scenario-card { flex: 1; border-radius: 20px; padding: 18px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
-        .scenario-green { border-color: var(--success); }
-        .scenario-red { border-color: var(--danger); }
-        .scenario-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
-        .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--text-muted); line-height: 1.6; } /* 加大到14px */
-        .scenario-list li { position: relative; padding-left: 12px; margin-bottom: 8px; }
-        .scenario-list li::before { content: '•'; position: absolute; left: 0; }
+        .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; align-items: stretch; }
+        @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
+        .column-box { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
+        .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
+        textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        .faq-wrap { width: 100%; max-width: 600px; margin: 10px auto 30px auto; padding: 0 15px; }
-        .faq-item { margin-bottom: 12px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; }
-        .faq-q { color: var(--primary); font-weight: 900; font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-        .faq-a { color: var(--text-muted); font-size: 12px; line-height: 1.6; display: none; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; }
-        .faq-item.active .faq-a { display: block; }
+        #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; }
+        .staged-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 6px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 5px; }
 
-        /* 页脚横排样式 */
-        .legal-footer { padding: 40px 20px 80px 20px; border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; gap: 20px; }
-        .footer-links-row { display: flex; justify-content: center; gap: 40px; width: 100%; flex-wrap: wrap; }
-        .clickable-footer-link { cursor: pointer; color: var(--text); font-weight: 900; font-size: 14px; transition: 0.3s; }
-        .clickable-footer-link:hover { color: var(--primary); }
+        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; transition: 0.3s; box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); margin-top: auto; text-transform: uppercase; }
+        button.action-btn:active { transform: scale(0.97); }
 
-        .policy-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; }
-        .policy-content { background: #111827; border: 1px solid var(--border); border-radius: 24px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; }
-        .close-policy { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-muted); }
-
-        .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; }
+        .nerd-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--success); font-family: monospace; font-weight: 900; margin-bottom: 10px; align-items: center; }
+        #receivedText-container { display: none; margin-top: 20px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); padding: 15px; border-radius: 18px; }
         
-        button.action-btn { background: var(--primary); color: white; border: none; padding: 16px; border-radius: 16px; font-size: 14px; cursor: pointer; width: 100%; font-weight: 800; text-transform: uppercase; }
-        .limit-config-box { background: rgba(15, 23, 42, 0.6); border-radius: 20px; padding: 15px; margin: 15px 0; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        select#downloadLimit { background: #0f172a; color: #fff; border: 1.8px solid var(--border); padding: 8px 16px; border-radius: 12px; appearance: none; }
+        .history-box { width: 100%; max-width: 600px; margin-top: 40px; padding: 0 15px; }
+        .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .history-title::after { content:""; flex:1; height:1px; background: rgba(255,255,255,0.1); }
+        .history-item { background: rgba(30, 41, 59, 0.5); border-radius: 14px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); font-size: 11px; }
+
+        #senderCodeArea { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 30px; display: none; text-align: center; }
+        .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
+        #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; box-shadow: 0 0 30px rgba(255,255,255,0.15); }
+
+        .receive-input-container { position: relative; width: 100%; max-width: 420px; display: flex; align-items: center; background: #0f172a; border: 2.5px solid var(--border); border-radius: 20px; overflow: hidden; }
+        input[type="number"] { flex: 1; padding: 18px; border: none; background: transparent; color: white; font-size: 42px; text-align: center; outline: none; min-width: 0; }
+        #btn-scan { background: transparent; border: none; border-left: 1.5px solid rgba(255,255,255,0.2); color: var(--text-muted); font-size: 14px; font-weight: 800; padding: 0 15px; height: 50px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
+        #btn-scan:hover { color: var(--primary); }
+
+        .pg-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; position: relative; }
+        .pg-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; box-shadow: 0 0 10px var(--primary); }
+
+        .legal-footer { padding: 40px 20px 80px 20px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: auto; }
+        .legal-section { flex: 1; min-width: 180px; max-width: 260px; margin-bottom: 10px; }
+        .legal-section h4 { color: var(--text); font-size: 12px; margin-bottom: 8px; font-weight: 900; }
+        .legal-section p { line-height: 1.5; opacity: 0.9; margin-top: 5px; }
+        .clickable-footer-link { cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: 0.3s; color: var(--text); font-weight: 900; }
+        .clickable-footer-link:hover { color: var(--primary) !important; transform: translateX(5px); }
+        .clickable-footer-link::after { content: '➔'; font-size: 10px; opacity: 0.5; }
+
+        .coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border: 1px solid var(--primary); border-radius: 12px; color: var(--primary); text-decoration: none; font-weight: 800; font-size: 12px; transition: 0.3s; margin-bottom: 25px; box-shadow: 0 0 15px rgba(99, 102, 241, 0.2); }
+        .coffee-btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+
+        .policy-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .policy-content { background: #111827; border: 1px solid var(--border); border-radius: 24px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; box-shadow: 0 0 50px rgba(99, 102, 241, 0.2); }
+        .policy-content h2 { color: var(--primary); margin-top: 0; font-size: 20px; }
+        .policy-content p { line-height: 1.8; color: var(--text-muted); font-size: 14px; text-align: left; }
+        .close-policy { position: absolute; top: 20px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-muted); font-weight: bold; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.97); z-index: 5000; display: none; justify-content: center; align-items: center; flex-direction: column; padding: 20px; backdrop-filter: blur(15px); }
+        #ad-wait-title { color:white; margin-bottom:10px; font-weight:bold; text-align:center; line-height:1.6; font-size:18px; }
+
+        #scanner-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding-top: 80px; padding-bottom: 100px; }
+        .scanner-container { position: relative; width: 280px; height: 280px; background: #111; border-radius: 24px; overflow: hidden; border: 2px solid rgba(255,255,255,0.1); box-shadow: 0 0 50px rgba(99, 102, 241, 0.3); margin-bottom: 30px; }
+        #video-preview { width: 100%; height: 100%; object-fit: cover; }
+        .scan-frame { position: absolute; inset: 0; border: 2px solid var(--primary); border-radius: 24px; pointer-events: none; }
+        .scan-line { position: absolute; width: 100%; height: 3px; background: var(--primary); top: 0; left: 0; box-shadow: 0 0 15px var(--primary); animation: scanMove 2.5s infinite ease-in-out; }
+        #btn-torch { position: absolute; bottom: 15px; right: 15px; width: 45px; height: 45px; border-radius: 50%; background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 10; }
+        
+        @keyframes scanMove { 0% { top: 0%; } 50% { top: 98%; } 100% { top: 0%; } }
+        #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; border: 6px dashed var(--primary); background: rgba(99,102,241,0.25); display: none; align-items: center; justify-content: center; pointer-events: none; }
     </style>
 </head>
 <body>
 
+<div id="safety-notice-view">
+    <div class="safety-card">
+        <div class="icon">🛡️</div>
+        <h3 id="safety-title">Keep FlashDrop Free</h3>
+        <p class="safety-text">FlashDrop is a free P2P tool. We rely on minimal ads to pay for our servers and domain. Please consider disabling your AdBlocker to support us! ❤️</p>
+        <button class="action-btn" onclick="location.reload()" style="background:var(--primary); box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);">I'VE DISABLED IT, RELOAD</button>
+        <div style="margin-top: 20px; font-size: 11px; color: var(--text-muted); opacity: 0.6;">Efficiency & Privacy First.</div>
+    </div>
+</div>
+
 <div class="app-container" id="app">
     <div class="stars-container" id="stars"></div>
     <nav class="navbar">
-        <div class="logo">⚡ Flash<span>Drop</span> Pro</div>
-        <div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div>
+        <div class="logo-wrap"><div id="status-dot" class="status-dot online"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
+        <div class="trust-badges" id="trust-badges"></div>
     </nav>
+
+    <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;">DROP TO STAGE</h2></div>
 
     <section class="intro-section">
         <div class="intro-badges">
@@ -106,17 +212,57 @@
         <h1 id="intro-title">Temporary, Vanishing Transfer Tool</h1>
         <p class="desc" id="intro-desc">Files connect directly between sender and receiver. Data is physically erased immediately after transfer or page closure.</p>
         <div class="intro-grid">
-            <div class="intro-card"><div class="icon">⏱️</div><h4 id="f1-t">10-Min Auto-Destruct</h4></div>
-            <div class="intro-card"><div class="icon">🔢</div><h4 id="f2-t">Visits Choice</h4></div>
-            <div class="intro-card"><div class="icon">🛑</div><h4 id="f3-t">Manual Terminate</h4></div>
+            <div class="intro-card">
+                <div class="icon">⏱️</div>
+                <h4 id="f1-t">10-Min Auto-Destruct</h4>
+                <p id="f1-d">Link expires automatically.</p>
+            </div>
+            <div class="intro-card">
+                <div class="icon">🔢</div>
+                <h4 id="f2-t">Visits Choice</h4>
+                <p id="f2-d">Supports 1/3/5/Unlimited.</p>
+            </div>
+            <div class="intro-card">
+                <div class="icon">🛑</div>
+                <h4 id="f3-t">Manual Terminate</h4>
+                <p id="f3-d">One-click cut-off all.</p>
+            </div>
         </div>
     </section>
 
+    <div class="ad-space ad-top" id="top-ad-zone">
+        <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
+        <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+    </div>
+
     <div class="main-wrapper">
+        <div class="ad-side" id="left-ad-zone">
+            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
+            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+        </div>
+
         <div class="content-area">
+            <div class="steps-bar">
+                <div class="step-item"><div class="step-dot" style="background:var(--primary); box-shadow:0 0 10px var(--primary);"></div><span>Select Files</span></div>
+                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
+                <div class="step-item"><div class="step-dot"></div><span>Get Code</span></div>
+                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
+                <div class="step-item"><div class="step-dot"></div><span>Download</span></div>
+            </div>
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
+                    <div class="share-grid">
+                        <div class="column-box">
+                            <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
+                            <div id="stagedList"></div>
+                            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
+                        </div>
+                        <div class="column-box">
+                            <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
+                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+                        </div>
+                    </div>
                     <div class="limit-config-box">
                         <div class="limit-label-wrap">
                             <span class="limit-label" id="label-limit">Download Limit:</span>
@@ -124,14 +270,41 @@
                         </div>
                         <div class="limit-hint" id="limit-hint-text">Default 1 download and 10 mins validity.</div>
                     </div>
-                    <button class="action-btn" onclick="triggerAd('send-file')">SHARE FILES / TEXT</button>
-                    <div id="senderCodeArea" style="display:none; margin-top:20px; text-align:center;">
+                    <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
+                    <div id="senderCodeArea">
+                        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
+                        <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5;"></p>
                         <div id="qrcode"></div>
-                        <div style="font-size:42px; font-weight:900; color:var(--primary);" id="myCode">000000</div>
-                        <button class="action-btn" style="background:var(--danger); margin-top:10px;" onclick="resetSender()">STOP</button>
+                        <div class="code-display" id="myCode">000000</div>
+                        <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
+                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
+                        <button class="action-btn" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
+                    </div>
+                </div>
+                <div id="panel-receive" class="panel">
+                    <div style="display:flex; flex-direction:column; align-items:center;">
+                        <div class="receive-input-container">
+                            <input type="number" id="targetCode" placeholder="000000" oninput="if(this.value.length>6) this.value=this.value.slice(0,6)" onkeydown="if(event.key==='Enter') triggerAd('receive')">
+                            <button id="btn-scan" onclick="openScanner()">or scan 📷</button>
+                        </div>
+                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
+                        <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
+                        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
+                        <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px;">📥 SAVE</button></div>
+                        <div id="receivedText-container"><div id="receivedText" style="color:white; margin-bottom:15px; word-break: break-all;"></div><button class="action-btn" onclick="copyReceivedText()">📋 COPY</button></div>
                     </div>
                 </div>
             </div>
+            <div class="history-box"><div class="history-title" id="history-title-text">Recent History</div><div id="history-list"></div></div>
+            <div class="ad-space ad-bottom" id="bottom-ad-zone">
+                <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
+                <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+            </div>
+        </div>
+
+        <div class="ad-side" id="right-ad-zone">
+            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
+            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
         </div>
     </div>
 
@@ -149,65 +322,210 @@
     <div class="faq-wrap" id="faq-list"></div>
 
     <footer class="legal-footer">
-        <div class="footer-links-row">
-            <span id="foot-head-priv" class="clickable-footer-link" onclick="showPolicy('priv')">Privacy</span>
-            <span id="foot-head-aboutsite" class="clickable-footer-link" onclick="showPolicy('site')">About Site</span>
-            <span id="foot-head-aboutus" class="clickable-footer-link" onclick="showPolicy('us')">About Us</span>
+        <div><a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn">☕ <span id="foot-coffee">Buy me a coffee</span></a></div>
+        <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; width: 100%; text-align: left;">
+            <div class="legal-section">
+                <h4 id="foot-head-priv" class="clickable-footer-link" onclick="showPolicy('priv')">Privacy</h4>
+                <p id="foot-priv-p">Zero logs.</p>
+            </div>
+            <div class="legal-section">
+                <h4 id="foot-head-aboutsite" class="clickable-footer-link" onclick="showPolicy('site')">About Site</h4>
+                <p id="foot-disc-p">P2P technology.</p>
+            </div>
+            <div class="legal-section">
+                <h4 id="foot-head-aboutus" class="clickable-footer-link" onclick="showPolicy('us')">About Us</h4>
+                <p id="foot-about-p">Efficiency first.</p>
+            </div>
         </div>
-        <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" style="color:var(--primary); text-decoration:none; font-weight:800; border:1px solid var(--primary); padding:10px 20px; border-radius:12px;">☕ Buy me a coffee</a>
-        <div style="opacity:0.5; font-size:11px;">Tel: 9292664485 | Email: flashdroppro@gmail.com</div>
+        <div style="width: 100%; max-width: 600px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 15px; margin-top: 20px; text-align: center; opacity: 0.7;">
+            <h4 id="foot-head-contact" style="margin-bottom: 5px;">Contact</h4>
+            <p style="margin-top:0; font-size:11px;">Tel: 9292664485 | Email: flashdroppro@gmail.com</p>
+        </div>
     </footer>
 </div>
 
-<div id="policyModal" class="policy-modal" onclick="closePolicy()"><div class="policy-content" onclick="event.stopPropagation()"><span class="close-policy" onclick="closePolicy()">×</span><div id="policyBody"></div></div></div>
+<div id="policyModal" class="policy-modal" onclick="closePolicy()">
+    <div class="policy-content" onclick="event.stopPropagation()"><span class="close-policy" onclick="closePolicy()">×</span><div id="policyBody"></div></div>
+</div>
+
+<div class="modal-overlay" id="adModal">
+    <div id="ad-wait-title">Checking Security...</div>
+    <div style="font-size: 13px; color: var(--primary); font-weight: 800; margin-bottom: 5px;" id="ad-timer-text">Remaining: 5s</div>
+    <div style="width: 300px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; margin-bottom: 20px;"><div id="ad-pg-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.1s linear;"></div></div>
+    <div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
+        <script>atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
+        <script src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
+    </div>
+</div>
+
+<div id="scanner-modal">
+    <div class="scanner-container"><video id="video-preview" playsinline></video><div class="scan-frame"><div class="scan-line"></div></div><button id="btn-torch" onclick="toggleTorch()">🔦</button></div>
+    <button class="action-btn" style="width:180px; background:#334155;" onclick="closeScanner()">CLOSE</button>
+</div>
 
 <script>
     const I18N = {
         en: { 
-            scTG: "✔ Suitable", scTR: "✖ Unsuitable", 
-            scLG: ["Cross-device transfer", "Public PCs sharing", "Self-destruct message"], 
-            scLR: ["Long-term cloud", "Team collaboration", "Permanent links"],
-            faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}],
-            pPriv: "<h2>Privacy</h2><p>Zero logs. Everything is encrypted in your browser. Closing the tab wipes all session data.</p>",
-            pSite: "<h2>About Site</h2><p>Direct P2P technology. Files never touch our servers. Close page to wipe data.</p>",
-            pUs: "<h2>About Us</h2><p>© 2025 FlashDrop Pro. Efficiency first privacy tool.</p>"
+            tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs.", pDisc: "Direct P2P.", pAbout: "© 2025 FlashDrop Pro.", inputErr: "6-digit code.", orScan: "scan 📷", doneRemind: "DONE!", histTitle: "History", fileErr: "Select files.", textErr: "Enter text.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary Transfer Tool", introD: "Direct connect. Erased after transfer.", f1T: "10-Min Auto-Destruct", f1D: "Expires automatically.", f2T: "Visits Choice", f2D: "1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click stop.", labLimit: "Limit:", hintLimit: "Default 1 download and 10 mins validity.", optL: "Only ", optU: "Unlimited",
+            scTG: "✔ Suitable", scTR: "✖ Unsuitable", scLG: ["Cross-device transfer", "Public PCs sharing", "Self-destruct message"], scLR: ["Long-term cloud", "Team collaboration", "Permanent links"],
+            faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}, {q: "Is it secure?", a: "P2P connection. Data physically wiped after session ends."}, {q: "Why visit limits?", a: "To prevent secondary leakage. 1 time is safest."}, {q: "Can I cancel early?", a: "Yes, click 'Stop' or close tab."}, {q: "What file types?", a: "Almost any file format supported."}, {q: "For long-term use?", a: "No, designed for vanishing transfers."}, {q: "Need account?", a: "No registration required."}]
         },
         zh: { 
-            scTG: "✔ 适合场景", scTR: "✖ 不适合场景", 
-            scLG: ["跨设备临时传输图片或文字", "在公共电脑分享敏感文件", "阅后即毁的一次性信息传递"], 
-            scLR: ["作为长期云盘存储资料", "团队长期协作共享空间", "需要永久保留下载链接"],
-            faq: [{q: "Q1：FlashDrop Pro 是干什么的？", a: "它是一个临时、安全的文件和文本传输工具。上传后内容 10 分钟自动销毁。"}],
-            pPriv: "<h2>隐私政策</h2><p>零日志。所有传输在浏览器内通过 WebRTC 完成。关闭标签页即刻抹除数据。</p>",
-            pSite: "<h2>关于网站</h2><p>直连传输，文件不经服务器存储，确保极致隐私与速度。</p>",
-            pUs: "<h2>关于我们</h2><p>© 2025 FlashDrop Pro. 一个追求效率与隐私的角落。</p>"
+            tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。", introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "文件在发送者与接收者之间直连，传输完成或页面关闭后，数据即刻物理抹除。", f1T: "10分钟自动销毁", f1D: "过期后链接自动失效", f2T: "访问次数可选", f2D: "支持 1/3/5/无限次", f3T: "随时手动终止", f3D: "一键切断所有传输", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期，旨在最大限度降低泄露风险", optL: "仅限 ", optU: "无限次",
+            scTG: "✔ 适合场景", scTR: "✖ 不适合场景", scLG: ["跨设备临时传输图片或文字", "在公共电脑分享敏感文件", "阅后即毁的一次性信息传递"], scLR: ["作为长期云盘存储资料", "团队长期协作共享空间", "需要永久保留下载链接"],
+            faq: [
+                {q: "Q1：FlashDrop Pro 是干什么的？", a: "它是一个临时、安全的文件和文本传输工具。上传后，内容在 10 分钟内自动销毁，访问次数可选 1 / 3 / 5 / 无限，并可随时手动终止或通过关闭网页结束会话，不会长期存储，也无需注册账号。"},
+                {q: "Q2：文件安全吗？别人能看到吗？", a: "文件只存在于一次性会话中，只有知道链接、二维码或 6 位会话码的人才能访问。会话过期、达到访问次数，或关闭网页/点击 Stop 后，文件将立即销毁，不会留下历史记录。"},
+                {q: "Q3：为什么会有访问次数限制？", a: "访问次数限制是为了保护你的内容不被二次泄露。默认一次访问最安全，你也可以根据需要选择 3、5 次或无限次访问。"},
+                {q: "Q4：我可以提前取消传输吗？", a: "可以。在生成会话后，你可以点击 “Stop” 按钮或直接关闭网页，会话立即终止，文件无法被下载。"},
+                {q: "Q5：我可以传什么类型的文件？", a: "几乎所有文件类型都可以传输，包括图片、视频、文档、压缩包等，支持大多数常见文件格式。"},
+                {q: "Q6：它适合长期保存文件吗？", a: "不适合。FlashDrop Pro 设计目标是临时传输文件和文本，一旦过期或达到访问次数，内容会自动销毁。如果需要长期存储，请使用云盘或其他备份工具。"},
+                {q: "Q7：是否需要注册账号？", a: "不需要。上传和接收都无需账号，整个过程匿名且快捷。"}
+            ]
         }
     };
 
-    let currLang = "zh";
+    let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
+    const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
     function applyI18N() {
+        const userLang = navigator.language.split('-')[0];
+        currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang];
+        document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
+        document.getElementById('tab-send').innerText = d.tabSend; document.getElementById('tab-receive').innerText = d.tabReceive;
+        document.getElementById('label-files').innerText = d.fileLab; document.getElementById('btn-share-files').innerText = d.shareF;
+        document.getElementById('btn-share-text').innerText = d.shareT; document.getElementById('btn-connect').innerText = d.connect;
+        document.getElementById('foot-coffee').innerText = d.coffee; document.getElementById('btn-scan').innerText = d.orScan;
+        document.getElementById('foot-head-priv').innerText = d.hPriv; document.getElementById('foot-head-aboutsite').innerText = d.hAboutSite;
+        document.getElementById('foot-head-aboutus').innerText = d.hAboutUs; document.getElementById('foot-head-contact').innerText = d.hContact;
+        document.getElementById('foot-priv-p').innerText = d.pPriv; document.getElementById('foot-disc-p').innerText = d.pDisc;
+        document.getElementById('foot-about-p').innerText = d.pAbout; document.getElementById('history-title-text').innerText = d.histTitle;
+        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
+        
+        document.getElementById('intro-b1').innerText = d.introB1; document.getElementById('intro-b2').innerText = d.introB2;
+        document.getElementById('intro-b3').innerText = d.introB3; document.getElementById('intro-title').innerText = d.introT;
+        document.getElementById('intro-desc').innerText = d.introD; document.getElementById('f1-t').innerText = d.f1T;
+        document.getElementById('f1-d').innerText = d.f1D; document.getElementById('f2-t').innerText = d.f2T;
+        document.getElementById('f2-d').innerText = d.f2D; document.getElementById('f3-t').innerText = d.f3T;
+        document.getElementById('f3-d').innerText = d.f3D;
+
+        document.getElementById('label-limit').innerText = d.labLimit;
+        document.getElementById('limit-hint-text').innerText = d.hintLimit;
+
+        const sel = document.getElementById('downloadLimit');
+        sel.options[0].text = `${d.optL}1${currLang==='en'?' Time':' 次'}`;
+        sel.options[1].text = `${d.optL}3${currLang==='en'?' Times':' 次'}`;
+        sel.options[2].text = `${d.optL}5${currLang==='en'?' Times':' 次'}`;
+        sel.options[3].text = d.optU;
+
         document.getElementById('sc-title-g').innerText = d.scTG;
         document.getElementById('sc-title-r').innerText = d.scTR;
         document.getElementById('sc-list-g').innerHTML = d.scLG.map(t => `<li>${t}</li>`).join('');
         document.getElementById('sc-list-r').innerHTML = d.scLR.map(t => `<li>${t}</li>`).join('');
-        document.getElementById('faq-list').innerHTML = d.faq.map(f => `<div class="faq-item" onclick="this.classList.toggle('active')"><span class="faq-q">${f.q}</span><span class="faq-a">${f.a}</span></div>`).join('');
+
+        // FAQ 渲染：增加 onclick 事件
+        document.getElementById('faq-list').innerHTML = d.faq.map(f => `
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <span class="faq-q">${f.q}</span>
+                <span class="faq-a">${f.a}</span>
+            </div>
+        `).join('');
     }
 
-    function showPolicy(type) {
-        const d = I18N[currLang];
-        const body = document.getElementById('policyBody');
-        if(type === 'priv') body.innerHTML = d.pPriv;
-        else if(type === 'site') body.innerHTML = d.pSite;
-        else body.innerHTML = d.pUs;
-        document.getElementById('policyModal').style.display = 'flex';
+    function triggerAd(mode) {
+        if(detectAdBlock()) return;
+        const modal = document.getElementById('adModal');
+        const adPg = document.getElementById('ad-pg-bar');
+        const timerText = document.getElementById('ad-timer-text');
+        modal.style.display = 'flex'; adPg.style.width = '0%';
+        let elapsed = 0; const totalMs = 5000;
+        const itv = setInterval(() => { 
+            elapsed += 100; const pct = (elapsed / totalMs) * 100;
+            const rem = Math.ceil((totalMs - elapsed) / 1000);
+            adPg.style.width = pct + '%'; timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`;
+            if(elapsed >= totalMs) { clearInterval(itv); modal.style.display = 'none'; mode.startsWith('send') ? initSender() : startReceiving(); } 
+        }, 100);
     }
 
+    async function initSender() {
+        if(peer) peer.destroy(); currentDownloads = 0; 
+        const code = Math.floor(100000 + Math.random() * 900000);
+        peer = new Peer(PREFIX + code);
+        peer.on('open', () => {
+            const area = document.getElementById('senderCodeArea'); area.style.display = 'block';
+            document.getElementById('myCode').innerText = code;
+            document.getElementById('qrcode').innerHTML = ""; 
+            new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
+            startExpiryTimer();
+        });
+        peer.on('connection', c => {
+            c.on('data', d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
+            c.on('open', async () => {
+                const text = document.getElementById('quickText').value; if(text) c.send({ type: 'text', data: text });
+                if(stagedFiles.length > 0) {
+                    let fb, fn;
+                    if (stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
+                    else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); fn = "Bundle.zip"; }
+                    c.send({ type: 'meta', name: fn, size: fb.size });
+                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) { c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() }); }
+                    c.send({ type: 'done' }); addHistory("Sent: " + fn, "file");
+                }
+            });
+        });
+    }
+
+    function startReceiving() {
+        const code = document.getElementById('targetCode').value;
+        const rPeer = new Peer(); activeConn = null;
+        const pgBar = document.getElementById('receive-pg-bar');
+        rPeer.on('open', () => {
+            const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+            let meta = null, chunks = [], totalRecv = 0;
+            c.on('data', d => {
+                if(d.type === 'text') { document.getElementById('receivedText').innerText = d.data; document.getElementById('receivedText-container').style.display = 'block'; }
+                else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; }
+                else if(d.type === 'chunk') { chunks[d.index] = d.data; totalRecv += d.data.byteLength; if(meta) pgBar.style.width = (totalRecv / meta.size * 100) + '%'; }
+                else if(d.type === 'done') {
+                    const b = new Blob(chunks); const u = window.URL.createObjectURL(b);
+                    const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
+                    btn.onclick = () => { const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); if(c.open) c.send({ type: 'confirm_save' }); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300); };
+                }
+            });
+        });
+    }
+
+    function addHistory(name, type) {
+        let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
+        h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type });
+        h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory();
+    }
+    function renderHistory() {
+        const list = document.getElementById('history-list');
+        const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
+        list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
+    }
+    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); alert("Copied!"); if(activeConn && activeConn.open) activeConn.send({ type: 'confirm_save' }); resetReceiver(); }
+    function detectAdBlock() {
+        setTimeout(() => {
+            const topAd = document.getElementById('top-ad-zone');
+            if (topAd.offsetHeight < 20) { document.getElementById('safety-notice-view').style.display = 'flex'; }
+        }, 1500); return false;
+    }
+    function showPolicy(type) { document.getElementById('policyModal').style.display = 'flex'; }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
-    function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); e.target.classList.add('active'); }
-    function initStars() { const c = document.getElementById('stars'); for(let i=0; i<50; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; c.appendChild(s); } }
-
-    window.onload = () => { initStars(); applyI18N(); };
+    function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
+    function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; if(expiryTimerIdx) clearInterval(expiryTimerIdx); }
+    function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; }
+    function switchTab(m, e) { document.querySelectorAll('.tab, .panel').forEach(el => el.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
+    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
+    function renderStagedList() { const list = document.getElementById('stagedList'); list.style.display = stagedFiles.length ? 'block' : 'none'; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>📄 ${f.name.substring(0,12)}</span><span onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); }
+    async function toggleTorch() { if (videoTrack) await videoTrack.applyConstraints({ advanced: [{ torch: torchOn=!torchOn }] }); }
+    async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { closeScanner(); } }
+    function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); }
+    function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const data = jsQR(cvs.getContext("2d").getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { document.getElementById('targetCode').value = new URL(data.data).searchParams.get("c"); closeScanner(); triggerAd('receive'); return; } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
+    function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
+    window.onload = () => { initStars(); applyI18N(); renderHistory(); detectAdBlock(); };
 </script>
 </body>
 </html>
