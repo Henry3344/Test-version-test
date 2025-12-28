@@ -40,7 +40,6 @@
         .intro-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(99, 102, 241, 0.3); padding: 15px 8px; border-radius: 18px; transition: 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .intro-card .icon { font-size: 20px; margin-bottom: 8px; }
         .intro-card h4 { margin: 0 0 5px 0; font-size: 13px; color: #fff; font-weight: 900; }
-        .intro-card p { margin: 0; font-size: 10px; color: var(--text-muted); line-height: 1.3; }
 
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 110px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(25px); padding: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.5); }
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
@@ -49,18 +48,29 @@
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         
+        /* --- 动态引导条样式 --- */
+        .steps-guide-container { width: 100%; max-width: 500px; margin: 0 auto 20px; text-align: center; }
+        .guide-label { font-size: 11px; color: var(--text-muted); font-weight: 900; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .steps-bar-wrap { position: relative; display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 15px; }
+        .line-bg { position: absolute; top: 6px; left: 15%; right: 15%; height: 2px; background: rgba(255,255,255,0.05); z-index: 1; overflow: hidden; border-radius: 10px; }
+        .line-fill { position: absolute; height: 100%; width: 40%; background: linear-gradient(to right, transparent, var(--primary), transparent); animation: flowLine 2s infinite linear; }
+        @keyframes flowLine { from { left: -40%; } to { left: 100%; } }
+        .step-item { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; flex: 1; }
+        .step-dot { width: 12px; height: 12px; background: var(--bg); border: 2px solid var(--primary); border-radius: 50%; box-shadow: 0 0 10px var(--primary); margin-bottom: 8px; }
+        .step-text { font-size: 11px; font-weight: 900; color: var(--text-muted); white-space: nowrap; }
+
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
         .tab { flex: 1; padding: 14px; cursor: pointer; border-radius: 14px; font-size: 14px; text-align: center; color: var(--text-muted); font-weight: 800; transition: 0.3s; }
         .tab.active { background: var(--primary); color: white; }
 
-        /* --- 场景建议区：列表文字加大 --- */
-        .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
-        .scenario-card { flex: 1; border-radius: 20px; padding: 18px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
+        /* --- 场景建议区：字体再次加大 --- */
+        .scenarios-wrap { display: flex; gap: 12px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
+        .scenario-card { flex: 1; border-radius: 20px; padding: 20px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
         .scenario-green { border-color: var(--success); }
         .scenario-red { border-color: var(--danger); }
-        .scenario-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
-        .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 14px; color: var(--text-muted); line-height: 1.6; } /* 加大到14px */
+        .scenario-title { font-size: 18px; font-weight: 900; margin-bottom: 12px; }
+        .scenario-list { margin: 0; padding: 0; list-style: none; font-size: 15px; color: var(--text-muted); line-height: 1.6; } /* 字体加大到15px */
         .scenario-list li { position: relative; padding-left: 12px; margin-bottom: 8px; }
         .scenario-list li::before { content: '•'; position: absolute; left: 0; }
 
@@ -70,11 +80,9 @@
         .faq-a { color: var(--text-muted); font-size: 12px; line-height: 1.6; display: none; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px; }
         .faq-item.active .faq-a { display: block; }
 
-        /* 页脚横排样式 */
         .legal-footer { padding: 40px 20px 80px 20px; border-top: 1px solid var(--border); background: #030712; display: flex; flex-direction: column; align-items: center; gap: 20px; }
         .footer-links-row { display: flex; justify-content: center; gap: 40px; width: 100%; flex-wrap: wrap; }
         .clickable-footer-link { cursor: pointer; color: var(--text); font-weight: 900; font-size: 14px; transition: 0.3s; }
-        .clickable-footer-link:hover { color: var(--primary); }
 
         .policy-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px); z-index: 10000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .policy-content { background: #111827; border: 1px solid var(--border); border-radius: 24px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 30px; position: relative; }
@@ -98,36 +106,40 @@
     </nav>
 
     <section class="intro-section">
-        <div class="intro-badges">
-            <span id="intro-b1">No Registration</span>
-            <span id="intro-b2">No Storage</span>
-            <span id="intro-b3">No History</span>
-        </div>
-        <h1 id="intro-title">Temporary, Vanishing Transfer Tool</h1>
-        <p class="desc" id="intro-desc">Files connect directly between sender and receiver. Data is physically erased immediately after transfer or page closure.</p>
+        <div class="intro-badges"><span id="intro-b1"></span><span id="intro-b2"></span><span id="intro-b3"></span></div>
+        <h1 id="intro-title"></h1><p class="desc" id="intro-desc"></p>
         <div class="intro-grid">
-            <div class="intro-card"><div class="icon">⏱️</div><h4 id="f1-t">10-Min Auto-Destruct</h4></div>
-            <div class="intro-card"><div class="icon">🔢</div><h4 id="f2-t">Visits Choice</h4></div>
-            <div class="intro-card"><div class="icon">🛑</div><h4 id="f3-t">Manual Terminate</h4></div>
+            <div class="intro-card"><div class="icon">⏱️</div><h4 id="f1-t"></h4></div>
+            <div class="intro-card"><div class="icon">🔢</div><h4 id="f2-t"></h4></div>
+            <div class="intro-card"><div class="icon">🛑</div><h4 id="f3-t"></h4></div>
         </div>
     </section>
 
     <div class="main-wrapper">
         <div class="content-area">
+            <div class="steps-guide-container">
+                <span class="guide-label" id="label-guide">Simple Steps</span>
+                <div class="steps-bar-wrap">
+                    <div class="line-bg"><div class="line-fill"></div></div>
+                    <div class="step-item"><div class="step-dot"></div><span class="step-text" id="step1"></span></div>
+                    <div class="step-item"><div class="step-dot"></div><span class="step-text" id="step2"></span></div>
+                    <div class="step-item"><div class="step-dot"></div><span class="step-text" id="step3"></span></div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
                     <div class="limit-config-box">
                         <div class="limit-label-wrap">
-                            <span class="limit-label" id="label-limit">Download Limit:</span>
+                            <span class="limit-label" id="label-limit"></span>
                             <select id="downloadLimit"><option value="1">Only 1 Time</option><option value="3">Only 3 Times</option><option value="5">Only 5 Times</option><option value="999">Unlimited</option></select>
                         </div>
-                        <div class="limit-hint" id="limit-hint-text">Default 1 download and 10 mins validity.</div>
+                        <div class="limit-hint" id="limit-hint-text"></div>
                     </div>
                     <button class="action-btn" onclick="triggerAd('send-file')">SHARE FILES / TEXT</button>
                     <div id="senderCodeArea" style="display:none; margin-top:20px; text-align:center;">
-                        <div id="qrcode"></div>
-                        <div style="font-size:42px; font-weight:900; color:var(--primary);" id="myCode">000000</div>
+                        <div id="qrcode"></div><div style="font-size:42px; font-weight:900; color:var(--primary);" id="myCode">000000</div>
                         <button class="action-btn" style="background:var(--danger); margin-top:10px;" onclick="resetSender()">STOP</button>
                     </div>
                 </div>
@@ -137,11 +149,11 @@
 
     <div class="scenarios-wrap">
         <div class="scenario-card scenario-green">
-            <div class="scenario-title" id="sc-title-g" style="color:var(--success)">✔ Suitable</div>
+            <div class="scenario-title" id="sc-title-g" style="color:var(--success)"></div>
             <ul class="scenario-list" id="sc-list-g"></ul>
         </div>
         <div class="scenario-card scenario-red">
-            <div class="scenario-title" id="sc-title-r" style="color:var(--danger)">✖ Unsuitable</div>
+            <div class="scenario-title" id="sc-title-r" style="color:var(--danger)"></div>
             <ul class="scenario-list" id="sc-list-r"></ul>
         </div>
     </div>
@@ -164,22 +176,29 @@
 <script>
     const I18N = {
         en: { 
+            guide: "Simplified usage instructions", step1: "Select Files", step2: "Get Code", step3: "Download",
             scTG: "✔ Suitable", scTR: "✖ Unsuitable", 
             scLG: ["Cross-device transfer", "Public PCs sharing", "Self-destruct message"], 
             scLR: ["Long-term cloud", "Team collaboration", "Permanent links"],
             faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}],
-            pPriv: "<h2>Privacy</h2><p>Zero logs. Everything is encrypted in your browser. Closing the tab wipes all session data.</p>",
-            pSite: "<h2>About Site</h2><p>Direct P2P technology. Files never touch our servers. Close page to wipe data.</p>",
-            pUs: "<h2>About Us</h2><p>© 2025 FlashDrop Pro. Efficiency first privacy tool.</p>"
+            pPriv: "<h2>Privacy</h2><p>Zero logs. Closing the tab wipes all data.</p>",
+            pSite: "<h2>About Site</h2><p>P2P technology. Files never touch servers.</p>",
+            pUs: "<h2>About Us</h2><p>© 2025 FlashDrop Pro. Efficiency first.</p>",
+            introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Vanishing Transfer", introD: "Direct connect. Erased immediately.", f1T: "10-Min Destruct", f2T: "Visits Choice", f3T: "Manual Stop", labLimit: "Limit:", hintLimit: "Default 1 download/10m."
         },
         zh: { 
+            guide: "简易使用方法", step1: "选择文件", step2: "获取代码", step3: "立即下载",
             scTG: "✔ 适合场景", scTR: "✖ 不适合场景", 
             scLG: ["跨设备临时传输图片或文字", "在公共电脑分享敏感文件", "阅后即毁的一次性信息传递"], 
             scLR: ["作为长期云盘存储资料", "团队长期协作共享空间", "需要永久保留下载链接"],
-            faq: [{q: "Q1：FlashDrop Pro 是干什么的？", a: "它是一个临时、安全的文件和文本传输工具。上传后内容 10 分钟自动销毁。"}],
-            pPriv: "<h2>隐私政策</h2><p>零日志。所有传输在浏览器内通过 WebRTC 完成。关闭标签页即刻抹除数据。</p>",
-            pSite: "<h2>关于网站</h2><p>直连传输，文件不经服务器存储，确保极致隐私与速度。</p>",
-            pUs: "<h2>关于我们</h2><p>© 2025 FlashDrop Pro. 一个追求效率与隐私的角落。</p>"
+            faq: [
+                {q: "Q1：FlashDrop Pro 是干什么的？", a: "它是一个临时、安全的文件和文本传输工具。上传后内容 10 分钟自动销毁。"},
+                {q: "Q2：文件安全吗？", a: "文件只存在于一次性会话中，关闭网页后数据立即销毁。"}
+            ],
+            pPriv: "<h2>隐私政策</h2><p>零日志。关闭标签页即刻抹除数据。</p>",
+            pSite: "<h2>关于网站</h2><p>直连传输，文件不经服务器存储。</p>",
+            pUs: "<h2>关于我们</h2><p>© 2025 FlashDrop Pro. 效率至上。</p>",
+            introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "数据即刻物理抹除。", f1T: "10分钟自动销毁", f2T: "访问次数可选", f3T: "随时手动终止", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期。"
         }
     };
 
@@ -187,26 +206,31 @@
 
     function applyI18N() {
         const d = I18N[currLang];
+        document.getElementById('label-guide').innerText = d.guide;
+        document.getElementById('step1').innerText = d.step1;
+        document.getElementById('step2').innerText = d.step2;
+        document.getElementById('step3').innerText = d.step3;
         document.getElementById('sc-title-g').innerText = d.scTG;
         document.getElementById('sc-title-r').innerText = d.scTR;
         document.getElementById('sc-list-g').innerHTML = d.scLG.map(t => `<li>${t}</li>`).join('');
         document.getElementById('sc-list-r').innerHTML = d.scLR.map(t => `<li>${t}</li>`).join('');
         document.getElementById('faq-list').innerHTML = d.faq.map(f => `<div class="faq-item" onclick="this.classList.toggle('active')"><span class="faq-q">${f.q}</span><span class="faq-a">${f.a}</span></div>`).join('');
+        document.getElementById('intro-b1').innerText = d.introB1; document.getElementById('intro-b2').innerText = d.introB2;
+        document.getElementById('intro-b3').innerText = d.introB3; document.getElementById('intro-title').innerText = d.introT;
+        document.getElementById('intro-desc').innerText = d.introD; document.getElementById('f1-t').innerText = d.f1T;
+        document.getElementById('f2-t').innerText = d.f2T; document.getElementById('f3-t').innerText = d.f3T;
+        document.getElementById('label-limit').innerText = d.labLimit; document.getElementById('limit-hint-text').innerText = d.hintLimit;
     }
 
     function showPolicy(type) {
-        const d = I18N[currLang];
-        const body = document.getElementById('policyBody');
-        if(type === 'priv') body.innerHTML = d.pPriv;
-        else if(type === 'site') body.innerHTML = d.pSite;
-        else body.innerHTML = d.pUs;
+        const d = I18N[currLang]; const body = document.getElementById('policyBody');
+        if(type === 'priv') body.innerHTML = d.pPriv; else if(type === 'site') body.innerHTML = d.pSite; else body.innerHTML = d.pUs;
         document.getElementById('policyModal').style.display = 'flex';
     }
 
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); e.target.classList.add('active'); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<50; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; c.appendChild(s); } }
-
     window.onload = () => { initStars(); applyI18N(); };
 </script>
 </body>
