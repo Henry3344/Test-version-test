@@ -31,6 +31,16 @@
         .app-container { display: flex; flex-direction: column; min-height: 100vh; width: 100%; padding-top: 130px; transition: opacity 0.5s; }
         body.is-blocked .app-container { opacity: 0.15; pointer-events: none; }
 
+        /* --- 新增：简易使用方法 引导条样式 --- */
+        .usage-guide-container { width: 100%; max-width: 500px; margin: 0 auto 40px auto; text-align: center; }
+        .guide-header { font-size: 16px; color: #fff; margin-bottom: 25px; font-weight: 800; letter-spacing: 2px; }
+        .guide-line-box { position: relative; display: flex; justify-content: space-between; align-items: center; padding: 0 30px; height: 60px; }
+        .guide-base-line { position: absolute; top: 15px; left: 30px; right: 30px; height: 2px; background: rgba(99, 102, 241, 0.15); z-index: 1; overflow: hidden; }
+        .guide-glow-line { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, #818cf8, #fff, #818cf8, transparent); animation: guideFlow 3s infinite linear; }
+        .guide-node { width: 10px; height: 10px; background: #fff; border-radius: 50%; box-shadow: 0 0 15px rgba(255,255,255,0.9), 0 0 30px rgba(99, 102, 241, 0.4); z-index: 2; position: relative; }
+        .guide-text { position: absolute; top: 28px; left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--text-muted); font-size: 12px; font-weight: 900; letter-spacing: 1px; }
+        @keyframes guideFlow { 0% { left: -100%; } 100% { left: 100%; } }
+
         .intro-section { width: 100%; max-width: 900px; margin: 0 auto 30px auto; padding: 0 15px; text-align: center; }
         .intro-badges { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
         .intro-badges span { color: #10b981; font-size: 11px; font-weight: 800; border: 1px solid rgba(16, 185, 129, 0.3); padding: 4px 10px; border-radius: 20px; background: rgba(16, 185, 129, 0.05); white-space: nowrap; }
@@ -50,7 +60,6 @@
         select#downloadLimit { background: #0f172a; color: #fff; border: 1.8px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: calc(100% - 12px) center; padding-right: 35px; }
         .limit-hint { font-size: 11px; color: var(--text-muted); font-style: italic; opacity: 0.8; margin-top: 5px; }
 
-        /* --- 场景建议区：标题加大，强制并排 --- */
         .scenarios-wrap { display: flex; gap: 15px; width: 100%; max-width: 600px; margin: 25px auto 15px auto; padding: 0 15px; }
         .scenario-card { flex: 1; border-radius: 20px; padding: 18px 15px; background: rgba(30, 41, 59, 0.3); border: 1px solid transparent; text-align: left; }
         .scenario-green { border-color: rgba(16, 185, 129, 0.3); }
@@ -67,7 +76,6 @@
             .scenario-list { font-size: 9px; }
         }
 
-        /* --- FAQ 交互样式 --- */
         .faq-wrap { width: 100%; max-width: 600px; margin: 10px auto 30px auto; padding: 0 15px; text-align: left; }
         .faq-item { margin-bottom: 12px; background: rgba(15, 23, 42, 0.4); padding: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.03); cursor: pointer; transition: 0.3s; }
         .faq-item:hover { border-color: var(--primary); }
@@ -235,6 +243,16 @@
         <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
     </div>
 
+    <div class="usage-guide-container">
+        <div class="guide-header" id="guide-main-title">简易使用方法</div>
+        <div class="guide-line-box">
+            <div class="guide-base-line"><div class="guide-glow-line"></div></div>
+            <div class="guide-node"><span class="guide-text" id="step-1">选择文件</span></div>
+            <div class="guide-node"><span class="guide-text" id="step-2">获取代码</span></div>
+            <div class="guide-node"><span class="guide-text" id="step-3">立即下载</span></div>
+        </div>
+    </div>
+
     <div class="main-wrapper">
         <div class="ad-side" id="left-ad-zone">
             <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
@@ -242,13 +260,6 @@
         </div>
 
         <div class="content-area">
-            <div class="steps-bar">
-                <div class="step-item"><div class="step-dot" style="background:var(--primary); box-shadow:0 0 10px var(--primary);"></div><span>Select Files</span></div>
-                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
-                <div class="step-item"><div class="step-dot"></div><span>Get Code</span></div>
-                <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
-                <div class="step-item"><div class="step-dot"></div><span>Download</span></div>
-            </div>
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
@@ -368,7 +379,8 @@
         en: { 
             tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Encrypting...<br>Stay on page.", receivingRemind: "Handshaking...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs.", pDisc: "Direct P2P.", pAbout: "© 2025 FlashDrop Pro.", inputErr: "6-digit code.", orScan: "scan 📷", doneRemind: "DONE!", histTitle: "History", fileErr: "Select files.", textErr: "Enter text.", introB1: "No Registration", introB2: "No Storage", introB3: "No History", introT: "Temporary Transfer Tool", introD: "Direct connect. Erased after transfer.", f1T: "10-Min Auto-Destruct", f1D: "Expires automatically.", f2T: "Visits Choice", f2D: "1/3/5/Unlimited.", f3T: "Manual Terminate", f3D: "One-click stop.", labLimit: "Limit:", hintLimit: "Default 1 download and 10 mins validity.", optL: "Only ", optU: "Unlimited",
             scTG: "✔ Suitable", scTR: "✖ Unsuitable", scLG: ["Cross-device transfer", "Public PCs sharing", "Self-destruct message"], scLR: ["Long-term cloud", "Team collaboration", "Permanent links"],
-            faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}, {q: "Is it secure?", a: "P2P connection. Data physically wiped after session ends."}, {q: "Why visit limits?", a: "To prevent secondary leakage. 1 time is safest."}, {q: "Can I cancel early?", a: "Yes, click 'Stop' or close tab."}, {q: "What file types?", a: "Almost any file format supported."}, {q: "For long-term use?", a: "No, designed for vanishing transfers."}, {q: "Need account?", a: "No registration required."}]
+            faq: [{q: "What is FlashDrop Pro?", a: "A secure, vanishing transfer tool. Erased after 10 mins or usage."}, {q: "Is it secure?", a: "P2P connection. Data physically wiped after session ends."}, {q: "Why visit limits?", a: "To prevent secondary leakage. 1 time is safest."}, {q: "Can I cancel early?", a: "Yes, click 'Stop' or close tab."}, {q: "What file types?", a: "Almost any file format supported."}, {q: "For long-term use?", a: "No, designed for vanishing transfers."}, {q: "Need account?", a: "No registration required."}],
+            guideMain: "Simple Steps", s1: "Select File", s2: "Get Code", s3: "Download"
         },
         zh: { 
             tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在加密发送中...<br>请勿关闭页面", receivingRemind: "安全握手中...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。", introB1: "无需注册", introB2: "不做存储", introB3: "无历史记录", introT: "临时的、会消失的传输工具", introD: "文件在发送者与接收者之间直连，传输完成或页面关闭后，数据即刻物理抹除。", f1T: "10分钟自动销毁", f1D: "过期后链接自动失效", f2T: "访问次数可选", f2D: "支持 1/3/5/无限次", f3T: "随时手动终止", f3D: "一键切断所有传输", labLimit: "下载限制:", hintLimit: "默认 1 次下载及 10 分钟有效期，旨在最大限度降低泄露风险", optL: "仅限 ", optU: "无限次",
@@ -381,7 +393,8 @@
                 {q: "Q5：我可以传什么类型的文件？", a: "几乎所有文件类型都可以传输，包括图片、视频、文档、压缩包等，支持大多数常见文件格式。"},
                 {q: "Q6：它适合长期保存文件吗？", a: "不适合。FlashDrop Pro 设计目标是临时传输文件和文本，一旦过期或达到访问次数，内容会自动销毁。如果需要长期存储，请使用云盘或其他备份工具。"},
                 {q: "Q7：是否需要注册账号？", a: "不需要。上传和接收都无需账号，整个过程匿名且快捷。"}
-            ]
+            ],
+            guideMain: "简易使用方法", s1: "选择文件", s2: "获取代码", s3: "立即下载"
         }
     };
 
@@ -402,35 +415,30 @@
         document.getElementById('foot-priv-p').innerText = d.pPriv; document.getElementById('foot-disc-p').innerText = d.pDisc;
         document.getElementById('foot-about-p').innerText = d.pAbout; document.getElementById('history-title-text').innerText = d.histTitle;
         document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
-        
         document.getElementById('intro-b1').innerText = d.introB1; document.getElementById('intro-b2').innerText = d.introB2;
         document.getElementById('intro-b3').innerText = d.introB3; document.getElementById('intro-title').innerText = d.introT;
         document.getElementById('intro-desc').innerText = d.introD; document.getElementById('f1-t').innerText = d.f1T;
         document.getElementById('f1-d').innerText = d.f1D; document.getElementById('f2-t').innerText = d.f2T;
         document.getElementById('f2-d').innerText = d.f2D; document.getElementById('f3-t').innerText = d.f3T;
         document.getElementById('f3-d').innerText = d.f3D;
-
         document.getElementById('label-limit').innerText = d.labLimit;
         document.getElementById('limit-hint-text').innerText = d.hintLimit;
-
         const sel = document.getElementById('downloadLimit');
         sel.options[0].text = `${d.optL}1${currLang==='en'?' Time':' 次'}`;
         sel.options[1].text = `${d.optL}3${currLang==='en'?' Times':' 次'}`;
         sel.options[2].text = `${d.optL}5${currLang==='en'?' Times':' 次'}`;
         sel.options[3].text = d.optU;
-
         document.getElementById('sc-title-g').innerText = d.scTG;
         document.getElementById('sc-title-r').innerText = d.scTR;
         document.getElementById('sc-list-g').innerHTML = d.scLG.map(t => `<li>${t}</li>`).join('');
         document.getElementById('sc-list-r').innerHTML = d.scLR.map(t => `<li>${t}</li>`).join('');
-
-        // FAQ 渲染：增加 onclick 事件
-        document.getElementById('faq-list').innerHTML = d.faq.map(f => `
-            <div class="faq-item" onclick="this.classList.toggle('active')">
-                <span class="faq-q">${f.q}</span>
-                <span class="faq-a">${f.a}</span>
-            </div>
-        `).join('');
+        document.getElementById('faq-list').innerHTML = d.faq.map(f => `<div class="faq-item" onclick="this.classList.toggle('active')"><span class="faq-q">${f.q}</span><span class="faq-a">${f.a}</span></div>`).join('');
+        
+        // 渲染新组件翻译
+        document.getElementById('guide-main-title').innerText = d.guideMain;
+        document.getElementById('step-1').innerText = d.s1;
+        document.getElementById('step-2').innerText = d.s2;
+        document.getElementById('step-3').innerText = d.s3;
     }
 
     function triggerAd(mode) {
@@ -509,7 +517,7 @@
     function detectAdBlock() {
         setTimeout(() => {
             const topAd = document.getElementById('top-ad-zone');
-            if (topAd.offsetHeight < 20) { document.getElementById('safety-notice-view').style.display = 'flex'; }
+            if (topAd && topAd.offsetHeight < 20) { document.getElementById('safety-notice-view').style.display = 'flex'; }
         }, 1500); return false;
     }
     function showPolicy(type) { document.getElementById('policyModal').style.display = 'flex'; }
