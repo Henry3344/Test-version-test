@@ -200,10 +200,118 @@
       <p>所有数据通过 WebRTC 加密通道传输，服务器无法解密或查看内容。</p>
     </section>
 
-    <section class="lang" id="ja"><h1>プライバシーとセキュリティ</h1><p>FlashDrop Pro は「データはユーザーのもの」という原則で設計されています。すべての転送はブラウザ間の P2P 接続で行われ、サーバーに保存されることはありません。</p></section>
-    <section class="lang" id="ko"><h1>개인정보 및 보안 정책</h1><p>FlashDrop Pro는 사용자의 데이터를 절대 저장하지 않습니다. 모든 파일 전송은 WebRTC 기반 P2P 방식으로 브라우저 간 직접 이루어집니다.</p></section>
-    <section class="lang" id="es"><h1>Privacidad y Seguridad</h1><p>FlashDrop Pro utiliza transferencias P2P directas en el navegador. No almacenamos archivos ni registros.</p></section>
-    <section class="lang" id="hi"><h1>गोपनीयता और सुरक्षा</h1><p>FlashDrop Pro पूरी तरह से ब्राउज़र आधारित P2P फ़ाइल ट्रांसफ़र का उपयोग करता है। हम किसी भी फ़ाइल या उपयोगकर्ता जानकारी को संग्रहीत नहीं करते।</p></section>
+<section class="lang" id="ja">
+  <h1>プライバシーとセキュリティポリシー</h1>
+  <p>FlashDrop Proは、「<strong>ユーザーのデータはユーザーだけのもの</strong>」というシンプルな原則に基づいて構築されています。この文書では、FlashDrop Proがプライバシー、セキュリティ、およびデータ保護をどのように扱っているかを説明します。</p>
+
+  <h2>1. 純粋な P2P アーキテクチャ</h2>
+  <p>WebRTCを使用したブラウザ間の直接接続により、ファイルとテキストは<strong>デバイス間で直接転送</strong>されます。</p>
+  <ul>
+    <li>ファイルデータがサーバーにアップロードまたは保存されることはありません</li>
+    <li>クラウドストレージや仲介者は存在しません</li>
+    <li>タブを閉じると、すべてのセッションデータは即座に破棄されます</li>
+  </ul>
+
+  <h2>2. サーバー保存ゼロ</h2>
+  <ul>
+    <li>ファイルやテキストの内容を保存しません</li>
+    <li>ダウンロード履歴や転送メタデータを保存しません</li>
+  </ul>
+
+  <h2>3. ログ取得ゼロ</h2>
+  <ul>
+    <li>IPアドレスやユーザー識別情報を記録しません</li>
+    <li>ファイル名やサイズの記録も行いません</li>
+  </ul>
+
+  <h2>4. エンドツーエンドのセッション管理</h2>
+  <p>1回限りのダウンロードや回数制限など、厳格なアクセス制限を設定できます。制限に達すると、セッションは自動的に自己破壊されます。</p>
+
+  <h2>5. 暗号化と転送の安全性</h2>
+  <p>すべての転送は、最新のブラウザ標準に従い、暗号化されたWebRTCチャネルを介して行われます。</p>
+</section>
+
+ <section class="lang" id="ko">
+  <h1>개인정보 및 보안 정책</h1>
+  <p>FlashDrop Pro의 핵심 원칙은 단 하나입니다: <strong>사용자의 데이터는 절대 저장되지 않습니다</strong>. 본 문서는 FlashDrop Pro가 개인정보, 보안 및 데이터 보호를 처리하는 방식을 명확하게 설명합니다.</p>
+
+  <h2>1. 순수 P2P 아키텍처</h2>
+  <p>WebRTC를 기반으로 브라우저 간 직접 연결(P2P)을 실현하며, 파일과 텍스트는 <strong>장치 간 직접 전송</strong>됩니다.</p>
+  <ul>
+    <li>파일 데이터가 서버에 업로드되거나 저장되지 않습니다</li>
+    <li>클라우드 스토리지나 중개 서버가 없습니다</li>
+    <li>페이지를 닫으면 모든 세션 데이터가 즉시 삭제됩니다</li>
+  </ul>
+
+  <h2>2. 서버 저장소 제로</h2>
+  <ul>
+    <li>파일 및 텍스트 콘텐츠를 저장하지 않습니다</li>
+    <li>다운로드 기록 및 전송 메타데이터를 저장하지 않습니다</li>
+  </ul>
+
+  <h2>3. 무로그 정책</h2>
+  <ul>
+    <li>IP 주소 및 사용자 신원을 기록하지 않습니다</li>
+    <li>파일명 및 크기를 기록하지 않습니다</li>
+  </ul>
+
+  <h2>4. 종단 간 세션 제어</h2>
+  <p>1회 다운로드 또는 다운로드 횟수 제한을 설정할 수 있습니다. 제한에 도달하면 세션은 자동으로 자가 파괴됩니다.</p>
+</section>
+
+<section class="lang" id="es">
+  <h1>Política de Privacidad y Seguridad</h1>
+  <p>FlashDrop Pro se basa en un principio único: <strong>sus datos nunca nos pertenecen</strong>. Este documento explica cómo manejamos la privacidad y la protección de datos.</p>
+
+  <h2>1. Arquitectura P2P Pura</h2>
+  <p>Utilizamos conexiones directas WebRTC. Los archivos y textos se transfieren <strong>directamente entre navegadores</strong>.</p>
+  <ul>
+    <li>Los datos nunca se cargan ni se almacenan en nuestros servidores</li>
+    <li>Sin almacenamiento en la nube ni intermediarios</li>
+    <li>Al cerrar la pestaña, todos los datos se destruyen</li>
+  </ul>
+
+  <h2>2. Almacenamiento Cero en el Servidor</h2>
+  <ul>
+    <li>No guardamos archivos ni contenido de texto</li>
+    <li>No guardamos historial de descargas ni metadatos de transferencia</li>
+  </ul>
+
+  <h2>3. Política de Cero Registros (Logs)</h2>
+  <ul>
+    <li>No registramos direcciones IP ni identidades de usuario</li>
+    <li>No registramos nombres ni tamaños de archivos</li>
+  </ul>
+
+  <h2>4. Control de Sesión de Extremo a Extremo</h2>
+  <p>Puede definir límites de acceso estrictos: descarga única o limitada. Una vez alcanzado el límite, la sesión se autodestruye automáticamente.</p>
+</section>
+
+<section class="lang" id="hi">
+  <h1>गोपनीयता और सुरक्षा नीति</h1>
+  <p>FlashDrop Pro एक ही सिद्धांत पर बना है: <strong>आपका डेटा कभी भी हमारा नहीं होता</strong>। यह दस्तावेज़ बताता है कि हम आपकी गोपनीयता और सुरक्षा का प्रबंधन कैसे करते हैं।</p>
+
+  <h2>1. शुद्ध P2P आर्किटेक्चर</h2>
+  <p>फ़ाइलें और टेक्स्ट <strong>सीधे ब्राउज़रों के बीच</strong> (WebRTC के माध्यम से) ट्रांसफ़र किए जाते हैं।</p>
+  <ul>
+    <li>डेटा हमारे सर्वर पर कभी अपलोड या स्टोर नहीं होता</li>
+    <li>कोई क्लाउड स्टोरेज या बिचौलिया नहीं है</li>
+    <li>टैब बंद होते ही सारा डेटा नष्ट हो जाता है</li>
+  </ul>
+
+  <h2>2. ज़ीरो सर्वर स्टोरेज</h2>
+  <ul>
+    <li>हम फ़ाइल सामग्री या टेक्स्ट स्टोर नहीं करते</li>
+    <li>कोई डाउनलोड इतिहास या मेटाडेटा स्टोर नहीं किया जाता</li>
+  </ul>
+
+  <h2>3. ज़ीरो लॉग्स नीति</h2>
+  <ul>
+    <li>हम IP एड्रेस या उपयोगकर्ता की पहचान लॉग नहीं करते</li>
+    <li>फ़ाइल के नाम या आकार को रिकॉर्ड नहीं किया जाता</li>
+  </ul>
+</section>
+
   </div>
 </main>
 
