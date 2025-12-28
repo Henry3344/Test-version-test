@@ -123,94 +123,90 @@ summary::after { content: '+'; color: var(--primary); font-size: 18px; transitio
 details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .faq-answer { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-/* --- 深度优化版：解决重叠 + 强制居中 + 气场放大 --- */
+/* --- 最终修复版：解决重叠 + 宽间距 + 强力辉光 --- */
 .legal-footer { 
-    padding: 30px 0 50px 0; 
+    padding: 30px 10px 50px 10px; 
     background: #030712; 
     border-top: 1px solid var(--border);
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    gap: 35px; 
+    gap: 40px; /* 模块之间的垂直间距加大 */
 }
 
-/* 图标区：放大且完美居中 */
+/* 图标区：更大、更闪、完美对齐 */
 .trust-signals-grid {
     display: flex;
-    flex-direction: row;
     justify-content: space-around; 
     align-items: center;
-    width: 95%; 
+    width: 100%;
     max-width: 700px;
 }
 
 .signal-item {
     display: flex;
-    flex-direction: column; /* 确保垂直排列 */
-    align-items: center;    /* 强制图标下的字水平居中 */
+    flex-direction: column;
+    align-items: center; /* 强制图标和字垂直中心对齐 */
     flex: 1;
 }
 
 .signal-item div { 
-    font-size: 32px; /* 图标放大，更有存在感 */
-    margin-bottom: 10px; 
-    filter: drop-shadow(0 0 12px #6366f1) drop-shadow(0 0 20px rgba(99, 102, 241, 0.7));
+    font-size: 36px; /* 再次加大图标，更有排面 */
+    margin-bottom: 12px; 
+    /* 极致紫色辉光 */
+    filter: drop-shadow(0 0 15px #6366f1) drop-shadow(0 0 25px rgba(99, 102, 241, 0.8));
 }
 
 .signal-item p {
-    font-size: 13px; /* 文字稍微调大，更清晰 */
+    font-size: 14px; /* 字体加大 */
     color: var(--text-muted);
-    font-weight: 800;
+    font-weight: 900;
     margin: 0;
     white-space: nowrap;
 }
 
-/* 链接容器：横向拉开 */
+/* 链接容器：解决重叠，拉开间距 */
 .footer-links-container {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between; 
+    justify-content: center; 
     align-items: center;
-    width: 92%; 
-    max-width: 550px;
+    gap: 45px; /* 这里是“字与字”之间的距离，调大到了 45px，绝不重叠 */
+    width: 100%;
 }
 
 .clickable-footer-link { 
     cursor: pointer; 
     display: inline-flex; 
     align-items: center; 
-    position: relative; /* 为箭头定位做准备 */
+    /* 这里控制“箭头离前面的字”多近，5px 是最精致的距离 */
+    gap: 5px; 
     color: white; 
     font-weight: 900; 
-    font-size: 18px; /* 字体加大，撑起排面 */
+    font-size: 18px; 
     white-space: nowrap;
     text-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
-    /* 关键：给右边留出足够空间，防止箭头重叠 */
-    padding-right: 25px; 
 }
 
-/* 箭头样式：增加 margin-left 彻底拉开间距 */
+/* 箭头动效：不再使用绝对定位 */
 .clickable-footer-link::after { 
     content: '➔'; 
-    position: absolute;
-    right: 0; /* 锁定在最右侧 */
-    margin-left: 12px; 
     font-size: 14px; 
     opacity: 0.9; 
+    display: inline-block;
     animation: arrowMove 1.5s infinite ease-in-out; 
 }
 
 @keyframes arrowMove {
     0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(8px); color: var(--primary); }
+    50% { transform: translateX(5px); color: var(--primary); }
 }
 
 .footer-info-block {
-    width: 100%; 
-    max-width: 600px; 
-    border-top: 1px dashed rgba(255,255,255,0.1); 
-    padding-top: 20px; 
-    margin-top: 10px; 
+    width: 100%;
+    max-width: 600px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    padding-top: 25px;
+    margin-top: 10px;
     text-align: center;
 }
 
@@ -367,7 +363,7 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 </div>
 
 <footer class="legal-footer">
-    <div style="margin-bottom: 10px;">
+    <div style="margin-bottom: 5px;">
         <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" style="box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);">☕ <span id="foot-coffee">Buy me a coffee</span></a>
     </div>
 
