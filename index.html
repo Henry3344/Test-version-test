@@ -62,12 +62,43 @@
         .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
         .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         
-        /* 优化广告位样式，防止检测失效 */
-        .ad-side { width: 160px; min-width: 160px; position: sticky; top: 130px; display: flex; flex-direction: column; align-items: center; border-radius: 12px; background: transparent; overflow: hidden; transition: 0.3s; }
-        .ad-space { background: transparent; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden; width: 100%; transition: 0.3s; }
-        .ad-top { min-height: 0; margin-bottom: 15px; }
-        .ad-bottom { min-height: 0; margin-top: 20px; margin-bottom: 25px; }
-        @media (max-width: 880px) { .ad-side { display: none !important; } }
+        /* --- 修改后的广告位，强制占位 --- */
+        .ad-side { 
+            width: 160px; 
+            height: 600px; /* 强制高度 */
+            position: sticky; 
+            top: 130px; 
+            display: flex !important; /* 强制显示 */
+            flex-direction: column; 
+            align-items: center; 
+            border-radius: 12px; 
+            background: rgba(255,255,255,0.03); /* 没广告时的占位底色 */
+            border: 1px dashed rgba(255,255,255,0.1); /* 淡淡的虚线框 */
+            overflow: hidden; 
+        }
+        .ad-space { 
+            display: flex !important; 
+            justify-content: center; 
+            align-items: center; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            transition: 0.3s; 
+        }
+        .ad-top { 
+            width: 728px; 
+            height: 90px; /* 强制高度 */
+            margin: 0 auto 15px auto; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px dashed rgba(255,255,255,0.1);
+        }
+        .ad-bottom { 
+            width: 728px; 
+            height: 90px; /* 强制高度 */
+            margin: 20px auto 25px auto; 
+            background: rgba(255,255,255,0.03); 
+            border: 1px dashed rgba(255,255,255,0.1);
+        }
+        @media (max-width: 1100px) { .ad-side { display: none !important; } } /* 屏幕太窄才隐藏侧边 */
         
         .card { background: var(--card); padding: 25px; border-radius: 30px; backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.1); width: 100%; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.9); }
         .tab-group { display: flex; background: rgba(51, 65, 85, 0.7); padding: 5px; border-radius: 18px; margin-bottom: 25px; }
@@ -436,9 +467,8 @@
             const topAd = document.getElementById('top-ad-zone');
             const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
             if (topAd.offsetHeight < 20 || !hasContent) {
-                // 这里的 ID 改成新的了
+                // 只显示求助弹窗，不再隐藏广告位框架
                 document.getElementById('safety-notice-view').style.display = 'flex';
-                document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
             }
         }, 1500);
         return false;
