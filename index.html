@@ -123,62 +123,88 @@ summary::after { content: '+'; color: var(--primary); font-size: 18px; transitio
 details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .faq-answer { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-/* --- 紧凑版：优化上下垂直间距 --- */
+/* --- 终极修复：居中对齐 + 辉光图标 + 箭头动效 --- */
 .legal-footer { 
-    padding: 15px 10px 30px 10px; /* 压缩页脚整体上下内边距 */
+    padding: 15px 10px 30px 10px; 
     background: #030712; 
     border-top: 1px solid var(--border);
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    gap: 15px; /* 核心修改：大幅缩小模块间的上下距离 */
+    gap: 15px; /* 保持紧凑的上下距离 */
 }
 
-/* 图标区：缩小底部边距 */
+/* 图标项：强制垂直排列并居中 */
 .trust-signals-grid {
     display: flex;
+    flex-direction: row;
     justify-content: space-around; 
     align-items: center;
     width: 100%;
-    max-width: 700px;
-    margin-bottom: 5px; /* 压缩图标区下方的空隙 */
+    max-width: 600px;
+}
+
+.signal-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 核心修复：确保文字在图标正下方居中 */
+    flex: 1;
 }
 
 .signal-item div { 
-    font-size: 34px; 
-    margin-bottom: 5px; /* 压缩图标与文字之间的距离 */
-    filter: drop-shadow(0 0 15px #6366f1) drop-shadow(0 0 25px rgba(99, 102, 241, 0.8));
+    font-size: 28px; /* 图标字号 */
+    margin-bottom: 5px; 
+    /* 补回紫色辉光 */
+    filter: drop-shadow(0 0 10px #6366f1) drop-shadow(0 0 20px rgba(99, 102, 241, 0.7));
 }
 
-/* 链接容器：保持横向间距，压缩垂直占用 */
+.signal-item p {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 800;
+    margin: 0;
+}
+
+/* 链接容器：横向分布 */
 .footer-links-container {
     display: flex;
     justify-content: center; 
     align-items: center;
-    gap: 35px; /* 保持字与字之间的左右距离 */
+    gap: 30px; /* 链接之间的左右间距 */
     width: 100%;
-    margin: 5px 0; /* 压缩这块区域的上下外边距 */
 }
 
 .clickable-footer-link { 
     cursor: pointer; 
     display: inline-flex; 
     align-items: center; 
-    gap: 5px; 
+    gap: 6px; 
     color: white; 
     font-weight: 900; 
-    font-size: 17px; /* 稍微缩小一点字号，更显精致 */
+    font-size: 16px; 
     white-space: nowrap;
-    text-shadow: 0 0 10px rgba(99, 102, 241, 0.6);
+    text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
 }
 
-/* 版权信息块：缩小顶部划线间距 */
+/* 补回箭头动效 */
+.clickable-footer-link::after { 
+    content: '➔'; 
+    font-size: 13px; 
+    color: #6366f1; /* 紫色箭头 */
+    opacity: 0.9; 
+    display: inline-block;
+    animation: arrowMove 1.5s infinite ease-in-out; 
+}
+
+@keyframes arrowMove {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
 .footer-info-block {
     width: 100%;
-    max-width: 600px;
     border-top: 1px dashed rgba(255,255,255,0.1);
-    padding-top: 15px; /* 缩小版权信息上方的空隙 */
-    margin-top: 5px;
+    padding-top: 10px;
     text-align: center;
 }
 
@@ -335,7 +361,7 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 </div>
 
 <footer class="legal-footer">
-    <div style="margin-bottom: 0;">
+    <div style="margin-bottom: 5px;">
         <a href="https://buymeacoffee.com/xiaevan199e" target="_blank" class="coffee-btn" style="box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);">☕ <span id="foot-coffee">Buy me a coffee</span></a>
     </div>
 
@@ -352,8 +378,8 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     </div>
 
     <div class="footer-info-block">
-        <p style="margin: 3px 0; font-weight: 800; font-size: 12px; color:white;">© 2025-2026 FlashDrop Pro. All rights reserved.</p>
-        <p style="margin: 0; opacity: 0.8; font-size: 10px; color:var(--text-muted);">Privacy-first P2P Workspace.</p>
+        <p style="margin: 3px 0; font-weight: 800; font-size: 11px; color:white;">© 2025-2026 FlashDrop Pro. All rights reserved.</p>
+        <p style="margin: 0; opacity: 0.7; font-size: 10px;">Privacy-first P2P Workspace.</p>
     </div>
 </footer>
 </div>
