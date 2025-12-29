@@ -529,70 +529,149 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         }, 100);
     }
 
-    async function initSender() {
-        if(peer) peer.destroy(); currentDownloads = 0; 
-        const code = Math.floor(100000 + Math.random() * 900000);
-        peer = new Peer(PREFIX + code);
-        peer.on('open', () => {
-            const area = document.getElementById('senderCodeArea'); area.style.display = 'block';
-            document.getElementById('myCode').innerText = code;
-            document.getElementById('qrcode').innerHTML = ""; 
-            new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
-            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
-            startExpiryTimer();
-        });
-        peer.on('connection', c => {
-            // 这里新增了监听：不管是文件存了还是文字拷了，只要收到确认信号就计数
-            c.on('data', d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
-            c.on('open', async () => {
-                const text = document.getElementById('quickText').value; 
-                if(text) { c.send({ type: 'text', data: text }); addHistory("Sent: Text", "text"); }
-                if(stagedFiles.length > 0) {
-                    let fb, fn;
-                    if (stagedFiles.length === 1) { fb = stagedFiles[0]; fn = stagedFiles[0].name; }
-                    else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); fn = "Bundle.zip"; }
-                    c.send({ type: 'meta', name: fn, size: fb.size });
-                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) { c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() }); }
-                    c.send({ type: 'done' }); addHistory("Sent: " + fn, "file");
-                }
-            });
-        });
-    }
+    /* --- [ 4. 核心加解密逻辑与函数集成 ] --- */
 
-    function startReceiving() {
-        const code = document.getElementById('targetCode').value;
-        const rPeer = new Peer();
-        const pgContainer = document.getElementById('receive-pg-container');
-        const pgBar = document.getElementById('receive-pg-bar');
-        const nerd = document.getElementById('receiveNerdStats');
-        pgContainer.style.display = 'block'; nerd.style.display = 'flex'; pgBar.style.width = '0%';
-        rPeer.on('open', () => {
-            const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
-            let meta = null, chunks = [], totalRecv = 0, startTime = Date.now();
-            c.on('data', d => {
-                if(d.type === 'text') { document.getElementById('receivedText').innerText = d.data; document.getElementById('receivedText-container').style.display = 'block'; pgBar.style.width = '100%'; }
-                else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; startTime = Date.now(); }
-                else if(d.type === 'chunk') { 
-                    chunks[d.index] = d.data; totalRecv += d.data.byteLength;
-                    if(meta) {
-                        const pct = (totalRecv / meta.size) * 100; pgBar.style.width = pct + '%';
-                        const speed = totalRecv / ((Date.now() - startTime) / 1000);
-                        document.getElementById('nerd-speed').innerText = (speed / 1024 / 1024).toFixed(1) + " MB/s";
-                        document.getElementById('nerd-eta').innerText = `ETA: ${Math.ceil((meta.size - totalRecv) / (speed || 1))}s`;
-                    }
-                }
-                else if(d.type === 'done') {
-                    const b = new Blob(chunks); const u = window.URL.createObjectURL(b);
-                    const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
-                    btn.onclick = () => { 
-                        const a = document.createElement('a'); a.href = u; a.download = meta.name; a.click(); 
-                        if(c.open) c.send({ type: 'confirm_save' }); addHistory("Received: " + meta.name, "file");
-                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300);
-                    };
-                }
-            });
-        });
+// 1. 加密核心工具
+let isEncrypted = false, aesKey = "";
+const FlashDropCrypto = {
+    async deriveKey(pass, salt) {
+        const encoder = new TextEncoder();
+        const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]);
+        return crypto.subtle.deriveKey(
+            { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+            baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+        );
+    },
+    async encrypt(blob, pass) {
+        const salt = crypto.getRandomValues(new Uint8Array(16));
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const key = await this.deriveKey(pass, salt);
+        const data = await blob.arrayBuffer();
+        const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
+        return new Blob([salt, iv, new Uint8Array(ct)]);
+    },
+    async decrypt(blob, pass) {
+        try {
+            const buf = await blob.arrayBuffer();
+            const salt = new Uint8Array(buf.slice(0, 16));
+            const iv = new Uint8Array(buf.slice(16, 28));
+            const ct = buf.slice(28);
+            const key = await this.deriveKey(pass, salt);
+            const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
+            return new Blob([pt]);
+        } catch (e) { throw new Error("ENC_FAILED"); }
     }
+};
+
+// 2. UI 控制函数
+function showCryptoModal() { 
+    if(isEncrypted) { isEncrypted = false; aesKey = ""; updateLockUI(); return; }
+    document.getElementById('crypto-modal').style.display = 'flex'; 
+}
+function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
+function confirmEncryption() {
+    const p = document.getElementById('crypto-password').value;
+    if(p.length < 6) return alert("Min 6 chars!");
+    aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal();
+}
+function updateLockUI() {
+    const toggle = document.getElementById('crypto-toggle');
+    const icon = document.getElementById('lock-icon');
+    const text = document.getElementById('lock-text');
+    if(isEncrypted) {
+        toggle.classList.add('enabled'); icon.innerText = "🔐";
+        text.innerText = "PROTECTION ON"; text.style.color = "#6366f1";
+    } else {
+        toggle.classList.remove('enabled'); icon.innerText = "🔓";
+        text.innerText = "PROTECTION OFF"; text.style.color = "var(--text-muted)";
+    }
+}
+
+// 3. 替换后的发送逻辑
+async function initSender() {
+    if(peer) peer.destroy(); currentDownloads = 0; 
+    const code = Math.floor(100000 + Math.random() * 900000);
+    peer = new Peer(PREFIX + code);
+    peer.on('open', () => {
+        const area = document.getElementById('senderCodeArea'); area.style.display = 'block';
+        document.getElementById('myCode').innerText = code;
+        document.getElementById('qrcode').innerHTML = ""; 
+        new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
+        startExpiryTimer();
+    });
+    peer.on('connection', c => {
+        c.on('data', d => { if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
+        c.on('open', async () => {
+            let text = document.getElementById('quickText').value.trim(); 
+            if(text) {
+                if(isEncrypted) {
+                    const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([text]), aesKey);
+                    const reader = new FileReader();
+                    reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true });
+                    reader.readAsDataURL(encryptedTextBlob);
+                } else {
+                    c.send({ type: 'text', data: text, encrypted: false });
+                }
+                addHistory("Sent: Text", "text");
+            }
+            if(stagedFiles.length > 0) {
+                let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip";
+                if (stagedFiles.length === 1) { fb = stagedFiles[0]; }
+                else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); }
+                if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; }
+                c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted });
+                for (let i = 0; i < fb.size; i += CHUNK_SIZE) { c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() }); }
+                c.send({ type: 'done' }); addHistory("Sent: " + fn, "file");
+            }
+        });
+    });
+}
+
+// 4. 替换后的接收逻辑
+function startReceiving() {
+    const code = document.getElementById('targetCode').value;
+    const rPeer = new Peer();
+    const pgBar = document.getElementById('receive-pg-bar');
+    document.getElementById('receive-pg-container').style.display = 'block';
+    rPeer.on('open', () => {
+        const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+        let meta = null, chunks = [], totalRecv = 0;
+        c.on('data', async d => {
+            if(d.type === 'text') {
+                let finalTxt = d.data;
+                if(d.encrypted) {
+                    const pass = prompt("Locked Message! Enter Password:");
+                    try {
+                        const res = await fetch(d.data); const blob = await res.blob();
+                        const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
+                        finalTxt = await ptBlob.text();
+                    } catch(e) { alert("Wrong Password!"); return; }
+                }
+                document.getElementById('receivedText').innerText = finalTxt;
+                document.getElementById('receivedText-container').style.display = 'block';
+                pgBar.style.width = '100%';
+            }
+            else if(d.type === 'meta') { meta = d; document.getElementById('mobileDownloadArea').style.display='block'; }
+            else if(d.type === 'chunk') { 
+                chunks[d.index] = d.data; totalRecv += d.data.byteLength;
+                if(meta) pgBar.style.width = (totalRecv / meta.size * 100) + '%';
+            }
+            else if(d.type === 'done') {
+                let b = new Blob(chunks);
+                const btn = document.getElementById('btn-save-file'); btn.innerText = "SAVE: " + meta.name;
+                btn.onclick = async () => { 
+                    if(meta.encrypted) {
+                        const pass = prompt("File is Encrypted! Enter Password:");
+                        try { b = await FlashDropCrypto.decrypt(b, pass); } catch(e) { return alert("Fail!"); }
+                    }
+                    const a = document.createElement('a'); a.href = window.URL.createObjectURL(b); a.download = meta.name.replace('.enc',''); a.click(); 
+                    if(c.open) c.send({ type: 'confirm_save' }); addHistory("Received: " + meta.name, "file");
+                    setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300);
+                };
+            }
+        });
+    });
+}
 
     function addHistory(name, type) {
         let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
