@@ -678,41 +678,52 @@ function startReceiving() {
             // 4. 传输完成后的动作
             else if(d.type === 'done') {
                 const btn = document.getElementById('btn-save-file');
-                
-                // 根据是否加密，自动变换按钮文案
-                if(meta && meta.encrypted) {
-                    btn.innerText = "🔐 DECRYPT & SAVE";
-                    btn.style.background = "#6366f1"; // 紫色强调
-                } else {
-                    btn.innerText = "📥 SAVE FILE";
-                    btn.style.background = "#10b981"; // 绿色
-                }
-                
-                btn.onclick = async () => { 
-                    let b = new Blob(chunks);
-                    if(meta && meta.encrypted) {
-                        const pass = prompt("🔐 This file is locked. Enter password to decrypt:");
-                        if(!pass) return;
-                        try { 
-                            b = await FlashDropCrypto.decrypt(b, pass); 
-                        } catch(e) { return alert("❌ Decryption failed! Check your password."); }
-                    }
+                let finalBlob = new Blob(chunks);
 
-                    // 执行保存：去掉 .enc 后缀，还原原始文件
-                    const u = window.URL.createObjectURL(b);
+                // --- 1. 自动检测加密逻辑 ---
+                if (meta && meta.encrypted) {
+                    // 如果加密，自动弹出密码框
+                    const pass = prompt("🔐 This file is encrypted. Enter password to decrypt:");
+                    if (!pass) {
+                        btn.innerText = "❌ DECRYPTION CANCELED";
+                        btn.onclick = () => location.reload(); // 取消则刷新重来
+                        return;
+                    }
+                    try {
+                        finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
+                        btn.innerText = "✅ DECRYPTED! CLICK TO SAVE";
+                        btn.style.background = "#10b981"; // 变成绿色表示安全
+                    } catch (e) {
+                        alert("❌ Wrong password! Decryption failed.");
+                        btn.innerText = "❌ ERROR: WRONG PASSWORD";
+                        btn.onclick = () => location.reload();
+                        return;
+                    }
+                } else {
+                    // 如果没加密，直接提示保存
+                    btn.innerText = "📥 SAVE FILE";
+                    btn.style.background = "#10b981";
+                }
+
+                // --- 2. 最终的保存动作 ---
+                btn.onclick = () => {
+                    const u = window.URL.createObjectURL(finalBlob);
                     const a = document.createElement('a');
                     a.href = u;
-                    a.download = meta.name.replace('.enc', ''); 
-                    a.click(); 
-                    
-                    if(c.open) c.send({ type: 'confirm_save' }); 
-                    addHistory("Received: " + meta.name.replace('.enc',''), "file");
-                    setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 300);
+                    a.download = meta.name.replace('.enc', '');
+                    a.click();
+
+                    // 发送确认并记录历史
+                    if (c.open) c.send({ type: 'confirm_save' });
+                    addHistory("Received: " + meta.name.replace('.enc', ''), "file");
+
+                    // 延迟重置，确保下载已启动
+                    setTimeout(() => { 
+                        resetReceiver(); 
+                        rPeer.destroy(); 
+                    }, 1000); 
                 };
             }
-        });
-    });
-}
 
     function addHistory(name, type) {
         let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
