@@ -627,62 +627,78 @@ async function initSender() {
     });
 }
 
-// --- [ 优化版：接收并直接解密下载 ] ---
+// --- [ 优化版：全英文 + 加密自动识别逻辑 ] ---
 function startReceiving() {
     const code = document.getElementById('targetCode').value;
     const rPeer = new Peer();
     const pgBar = document.getElementById('receive-pg-bar');
     const nerd = document.getElementById('receiveNerdStats');
+    
     document.getElementById('receive-pg-container').style.display = 'block';
-    nerd.style.display = 'flex';
+    if(nerd) nerd.style.display = 'flex';
     
     rPeer.on('open', () => {
-        const c = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = c;
+        const c = rPeer.connect(PREFIX + code, { reliable: true }); 
+        activeConn = c;
         let meta = null, chunks = [], totalRecv = 0, startTime = Date.now();
         
         c.on('data', async d => {
+            // 1. 处理文字接收
             if(d.type === 'text') {
                 let finalTxt = d.data;
                 if(d.encrypted) {
-                    const pass = prompt("🔐 收到加密文字，请输入二级密码：");
+                    const pass = prompt("🔐 Encrypted Message! Enter Password:");
+                    if(!pass) return;
                     try {
                         const res = await fetch(d.data); const blob = await res.blob();
                         const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
                         finalTxt = await ptBlob.text();
-                    } catch(e) { return alert("❌ 密码错误，无法显示！"); }
+                    } catch(e) { return alert("❌ Wrong Password!"); }
                 }
                 document.getElementById('receivedText').innerText = finalTxt;
                 document.getElementById('receivedText-container').style.display = 'block';
                 pgBar.style.width = '100%';
             }
+            // 2. 处理元数据
             else if(d.type === 'meta') { 
                 meta = d; 
                 document.getElementById('mobileDownloadArea').style.display='block'; 
                 startTime = Date.now(); 
             }
+            // 3. 处理文件块传输
             else if(d.type === 'chunk') { 
                 chunks[d.index] = d.data; totalRecv += d.data.byteLength;
                 if(meta) {
                     const pct = (totalRecv / meta.size) * 100; pgBar.style.width = pct + '%';
                     const speed = totalRecv / ((Date.now() - startTime) / 1000);
-                    document.getElementById('nerd-speed').innerText = (speed / 1024 / 1024).toFixed(1) + " MB/s";
-                    document.getElementById('nerd-eta').innerText = `ETA: ${Math.ceil((meta.size - totalRecv) / (speed || 1))}s`;
+                    const speedTxt = (speed / 1024 / 1024).toFixed(1) + " MB/s";
+                    if(document.getElementById('nerd-speed')) document.getElementById('nerd-speed').innerText = speedTxt;
                 }
             }
+            // 4. 传输完成后的动作
             else if(d.type === 'done') {
                 const btn = document.getElementById('btn-save-file');
-                btn.innerText = "📥 " + (meta.encrypted ? "解密并保存" : "保存文件");
+                
+                // 根据是否加密，自动变换按钮文案
+                if(meta && meta.encrypted) {
+                    btn.innerText = "🔐 DECRYPT & SAVE";
+                    btn.style.background = "#6366f1"; // 紫色强调
+                } else {
+                    btn.innerText = "📥 SAVE FILE";
+                    btn.style.background = "#10b981"; // 绿色
+                }
                 
                 btn.onclick = async () => { 
                     let b = new Blob(chunks);
-                    if(meta.encrypted) {
-                        const pass = prompt("🔐 该文件已加密，请输入二级密码：");
+                    if(meta && meta.encrypted) {
+                        const pass = prompt("🔐 This file is locked. Enter password to decrypt:");
                         if(!pass) return;
                         try { 
                             b = await FlashDropCrypto.decrypt(b, pass); 
-                        } catch(e) { return alert("❌ 密码错误，解密失败！"); }
+                        } catch(e) { return alert("❌ Decryption failed! Check your password."); }
                     }
-                    // 核心：直接下载原始文件名，去掉 .enc 后缀
+
+                    // 执行保存：去掉 .enc 后缀，还原原始文件
                     const u = window.URL.createObjectURL(b);
                     const a = document.createElement('a');
                     a.href = u;
