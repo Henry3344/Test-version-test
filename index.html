@@ -260,46 +260,7 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     </div>
 </div>
 
-<div class="trust-badges" id="trust-badges" style="
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    gap: 8px; /* 间距稍微拉开点更好看 */
-    margin-top: 10px; 
-    width: 100%; 
-    flex-wrap: wrap; /* ✨ 关键：允许它在手机端自动换行 */
-    padding: 0 10px; /* 侧边留点呼吸空间 */
-">
-">
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">🔐 AES-256 Encryption</span>
-        <span class="lang-zh" style="display:none;">🔐 AES-256 加密</span>
-    </span>
 
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">🔑 Protected Sharing</span>
-        <span class="lang-zh" style="display:none;">🔑 安全保护分享</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">🔗 Instant Code & QR</span>
-        <span class="lang-zh" style="display:none;">🔗 验证码/扫码秒传</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">⚡ P2P Transfer</span>
-        <span class="lang-zh" style="display:none;">⚡ P2P 点对点传输</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">🌍 Works Everywhere</span>
-        <span class="lang-zh" style="display:none;">"🌍 全平台通用</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 10px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px; margin: 2px 0;">
-        <span class="lang-en">🧹 Zero Storage</span>
-        <span class="lang-zh" style="display:none;">🧹 零存储策略</span>
-    </span>
 </div>
     </nav>
 
@@ -321,7 +282,42 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     <h1 style="font-size: 26px; font-weight: 900; color: white; margin-bottom: 8px;">Secure File Sharing, Even We Can’t See.</h1>
     <h2 style="font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 480px; margin: 0 auto;">
         Send files and text directly between devices using peer-to-peer technology. <br>
-        <span style="color: var(--primary); font-weight: 800;">Add an optional password to encrypt your files with AES-256 — only the recipient can open them.</span>
+        <span style="color: var(--primary); font-weight: 800;">Add an optional password to encrypt your files with A<div class="app-container" id="app">
+    <div class="stars-container" id="stars"></div>
+    <nav class="navbar">
+        <div class="logo-wrap"><div id="status-dot" class="status-dot online"></div><div class="logo">⚡ Flash<span>Drop</span> Pro</div><div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div></div>
+        <div class="trust-badges" id="trust-badges" style="
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    gap: 5px; /* 极小的间距 */
+    margin-top: 8px; /* 离 Logo 近一点 */
+    width: 100%; 
+    flex-wrap: nowrap; /* 核心：强制不换行 */
+">
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">🔐 AES-256 Encryption</span>
+        <span class="lang-zh" style="display:none;">🔐 AES-256 加密</span>
+    </span>
+
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">🔑 Protected Sharing</span>
+        <span class="lang-zh" style="display:none;">🔑 安全保护分享</span>
+    </span>
+
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">🔗 Instant Code & QR</span>
+        <span class="lang-zh" style="display:none;">🔗 验证码/扫码秒传</span>
+    </span>
+
+    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
+        <span class="lang-en">⚡ P2P Transfer</span>
+        <span class="lang-zh" style="display:none;">⚡ P2P 点对点传输</span>
+    </span>
+</div>
+    </nav>
+
+这里是这么写的ES-256 — only the recipient can open them.</span>
     </h2>
 </div>
 
