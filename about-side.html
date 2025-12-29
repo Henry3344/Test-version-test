@@ -42,13 +42,16 @@
       <option value="hi">हिन्दी</option>
     </select>
   </header>
+
   <main>
     <a href="index.html" class="back-btn">← Back to Workspace</a>
     <div class="card">
+
+      <!-- English -->
       <section class="lang active" id="en">
         <h1>About FlashDrop Pro</h1>
         <p>FlashDrop Pro is a privacy-first, browser-based P2P workspace designed for fast, secure file and text transfer — without servers, accounts, or tracking.</p>
-        <p>Built on modern WebRTC technology, FlashDrop Pro enables direct peer-to-peer connections between devices. Your files and messages never touch our servers, are never stored, and are never logged.</p>
+        <p>Built on modern WebRTC technology, FlashDrop Pro enables direct peer-to-peer connections between devices. When password protection is enabled, files and messages are encrypted in your browser using AES-256 before transmission. Your data never touches our servers, is never stored, and is never logged.</p>
         <p>There are no uploads to the cloud, no user profiles, and no hidden data collection. Once a transfer session ends or the browser tab is closed, all data is destroyed automatically.</p>
         <p>FlashDrop Pro is built for people who value speed, simplicity, and privacy.</p>
         <h2>Key principles we follow:</h2>
@@ -57,14 +60,19 @@
           <li>Zero logs</li>
           <li>No registration required</li>
           <li>Browser-to-browser encryption</li>
+          <li>Optional client-side AES-256 encryption</li>
           <li>Temporary, self-destructing sessions</li>
         </ul>
-        <p style="margin-top:30px; font-weight:800; color:white;">Privacy isn’t a feature here — it’s the foundation.</p>
+        <p style="margin-top:30px; font-weight:800; color:white;">
+          Privacy isn’t a feature here — it’s the foundation. Even we can’t access your encrypted data.
+        </p>
       </section>
+
+      <!-- 中文 -->
       <section class="lang" id="zh">
         <h1>关于 FlashDrop Pro</h1>
         <p>FlashDrop Pro 是一个隐私至上的浏览器 P2P 工作空间，旨在实现快速、安全的文件和文本传输 —— 无需服务器、账户或追踪。</p>
-        <p>基于现代 WebRTC 技术，FlashDrop Pro 实现了设备之间的直接点对点连接。您的文件和信息绝不会接触我们的服务器，从不存储，也从不记录。</p>
+        <p>FlashDrop Pro 基于现代 WebRTC 技术，实现设备之间的直接点对点连接。当发送者设置密码时，文件和文本会在浏览器本地使用 AES-256 进行加密后再传输。您的数据绝不会接触我们的服务器，从不存储，也从不记录。</p>
         <p>没有云端上传，没有用户配置，也没有隐藏的数据收集。一旦传输会话结束或浏览器标签关闭，所有数据都会自动销毁。</p>
         <p>FlashDrop Pro 为重视速度、简单和隐私的用户而生。</p>
         <h2>我们遵循的核心原则：</h2>
@@ -73,72 +81,96 @@
           <li>零日志记录</li>
           <li>无需注册</li>
           <li>浏览器间加密传输</li>
+          <li>可选的 AES-256 客户端加密</li>
           <li>临时、自毁式会话</li>
         </ul>
-        <p style="margin-top:30px; font-weight:800; color:white;">在这里，隐私不是一种功能 —— 而是基石。</p>
+        <p style="margin-top:30px; font-weight:800; color:white;">
+          在这里，隐私不是一种功能 —— 而是基石，甚至我们也无法访问您的加密数据。
+        </p>
       </section>
+
+      <!-- 日本語 -->
       <section class="lang" id="ja">
         <h1>FlashDrop Pro について</h1>
-        <p>FlashDrop Proは、サーバー、アカウント、または追跡を必要とせず、高速で安全なファイルおよびテキスト転送のために設計された、プライバシー優先のブラウザベースのP2Pワークスペースです。</p>
-        <p>最新のWebRTCテクノロジーに基づいて構築されたFlashDrop Proは、デバイス間の直接ピアツーピア接続を可能にします。ファイルやメッセージが当社のサーバーに触れることはなく、保存もログ記録もされません。</p>
-        <p>クラウドへのアップロード、ユーザープロファイル、隠れたデータ収集はありません。転送セッションが終了するかブラウザのタブを閉じると、すべてのデータは自動的に破棄されます。</p>
+        <p>FlashDrop Pro は、サーバーやアカウント、追跡を必要とせず、高速かつ安全なファイルおよびテキスト転送を実現する、プライバシー重視のブラウザベース P2P ワークスペースです。</p>
+        <p>最新の WebRTC テクノロジーに基づいて構築された FlashDrop Pro は、デバイス間の直接的な P2P 接続を可能にします。パスワード保護が有効な場合、ファイルやメッセージは送信前にブラウザ内で AES-256 により暗号化されます。データが当社のサーバーに保存または記録されることはありません。</p>
+        <p>クラウドへのアップロードやユーザープロファイル、隠れたデータ収集はありません。転送セッションが終了するかタブを閉じると、すべてのデータは自動的に破棄されます。</p>
         <h2>私たちが従う主要な原則：</h2>
         <ul>
           <li>サーバー保存ゼロ</li>
           <li>ログ記録ゼロ</li>
           <li>登録不要</li>
           <li>ブラウザ間暗号化</li>
+          <li>クライアント側 AES-256 暗号化（オプション）</li>
           <li>一時的な自己破壊セッション</li>
         </ul>
-        <p style="margin-top:30px; font-weight:800; color:white;">プライバシーは単なる機能ではなく、基盤です。</p>
+        <p style="margin-top:30px; font-weight:800; color:white;">
+          プライバシーは機能ではなく、基盤です。暗号化されたデータは私たちにも閲覧できません。
+        </p>
       </section>
+
+      <!-- 한국어 -->
       <section class="lang" id="ko">
         <h1>FlashDrop Pro 소개</h1>
         <p>FlashDrop Pro는 서버, 계정 또는 추적 없이 빠르고 안전한 파일 및 텍스트 전송을 위해 설계된 프라이버시 우선 브라우저 기반 P2P 워크스페이스입니다.</p>
-        <p>현대적인 WebRTC 기술을 기반으로 구축된 FlashDrop Pro는 장치 간의 직접적인 피어 투 피어 연결을 지원합니다. 귀하의 파일과 메시지는 당사의 서버를 거치지 않으며, 저장되거나 기록되지 않습니다.</p>
-        <p>클라우드 업로드, 사용자 프로필, 숨겨진 데이터 수집이 없습니다. 전송 세션이 종료되거나 브라우저 탭을 닫으면 모든 데이터가 자동으로 소멸됩니다.</p>
+        <p>FlashDrop Pro는 최신 WebRTC 기술을 기반으로 장치 간 직접적인 P2P 연결을 제공합니다. 비밀번호 보호를 설정하면 파일과 메시지는 전송 전에 브라우저 내에서 AES-256으로 암호화됩니다. 데이터는 서버에 저장되거나 기록되지 않습니다.</p>
+        <p>클라우드 업로드, 사용자 프로필, 숨겨진 데이터 수집이 없습니다. 전송 세션이 종료되거나 탭을 닫으면 모든 데이터가 자동으로 소멸됩니다.</p>
         <h2>우리가 따르는 핵심 원칙:</h2>
         <ul>
           <li>서버 저장소 제로</li>
           <li>로그 기록 제로</li>
           <li>가입 불필요</li>
           <li>브라우저 간 암호화</li>
+          <li>선택적 AES-256 클라이언트 측 암호화</li>
           <li>임시 자가 소멸 세션</li>
         </ul>
-        <p style="margin-top:30px; font-weight:800; color:white;">프라이버시는 기능이 아니라 기반입니다.</p>
+        <p style="margin-top:30px; font-weight:800; color:white;">
+          프라이버시는 기능이 아니라 기반이며, 암호화된 데이터는 우리도 접근할 수 없습니다.
+        </p>
       </section>
+
+      <!-- Español -->
       <section class="lang" id="es">
         <h1>Sobre FlashDrop Pro</h1>
         <p>FlashDrop Pro es un espacio de trabajo P2P basado en el navegador, diseñado para transferencias rápidas y seguras de archivos y texto, sin servidores, cuentas ni rastreo.</p>
-        <p>Basado en la tecnología WebRTC, permite conexiones directas entre dispositivos. Sus archivos nunca tocan nuestros servidores, nunca se almacenan y nunca se registran.</p>
-        <p>No hay cargas a la nube ni perfiles de usuario. Una vez que finaliza la sesión o se cierra la pestaña, todos los datos se destruyen automáticamente.</p>
+        <p>Basado en la tecnología moderna WebRTC, FlashDrop Pro permite conexiones P2P directas entre dispositivos. Cuando se establece una contraseña, los archivos y textos se cifran en el navegador utilizando AES-256 antes de la transmisión. Nunca se almacenan ni registran en nuestros servidores.</p>
+        <p>No hay cargas a la nube ni perfiles de usuario. Una vez que la sesión finaliza o se cierra la pestaña, todos los datos se destruyen automáticamente.</p>
         <h2>Principios clave:</h2>
         <ul>
           <li>Almacenamiento cero en el servidor</li>
           <li>Cero registros (logs)</li>
           <li>No requiere registro</li>
-          <li>Cifrado de navegador a navegador</li>
+          <li>Cifrado entre navegadores</li>
+          <li>Cifrado AES-256 del lado del cliente (opcional)</li>
           <li>Sesiones temporales autodestructivas</li>
         </ul>
-        <p style="margin-top:30px; font-weight:800; color:white;">La privacidad no es una característica, es la base.</p>
+        <p style="margin-top:30px; font-weight:800; color:white;">
+          La privacidad no es una función, es la base. Ni siquiera nosotros podemos acceder a los datos cifrados.
+        </p>
       </section>
+
+      <!-- हिन्दी -->
       <section class="lang" id="hi">
         <h1>FlashDrop Pro के बारे में</h1>
-        <p>FlashDrop Pro एक गोपनीयता-प्रथम, ब्राउज़र-आधारित P2P वर्कस्पेस है जिसे तेज़, सुरक्षित फ़ाइल और टेक्स्ट ट्रांसफ़र के लिए डिज़ाइन किया गया है।</p>
-        <p>WebRTC तकनीक पर निर्मित, यह उपकरणों के बीच सीधी पीयर-टू-पीयर कनेक्शन सक्षम करता है। आपकी फ़ाइलें हमारे सर्वर को कभी नहीं छूती हैं और न ही स्टोर की जाती हैं।</p>
-        <p>कोई क्लाउड अपलोड या उपयोगकर्ता प्रोफ़ाइल नहीं है। सत्र समाप्त होने पर सारा डेटा स्वतः नष्ट हो जाता है।</p>
+        <p>FlashDrop Pro एक गोपनीयता-प्रथम, ब्राउज़र-आधारित P2P वर्कस्पेस है जिसे तेज़ और सुरक्षित फ़ाइल व टेक्स्ट ट्रांसफ़र के लिए डिज़ाइन किया गया है।</p>
+        <p>आधुनिक WebRTC तकनीक पर आधारित FlashDrop Pro उपकरणों के बीच सीधे P2P कनेक्शन सक्षम करता है। जब पासवर्ड सेट किया जाता है, तो फ़ाइलें और संदेश ट्रांसफ़र से पहले ब्राउज़र में ही AES-256 से एन्क्रिप्ट किए जाते हैं। डेटा कभी सर्वर पर संग्रहीत या लॉग नहीं किया जाता।</p>
+        <p>कोई क्लाउड अपलोड, उपयोगकर्ता प्रोफ़ाइल या छिपा हुआ डेटा संग्रह नहीं है। सत्र समाप्त होने या टैब बंद होने पर सभी डेटा स्वतः नष्ट हो जाता है।</p>
         <h2>मुख्य सिद्धांत:</h2>
         <ul>
           <li>ज़ीरो सर्वर स्टोरेज</li>
           <li>ज़ीरो लॉग्स</li>
           <li>कोई पंजीकरण आवश्यक नहीं</li>
           <li>ब्राउज़र-टू-ब्राउज़र एन्क्रिप्शन</li>
+          <li>वैकल्पिक AES-256 क्लाइंट-साइड एन्क्रिप्शन</li>
           <li>अस्थायी सत्र</li>
         </ul>
       </section>
+
     </div>
   </main>
+
   <footer>© 2025-2026 FlashDrop Pro · Privacy-First P2P Workspace</footer>
+
   <script>
     function switchLang(lang) {
       document.querySelectorAll('.lang').forEach(el => el.classList.remove('active'));
