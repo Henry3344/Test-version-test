@@ -96,7 +96,7 @@
         .pg-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; position: relative; }
         .pg-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; box-shadow: 0 0 10px var(--primary); }
 
-/* --- FAQ 与页脚联合样式 (包含特性图标与动效) --- */
+/* --- FAQ 与页脚联合样式 --- */
 .faq-container { max-width: 600px; margin: 40px auto; padding: 0 20px; text-align: left; }
 .faq-container h3 { font-size: 16px; color: var(--primary); margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; }
 details { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; margin-bottom: 10px; padding: 12px 15px; transition: 0.3s; }
@@ -106,7 +106,7 @@ summary::after { content: '+'; color: var(--primary); font-size: 18px; transitio
 details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .faq-answer { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.6; padding-top: 10px; border-top: 1px dashed rgba(255, 255, 255, 0.1); }
 
-/* --- 终极修复：居中对齐 + 辉光图标 + 箭头动效 --- */
+/* --- 页脚优化 --- */
 .legal-footer { 
     padding: 15px 10px 30px 10px; 
     background: #030712; 
@@ -114,10 +114,9 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    gap: 15px; /* 保持紧凑的上下距离 */
+    gap: 15px; 
 }
 
-/* 图标项：强制垂直排列并居中 */
 .trust-signals-grid {
     display: flex;
     flex-direction: row;
@@ -130,14 +129,13 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .signal-item {
     display: flex;
     flex-direction: column;
-    align-items: center; /* 核心修复：确保文字在图标正下方居中 */
+    align-items: center; 
     flex: 1;
 }
 
 .signal-item div { 
-    font-size: 28px; /* 图标字号 */
+    font-size: 28px; 
     margin-bottom: 5px; 
-    /* 补回紫色辉光 */
     filter: drop-shadow(0 0 10px #6366f1) drop-shadow(0 0 20px rgba(99, 102, 241, 0.7));
 }
 
@@ -148,12 +146,11 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     margin: 0;
 }
 
-/* 链接容器：横向分布 */
 .footer-links-container {
     display: flex;
     justify-content: center; 
     align-items: center;
-    gap: 30px; /* 链接之间的左右间距 */
+    gap: 30px; 
     width: 100%;
 }
 
@@ -169,11 +166,10 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     text-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
 }
 
-/* 补回箭头动效 */
 .clickable-footer-link::after { 
     content: '➔'; 
     font-size: 13px; 
-    color: #6366f1; /* 紫色箭头 */
+    color: #6366f1; 
     opacity: 0.9; 
     display: inline-block;
     animation: arrowMove 1.5s infinite ease-in-out; 
@@ -238,7 +234,7 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     We use minimal ads only to support the infrastructure and keep this P2P tool free for everyone. 
     Please support privacy by disabling your AdBlocker! ❤️
 </p>
-    <button class="action-btn" onclick="location.reload()">I'VE DISABLED IT, RELOAD</button>
+    <button class="action-btn" id="btn-reload" onclick="location.reload()">I'VE DISABLED IT, RELOAD</button>
         <div style="margin-top: 20px; font-size: 11px; color: var(--text-muted); opacity: 0.6;">Efficiency & Privacy First.</div>
     </div>
 </div>
@@ -251,34 +247,15 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
     display: flex; 
     justify-content: center; 
     align-items: center; 
-    gap: 5px; /* 极小的间距 */
-    margin-top: 8px; /* 离 Logo 近一点 */
+    gap: 5px; 
+    margin-top: 8px; 
     width: 100%; 
-    flex-wrap: nowrap; /* 核心：强制不换行 */
+    flex-wrap: nowrap; 
 ">
-    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
-        <span class="lang-en">🔐 AES-256</span>
-        <span class="lang-zh" style="display:none;">🔐 AES-256</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
-        <span class="lang-en">🔗 Instant&QR</span>
-        <span class="lang-zh" style="display:none;">🔗 秒传</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
-        <span class="lang-en">⚡ P2P</span>
-        <span class="lang-zh" style="display:none;">⚡ P2P</span>
-    </span>
-
-    <span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">
-        <span class="lang-en">🧹 Zero Log</span>
-        <span class="lang-zh" style="display:none;">🧹 零日志</span>
-    </span>
-</div>
+    </div>
     </nav>
 
-    <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;">DROP TO STAGE</h2></div>
+    <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;" id="drop-text">DROP TO STAGE</h2></div>
 
     <div class="ad-space ad-top" id="top-ad-zone">
         <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
@@ -293,23 +270,19 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 
         <div class="content-area">
 <div style="text-align: center; margin-bottom: 25px;">
-    <h1 style="font-size: 26px; font-weight: 900; color: white; margin-bottom: 8px;">Secure File Sharing, Even We Can’t See.</h1>
-    <h2 style="font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 480px; margin: 0 auto;">
+    <h1 id="hero-title" style="font-size: 26px; font-weight: 900; color: white; margin-bottom: 8px;">Secure File Sharing, Even We Can’t See.</h1>
+    <h2 id="hero-subtitle" style="font-size: 14px; color: var(--text-muted); line-height: 1.6; max-width: 480px; margin: 0 auto;">
         Send files and text directly between devices using peer-to-peer technology. <br>
         <span style="color: var(--primary); font-weight: 800;">Add an optional password to encrypt your files with AES-256 — only the recipient can open them.</span>
     </h2>
 </div>
 
-<div style="display: none;"> <h3>How to use FlashDrop Pro?</h3>
-    <p>1. Select files or paste text. 2. Get your unique 6-digit code. 3. Recipient enters the code to download directly.</p>
-</div>
-
             <div class="steps-bar">
-                <div class="step-item"><div class="step-dot" style="background:var(--primary); box-shadow:0 0 10px var(--primary);"></div><span>Select Files</span></div>
+                <div class="step-item"><div class="step-dot" style="background:var(--primary); box-shadow:0 0 10px var(--primary);"></div><span id="step-1">Select Files</span></div>
                 <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
-                <div class="step-item"><div class="step-dot"></div><span>Get Code</span></div>
+                <div class="step-item"><div class="step-dot"></div><span id="step-2">Get Code</span></div>
                 <div style="flex:1; height:1px; background:var(--border); margin-top:4px; opacity:0.3;"></div>
-                <div class="step-item"><div class="step-dot"></div><span>Download</span></div>
+                <div class="step-item"><div class="step-dot"></div><span id="step-3">Download</span></div>
             </div>
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
@@ -332,11 +305,11 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 
 <div id="crypto-modal" class="crypto-modal">
     <div class="crypto-modal-card">
-        <h3 style="color: #6366f1; margin: 0;">Set Password</h3>
+        <h3 id="modal-pass-title" style="color: #6366f1; margin: 0;">Set Password</h3>
         <input type="password" id="crypto-password" placeholder="Min 6 characters">
         <div style="display: flex; gap: 10px;">
-            <button class="action-btn" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
-            <button class="action-btn" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
+            <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
+            <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
         </div>
     </div>
 </div>
@@ -349,7 +322,7 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
                         <div class="code-display" id="myCode">000000</div>
                         <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
                         <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
-                        <button class="action-btn" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
+                        <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
                     </div>
                 </div>
 
@@ -363,7 +336,7 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
                         <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
                         <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
                         <div id="mobileDownloadArea" style="display:none; width:100%; margin-top:15px; text-align:center;"><button class="action-btn" id="btn-save-file" style="background:var(--success); padding:22px;">📥 SAVE</button></div>
-                        <div id="receivedText-container"><div id="receivedText" style="color:white; margin-bottom:15px; word-break: break-all;"></div><button class="action-btn" onclick="copyReceivedText()">📋 COPY</button></div>
+                        <div id="receivedText-container"><div id="receivedText" style="color:white; margin-bottom:15px; word-break: break-all;"></div><button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()">📋 COPY</button></div>
                     </div>
                 </div>
             </div>
@@ -383,16 +356,11 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
 
 <footer class="legal-footer">
 <div class="faq-container">
-    <h3>Common Questions</h3>
+    <h3 id="faq-title">Common Questions</h3>
     <details><summary>Do my files ever touch your servers?</summary><div class="faq-answer">No. FlashDrop Pro uses peer-to-peer (P2P) connections powered by WebRTC. Files and text are sent directly between browsers and are never uploaded to or stored on our servers.</div></details>
     <details><summary>Do you store logs or track users?</summary><div class="faq-answer">No. FlashDrop Pro does not store IP addresses, transfer logs, file names, or user identities. We do not use tracking cookies or build user profiles.</div></details>
     <details><summary>How is the data secured during transfer?</summary><div class="faq-answer">Transfers are encrypted using standard WebRTC security mechanisms. Data is encrypted in transit and is never decrypted by FlashDrop Pro servers.</div></details>
     <details><summary>Can the recipient see my IP address?</summary><div class="faq-answer">Because FlashDrop Pro uses direct peer-to-peer connections, your IP address may be visible to the receiving peer. We recommend using a VPN if this is a concern.</div></details>
-    <details><summary>Is FlashDrop Pro suitable for sharing sensitive files?</summary><div class="faq-answer">FlashDrop Pro is designed for privacy-conscious transfers. Since files are not stored on servers, it reduces exposure risk. However, users are responsible for deciding what they share.</div></details>
-    <details><summary>Can I recover a file after the session ends?</summary><div class="faq-answer">No. Once a session ends or the browser tab is closed, the data is destroyed and cannot be recovered by anyone.</div></details>
-    <details><summary>Can FlashDrop Pro see my files?</summary><div class="faq-answer">No. Files are transferred directly between devices, and encrypted files cannot be accessed by us.</div></details>
-    <details><summary>Is the password required?</summary><div class="faq-answer">No. Password protection is optional for convenience.</div></details>
-    <details><summary>What happens if I forget the password?</summary><div class="faq-answer">Encrypted files cannot be recovered without the correct password.</div></details>
 </div>
 
 <footer class="legal-footer">
@@ -401,15 +369,15 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
     </div>
 
     <div class="trust-signals-grid">
-        <div class="signal-item"><div>⚡</div><p>No Limits</p></div>
-        <div class="signal-item"><div>🔐</div><p>P2P Only</p></div>
-        <div class="signal-item"><div>📂</div><p>Auto-Wipe</p></div>
+        <div class="signal-item"><div>⚡</div><p id="signal-1">No Limits</p></div>
+        <div class="signal-item"><div>🔐</div><p id="signal-2">P2P Only</p></div>
+        <div class="signal-item"><div>📂</div><p id="signal-3">Auto-Wipe</p></div>
     </div>
 
     <div class="footer-links-container">
-        <h4 class="clickable-footer-link" onclick="window.location.href='privacy.html'">Privacy</h4>
-        <h4 class="clickable-footer-link" onclick="window.location.href='about-side.html'">About Site</h4>
-        <h4 class="clickable-footer-link" onclick="window.location.href='about-us.html'">About Us</h4>
+        <h4 class="clickable-footer-link" id="link-priv" onclick="window.location.href='privacy.html'">Privacy</h4>
+        <h4 class="clickable-footer-link" id="link-site" onclick="window.location.href='about-side.html'">About Site</h4>
+        <h4 class="clickable-footer-link" id="link-us" onclick="window.location.href='about-us.html'">About Us</h4>
     </div>
 
     <div class="footer-info-block">
@@ -446,32 +414,174 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
     </div>
     <button class="action-btn" style="width:180px; background:#334155;" onclick="closeScanner()">CLOSE</button>
 </div>
-
 <script>
+    /* --- [多语言配置中心] --- */
     const I18N = {
-        en: { tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P", "🕵️ No Logs", "☁️ CF Secured", "🛠️ GitHub Sync"], drop: "DROP HERE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", exp: "Expires: ", copyLink: "📋 COPY LINK", sendingRemind: "Establishing Secure P2P Tunnel...<br>Stay on page.", receivingRemind: "Establishing Secure P2P Tunnel...<br>Stay on page.", guide: "Code expires in 10 mins.", coffee: "Buy me a coffee", hPriv: "Privacy", hAboutSite: "About Site", hAboutUs: "About Us", hContact: "Contact", pPriv: "Zero logs. Zero tracking. Everything is encrypted in your browser.", pDisc: "Direct P2P. Files never touch our servers. Close page to wipe data.", pAbout: "© 2025 FlashDrop Pro. Efficiency first.", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE below.", histTitle: "Recent History (Local Stored)", fileErr: "Please select files first.", textErr: "Please enter text first." },
-        zh: { tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "☁️ CF 加速", "🛠️ GitHub 部署"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", exp: "有效期: ", copyLink: "📋 复制链接", sendingRemind: "正在建立安全 P2P 隧道...<br>请勿关闭页面", receivingRemind: "正在建立安全 P2P 隧道...<br>请勿关闭页面", guide: "请在10分钟内输入验证码。", coffee: "请我喝杯咖啡", hPriv: "关于隐私", hAboutSite: "关于网站", hAboutUs: "关于我们", hContact: "联系信息", pPriv: "咱这儿没后台没日志，所有东西都在浏览器里加密，隐私第一。", pDisc: "直连传输，文件不经服务器，关掉页面数据即刻消失。", pAbout: "© 2025 FlashDrop Pro. 一个追求效率的角落。", inputErr: "请输入6位验证码。", orScan: "或者扫码 📷", doneRemind: "传输完成！点击下方保存按钮", histTitle: "最近记录 (本地保留)", fileErr: "请先选择文件。", textErr: "请先输入文字。" }
+        en: { 
+            tabSend: "Send", tabReceive: "Receive", 
+            badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], 
+            drop: "DROP TO STAGE", fileLab: "Drop / Click", 
+            shareF: "SHARE FILES", shareT: "SHARE TEXT", 
+            connect: "DOWNLOAD", save: "📥 SAVE", 
+            exp: "Expires: ", copyLink: "📋 COPY LINK", stop: "STOP",
+            guide: "Scan QR or enter code on receiver device.", 
+            coffee: "Buy me a coffee", 
+            hPriv: "Privacy", hSite: "About Site", hUs: "About Us",
+            inputErr: "Enter 6-digit code.", orScan: "or scan 📷", 
+            doneRemind: "DONE! Click SAVE below.", 
+            histTitle: "Recent History", fileErr: "Please select files first.", textErr: "Please enter text first.",
+            step1: "Select Files", step2: "Get Code", step3: "Download",
+            heroTitle: "Secure File Sharing, Even We Can’t See.",
+            heroSub: "Direct P2P transfer. Optional AES-256 encryption. No servers.",
+            sig1: "No Limits", sig2: "P2P Only", sig3: "Auto-Wipe",
+            modalTitle: "Set Password", btnEnable: "ENABLE", btnCancel: "CANCEL",
+            techPhrases: ["Generating RSA-4096 Key...", "Initializing WebRTC Handshake...", "Establishing P2P Tunnel...", "Synchronizing Peer Signals...", "Channel Secured!"]
+        },
+        zh: { 
+            tabSend: "发送", tabReceive: "接收", 
+            badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 极速传输", "📂 阅后即焚"], 
+            drop: "松手上传", fileLab: "拖拽 / 点击", 
+            shareF: "分享文件", shareT: "分享文字", 
+            connect: "立即下载", save: "📥 保存文件", 
+            exp: "有效期: ", copyLink: "📋 复制链接", stop: "停止分享",
+            guide: "请对方扫描二维码或输入下方验证码。", 
+            coffee: "请我喝杯咖啡", 
+            hPriv: "隐私政策", hSite: "关于网站", hUs: "关于我们",
+            inputErr: "请输入6位验证码。", orScan: "扫码接收 📷", 
+            doneRemind: "传输完成！点击下方保存。", 
+            histTitle: "最近记录", fileErr: "请先选择文件。", textErr: "请先输入文字。",
+            step1: "选文件", step2: "取件码", step3: "下载",
+            heroTitle: "安全传输，只有天知地知你知。",
+            heroSub: "点对点直连。可选 AES-256 加密。不经服务器。",
+            sig1: "无限制", sig2: "仅P2P", sig3: "自动销毁",
+            modalTitle: "设置密码", btnEnable: "启用保护", btnCancel: "取消",
+            techPhrases: ["正在生成密钥对...", "初始化 WebRTC 握手...", "建立加密隧道...", "同步点对点信号...", "通道已安全!"]
+        },
+        ja: { 
+            tabSend: "送信", tabReceive: "受信", 
+            badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], 
+            drop: "ここにドロップ", fileLab: "クリックして選択", 
+            shareF: "ファイルを共有", shareT: "テキストを共有", 
+            connect: "ダウンロード", save: "📥 保存する", 
+            exp: "有効期限: ", copyLink: "📋 リンクをコピー", stop: "停止",
+            guide: "QRコードをスキャンするか、コードを入力してください。", 
+            coffee: "コーヒーを奢る", 
+            hPriv: "プライバシー", hSite: "サイトについて", hUs: "私たちについて",
+            inputErr: "6桁のコードを入力してください。", orScan: "QRスキャン 📷", 
+            doneRemind: "完了！保存ボタンを押してください。", 
+            histTitle: "最近の履歴", fileErr: "ファイルを選択してください。", textErr: "テキストを入力してください。",
+            step1: "ファイル選択", step2: "コード取得", step3: "ダウンロード",
+            heroTitle: "安全なファイル共有。私たちも見えません。",
+            heroSub: "P2P直接転送。AES-256暗号化オプション。サーバーなし。",
+            sig1: "無制限", sig2: "P2Pのみ", sig3: "自動消去",
+            modalTitle: "パスワード設定", btnEnable: "有効にする", btnCancel: "キャンセル",
+            techPhrases: ["RSA鍵を生成中...", "WebRTCハンドシェイク...", "P2Pトンネル確立中...", "信号を同期中...", "安全な接続完了!"]
+        },
+        ko: { 
+            tabSend: "보내기", tabReceive: "받기", 
+            badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], 
+            drop: "여기에 드롭", fileLab: "파일 선택 / 클릭", 
+            shareF: "파일 공유", shareT: "텍스트 공유", 
+            connect: "다운로드", save: "📥 저장", 
+            exp: "만료: ", copyLink: "📋 링크 복사", stop: "중지",
+            guide: "QR 코드를 스캔하거나 코드를 입력하세요.", 
+            coffee: "커피 한 잔 후원", 
+            hPriv: "개인정보", hSite: "사이트 정보", hUs: "회사 소개",
+            inputErr: "6자리 코드를 입력하세요.", orScan: "스캔하기 📷", 
+            doneRemind: "완료! 아래 저장 버튼을 누르세요.", 
+            histTitle: "최근 기록", fileErr: "파일을 먼저 선택하세요.", textErr: "텍스트를 먼저 입력하세요.",
+            step1: "파일 선택", step2: "코드 받기", step3: "다운로드",
+            heroTitle: "안전한 파일 공유. 서버 저장 없음.",
+            heroSub: "직접 P2P 전송. 선택적 AES-256 암호화.",
+            sig1: "무제한", sig2: "P2P 전용", sig3: "자동 삭제",
+            modalTitle: "비밀번호 설정", btnEnable: "활성화", btnCancel: "취소",
+            techPhrases: ["RSA 키 생성 중...", "WebRTC 연결 중...", "P2P 터널 수립 중...", "동기화 중...", "보안 연결 완료!"]
+        },
+        es: { 
+            tabSend: "Enviar", tabReceive: "Recibir", 
+            badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], 
+            drop: "SOLTAR AQUÍ", fileLab: "Soltar / Clic", 
+            shareF: "COMPARTIR ARCHIVOS", shareT: "COMPARTIR TEXTO", 
+            connect: "DESCARGAR", save: "📥 GUARDAR", 
+            exp: "Expira: ", copyLink: "📋 COPIAR ENLACE", stop: "DETENER",
+            guide: "Escanea el QR o introduce el código.", 
+            coffee: "invítame un café", 
+            hPriv: "Privacidad", hSite: "Sobre el sitio", hUs: "Sobre nosotros",
+            inputErr: "Introduce el código de 6 dígitos.", orScan: "o escanear 📷", 
+            doneRemind: "¡HECHO! Clic en guardar.", 
+            histTitle: "Historial Reciente", fileErr: "Selecciona archivos primero.", textErr: "Introduce texto primero.",
+            step1: "Elegir Archivos", step2: "Obtener Código", step3: "Descargar",
+            heroTitle: "Intercambio seguro. Nadie nos ve.",
+            heroSub: "Transferencia P2P directa. Cifrado AES-256 opcional.",
+            sig1: "Sin Límites", sig2: "Solo P2P", sig3: "Auto-Borrado",
+            modalTitle: "Contraseña", btnEnable: "ACTIVAR", btnCancel: "CANCELAR",
+            techPhrases: ["Generando Clave RSA...", "Iniciando WebRTC...", "Túnel P2P...", "Sincronizando...", "¡Canal Seguro!"]
+        },
+        hi: { 
+            tabSend: "भेजें", tabReceive: "प्राप्त करें", 
+            badges: ["🔒 P2P एन्क्रिप्शन", "🕵️ कोई लॉग नहीं", "⚡ तीव्र गति", "📂 ऑटो-वाइप"], 
+            drop: "यहाँ छोड़ें", fileLab: "चुनें / क्लिक करें", 
+            shareF: "फ़ाइलें साझा करें", shareT: "텍스트 साझा करें", 
+            connect: "डाउनलोड", save: "📥 सहेजें", 
+            exp: "समाप्त: ", copyLink: "📋 लिंक कॉपी करें", stop: "रोकें",
+            guide: "QR स्कैन करें या कोड दर्ज करें।", 
+            coffee: "मुझे कॉफी पिलाएं", 
+            hPriv: "गोपनीयता", hSite: "साइट के बारे में", hUs: "हमारे बारे में",
+            inputErr: "6-अंकीय कोड दर्ज करें।", orScan: "स्कैन करें 📷", 
+            doneRemind: "पूर्ण! सहेजें पर क्लिक करें।", 
+            histTitle: "हाल का इतिहास", fileErr: "कृपया पहले फ़ाइलें चुनें।", textErr: "कृपया पहले टेक्स्ट दर्ज करें।",
+            step1: "फ़ाइलें चुनें", step2: "कोड प्राप्त करें", step3: "डाउनलोड",
+            heroTitle: "सुरक्षित फ़ाइल शेयरिंग, हम भी नहीं देख सकते।",
+            heroSub: "सीधा P2P स्थानांतरण। वैकल्पिक AES-256 एन्क्रिप्शन।",
+            sig1: "कोई सीमा नहीं", sig2: "केवल P2P", sig3: "ऑटो-वाइप",
+            modalTitle: "पासवर्ड सेट करें", btnEnable: "सक्षम करें", btnCancel: "रद्द करें",
+            techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"]
+        }
     };
 
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
+    /* --- [语言自动检测与应用函数] --- */
     function applyI18N() {
+        // 获取浏览器语言前缀 (例如 'zh-CN' -> 'zh')
         const userLang = navigator.language.split('-')[0];
+        // 如果支持该语言则使用，否则默认英语
         currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang];
+
+        // 更新右上角语言标签
         document.getElementById('currentLangTag').innerText = currLang.toUpperCase();
-        document.getElementById('tab-send').innerText = d.tabSend; document.getElementById('tab-receive').innerText = d.tabReceive;
-        document.getElementById('label-files').innerText = d.fileLab; document.getElementById('btn-share-files').innerText = d.shareF;
-        document.getElementById('btn-share-text').innerText = d.shareT; document.getElementById('btn-connect').innerText = d.connect;
-        document.getElementById('foot-coffee').innerText = d.coffee; document.getElementById('btn-scan').innerText = d.orScan;
-        document.getElementById('foot-head-priv').innerText = d.hPriv; document.getElementById('foot-head-aboutsite').innerText = d.hAboutSite;
-        document.getElementById('foot-head-aboutus').innerText = d.hAboutUs; document.getElementById('foot-head-contact').innerText = d.hContact;
-        document.getElementById('foot-priv-p').innerText = d.pPriv; document.getElementById('foot-disc-p').innerText = d.pDisc;
-        document.getElementById('foot-about-p').innerText = d.pAbout; document.getElementById('history-title-text').innerText = d.histTitle;
-        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span>${b}</span>`).join('');
+
+        // 批量更新文本内容
+        const map = {
+            'tab-send': d.tabSend, 'tab-receive': d.tabReceive,
+            'drop-text': d.drop, 'label-files': d.fileLab,
+            'btn-share-files': d.shareF, 'btn-share-text': d.shareT,
+            'btn-connect': d.connect, 'btn-save-file': d.save,
+            'btn-copy-link': d.copyLink, 'btn-stop': d.stop,
+            'guideText': d.guide, 'foot-coffee': d.coffee,
+            'link-priv': d.hPriv, 'link-site': d.hSite, 'link-us': d.hUs,
+            'btn-scan': d.orScan, 'history-title-text': d.histTitle,
+            'step-1': d.step1, 'step-2': d.step2, 'step-3': d.step3,
+            'hero-title': d.heroTitle, 'hero-subtitle': d.heroSub,
+            'signal-1': d.sig1, 'signal-2': d.sig2, 'signal-3': d.sig3,
+            'modal-pass-title': d.modalTitle, 'btn-enable-pass': d.btnEnable, 'btn-cancel-pass': d.btnCancel
+        };
+
+        for (const [id, text] of Object.entries(map)) {
+            const el = document.getElementById(id);
+            if(el) el.innerHTML = text; // 使用 innerHTML 允许简单的换行标签
+        }
+
+        // 动态生成徽章 (Badges)
+        const badgeContainer = document.getElementById('trust-badges');
+        badgeContainer.innerHTML = d.badges.map(b => 
+            `<span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">${b}</span>`
+        ).join('');
     }
 
+    /* --- [广告与等待机制] --- */
     function triggerAd(mode) {
         if(detectAdBlock()) return;
         if(mode === 'receive' && document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
@@ -483,10 +593,8 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         const timerText = document.getElementById('ad-timer-text');
         const title = document.getElementById('ad-wait-title');
 
-        // 极客文案库：5秒内动态切换，显得后台在做高科技加密
-        const techPhrases = currLang === 'zh' ? 
-            ["正在生成 RSA-4096 密钥对...", "初始化 WebRTC 握手...", "建立加密 P2P 隧道...", "同步点对点信号...", "加密通道已就绪!"] :
-            ["Generating RSA-4096 Key...", "Initializing WebRTC Handshake...", "Establishing P2P Tunnel...", "Synchronizing Peer Signals...", "Channel Secured!"];
+        // 获取当前语言的技术术语库
+        const techPhrases = I18N[currLang].techPhrases;
 
         modal.style.display = 'flex'; 
         adPg.style.width = '0%'; 
@@ -501,7 +609,7 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
             adPg.style.width = pct + '%'; 
             timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`;
 
-            // 每 1.2 秒左右换一句技术黑话
+            // 动态切换文字
             if (elapsed % 1200 === 0 || elapsed === 100) {
                 const phraseIdx = Math.floor(elapsed / 1200);
                 title.innerText = techPhrases[Math.min(phraseIdx, techPhrases.length - 1)];
@@ -515,236 +623,220 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         }, 100);
     }
 
-    /* --- [ 4. 核心加解密逻辑与函数集成 ] --- */
-
-// 1. 加密核心工具
-let isEncrypted = false, aesKey = "";
-const FlashDropCrypto = {
-    async deriveKey(pass, salt) {
-        const encoder = new TextEncoder();
-        const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]);
-        return crypto.subtle.deriveKey(
-            { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
-            baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
-        );
-    },
-    async encrypt(blob, pass) {
-        const salt = crypto.getRandomValues(new Uint8Array(16));
-        const iv = crypto.getRandomValues(new Uint8Array(12));
-        const key = await this.deriveKey(pass, salt);
-        const data = await blob.arrayBuffer();
-        const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
-        return new Blob([salt, iv, new Uint8Array(ct)]);
-    },
-    async decrypt(blob, pass) {
-        try {
-            const buf = await blob.arrayBuffer();
-            const salt = new Uint8Array(buf.slice(0, 16));
-            const iv = new Uint8Array(buf.slice(16, 28));
-            const ct = buf.slice(28);
+    /* --- [加密核心模块] --- */
+    let isEncrypted = false, aesKey = "";
+    const FlashDropCrypto = {
+        async deriveKey(pass, salt) {
+            const encoder = new TextEncoder();
+            const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]);
+            return crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+            );
+        },
+        async encrypt(blob, pass) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
             const key = await this.deriveKey(pass, salt);
-            const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
-            return new Blob([pt]);
-        } catch (e) { throw new Error("ENC_FAILED"); }
-    }
-};
-
-// 2. UI 控制函数
-function showCryptoModal() { 
-    if(isEncrypted) { isEncrypted = false; aesKey = ""; updateLockUI(); return; }
-    document.getElementById('crypto-modal').style.display = 'flex'; 
-}
-function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
-function confirmEncryption() {
-    const p = document.getElementById('crypto-password').value;
-    if(p.length < 6) return alert("Min 6 chars!");
-    aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal();
-}
-function updateLockUI() {
-    const toggle = document.getElementById('crypto-toggle');
-    const icon = document.getElementById('lock-icon');
-    const text = document.getElementById('lock-text');
-    if(isEncrypted) {
-        toggle.classList.add('enabled'); icon.innerText = "🔐";
-        text.innerText = "PROTECTION ON"; text.style.color = "#6366f1";
-    } else {
-        toggle.classList.remove('enabled'); icon.innerText = "🔓";
-        text.innerText = "PROTECTION OFF"; text.style.color = "var(--text-muted)";
-    }
-}
-
-// 3. 替换后的发送逻辑
-async function initSender() {
-    if(peer) peer.destroy(); 
-    currentDownloads = 0; 
-    const code = Math.floor(100000 + Math.random() * 900000);
-    
-    peer = new Peer(PREFIX + code);
-    
-    peer.on('open', () => {
-        const area = document.getElementById('senderCodeArea');
-        if (area) {
-            area.style.display = 'block';
-            // 自动平滑滚动
-            setTimeout(() => {
-                area.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }, 200);
+            const data = await blob.arrayBuffer();
+            const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
+            return new Blob([salt, iv, new Uint8Array(ct)]);
+        },
+        async decrypt(blob, pass) {
+            try {
+                const buf = await blob.arrayBuffer();
+                const salt = new Uint8Array(buf.slice(0, 16));
+                const iv = new Uint8Array(buf.slice(16, 28));
+                const ct = buf.slice(28);
+                const key = await this.deriveKey(pass, salt);
+                const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
+                return new Blob([pt]);
+            } catch (e) { throw new Error("ENC_FAILED"); }
         }
+    };
+
+    function showCryptoModal() { 
+        if(isEncrypted) { isEncrypted = false; aesKey = ""; updateLockUI(); return; }
+        document.getElementById('crypto-modal').style.display = 'flex'; 
+    }
+    function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
+    function confirmEncryption() {
+        const p = document.getElementById('crypto-password').value;
+        if(p.length < 6) return alert("Min 6 chars!");
+        aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal();
+    }
+    function updateLockUI() {
+        const toggle = document.getElementById('crypto-toggle');
+        const icon = document.getElementById('lock-icon');
+        const text = document.getElementById('lock-text');
+        if(isEncrypted) {
+            toggle.classList.add('enabled'); icon.innerText = "🔐";
+            text.innerText = "PROTECTION ON"; text.style.color = "#6366f1";
+        } else {
+            toggle.classList.remove('enabled'); icon.innerText = "🔓";
+            text.innerText = "PROTECTION OFF"; text.style.color = "var(--text-muted)";
+        }
+    }
+
+    /* --- [发送端逻辑] --- */
+    async function initSender() {
+        if(peer) peer.destroy(); 
+        currentDownloads = 0; 
+        const code = Math.floor(100000 + Math.random() * 900000);
         
-        document.getElementById('myCode').innerText = code;
-        document.getElementById('qrcode').innerHTML = ""; 
-        new QRCode(document.getElementById('qrcode'), { 
-            text: window.location.origin + window.location.pathname + "?c=" + code, 
-            width: 140, 
-            height: 140 
-        });
-        startExpiryTimer();
-    });
-
-    peer.on('connection', c => {
-        c.on('data', d => { 
-            if(d.type === 'confirm_save') { 
-                currentDownloads++; 
-                if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
-            } 
-        });
-
-        c.on('open', async () => {
-            // A. 处理文字
-            let textValue = document.getElementById('quickText').value.trim(); 
-            if(textValue) {
-                if(isEncrypted) {
-                    const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey);
-                    const reader = new FileReader();
-                    reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true });
-                    reader.readAsDataURL(encryptedTextBlob);
-                } else {
-                    c.send({ type: 'text', data: textValue, encrypted: false });
-                }
-                addHistory("Sent: Text", "text");
-            }
-
-            // B. 处理文件
-            if(stagedFiles && stagedFiles.length > 0) {
-                let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip";
-                
-                if (stagedFiles.length === 1) { 
-                    fb = stagedFiles[0]; 
-                } else { 
-                    const zip = new JSZip(); 
-                    stagedFiles.forEach(f => zip.file(f.name, f)); 
-                    fb = await zip.generateAsync({type: "blob"}); 
-                }
-                
-                if(isEncrypted) { 
-                    fb = await FlashDropCrypto.encrypt(fb, aesKey); 
-                    fn += ".enc"; 
-                }
-                
-                c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted });
-                for (let i = 0; i < fb.size; i += CHUNK_SIZE) { 
-                    c.send({ 
-                        type: 'chunk', 
-                        index: i/CHUNK_SIZE, 
-                        data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() 
-                    }); 
-                }
-                c.send({ type: 'done' }); 
-                addHistory("Sent: " + fn, "file");
-            }
-        });
-    });
-}
-
-// --- [ 优化版：全英文 + 加密自动识别逻辑 ] ---
-function startReceiving() {
-    const code = document.getElementById('targetCode').value;
-    const rPeer = new Peer();
-    const pgBar = document.getElementById('receive-pg-bar');
-    
-    document.getElementById('receive-pg-container').style.display = 'block';
-    
-    rPeer.on('open', () => {
-        // 这里的 conn 就是 c，我们用 conn 确保作用域不出错
-        const conn = rPeer.connect(PREFIX + code, { reliable: true }); 
-        activeConn = conn;
-        let meta = null, chunks = [], totalRecv = 0;
+        peer = new Peer(PREFIX + code);
         
-        conn.on('data', async d => {
-            if(d.type === 'text') {
-                let finalTxt = d.data;
-                if(d.encrypted) {
-                    const pass = prompt("🔐 Encrypted Message! Enter Password:");
-                    if(!pass) return;
-                    try {
-                        const res = await fetch(d.data); const blob = await res.blob();
-                        const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
-                        finalTxt = await ptBlob.text();
-                    } catch(e) { return alert("❌ Wrong Password!"); }
-                }
-                document.getElementById('receivedText').innerText = finalTxt;
-                document.getElementById('receivedText-container').style.display = 'block';
-                pgBar.style.width = '100%';
+        peer.on('open', () => {
+            const area = document.getElementById('senderCodeArea');
+            if (area) {
+                area.style.display = 'block';
+                setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200);
             }
-            else if(d.type === 'meta') { 
-                meta = d; 
-                document.getElementById('mobileDownloadArea').style.display = 'block'; 
-            }
-            else if(d.type === 'chunk') { 
-                chunks[d.index] = d.data; totalRecv += d.data.byteLength;
-                if(meta) pgBar.style.width = (totalRecv / meta.size * 100) + '%';
-            }
-            else if(d.type === 'done') {
-                const btn = document.getElementById('btn-save-file');
-                let finalBlob = new Blob(chunks);
+            
+            document.getElementById('myCode').innerText = code;
+            document.getElementById('qrcode').innerHTML = ""; 
+            new QRCode(document.getElementById('qrcode'), { 
+                text: window.location.origin + window.location.pathname + "?c=" + code, 
+                width: 140, 
+                height: 140 
+            });
+            startExpiryTimer();
+        });
 
-                // --- 自动检测加密并弹出 ---
-                if (meta && meta.encrypted) {
-                    const pass = prompt("🔐 This file is encrypted. Enter password to decrypt:");
-                    if (!pass) {
-                        btn.innerText = "❌ CANCELED";
-                        return;
+        peer.on('connection', c => {
+            c.on('data', d => { 
+                if(d.type === 'confirm_save') { 
+                    currentDownloads++; 
+                    if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
+                } 
+            });
+
+            c.on('open', async () => {
+                let textValue = document.getElementById('quickText').value.trim(); 
+                if(textValue) {
+                    if(isEncrypted) {
+                        const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey);
+                        const reader = new FileReader();
+                        reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true });
+                        reader.readAsDataURL(encryptedTextBlob);
+                    } else {
+                        c.send({ type: 'text', data: textValue, encrypted: false });
                     }
-                    try {
-                        finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
-                        btn.innerText = "✅ DECRYPTED! SAVE NOW";
-                        btn.style.background = "#10b981";
-                    } catch (e) {
-                        alert("❌ Wrong password!");
-                        btn.innerText = "❌ WRONG PASSWORD";
-                        return;
-                    }
-                } else {
-                    btn.innerText = "📥 SAVE FILE";
-                    btn.style.background = "#10b981";
+                    addHistory("Sent: Text", "text");
                 }
 
-                // --- 修复后的保存动作 ---
-                btn.onclick = () => {
-                    const u = window.URL.createObjectURL(finalBlob);
-                    const a = document.createElement('a');
-                    a.href = u;
-                    a.download = meta.name.replace('.enc', '');
-                    a.click();
-
-                    // 使用 conn 而不是 c，确保连接还在
-                    if (conn && conn.open) {
-                        conn.send({ type: 'confirm_save' });
+                if(stagedFiles && stagedFiles.length > 0) {
+                    let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip";
+                    
+                    if (stagedFiles.length === 1) { 
+                        fb = stagedFiles[0]; 
+                    } else { 
+                        const zip = new JSZip(); 
+                        stagedFiles.forEach(f => zip.file(f.name, f)); 
+                        fb = await zip.generateAsync({type: "blob"}); 
                     }
                     
-                    addHistory("Received: " + meta.name.replace('.enc', ''), "file");
-
-                    // 延迟重置
-                    setTimeout(() => { 
-                        resetReceiver(); 
-                        rPeer.destroy(); 
-                    }, 1000); 
-                };
-            }
+                    if(isEncrypted) { 
+                        fb = await FlashDropCrypto.encrypt(fb, aesKey); 
+                        fn += ".enc"; 
+                    }
+                    
+                    c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted });
+                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) { 
+                        c.send({ 
+                            type: 'chunk', 
+                            index: i/CHUNK_SIZE, 
+                            data: await fb.slice(i, i + CHUNK_SIZE).arrayBuffer() 
+                        }); 
+                    }
+                    c.send({ type: 'done' }); 
+                    addHistory("Sent: " + fn, "file");
+                }
+            });
         });
-    });
-}
+    }
 
+    /* --- [接收端逻辑] --- */
+    function startReceiving() {
+        const code = document.getElementById('targetCode').value;
+        const rPeer = new Peer();
+        const pgBar = document.getElementById('receive-pg-bar');
+        
+        document.getElementById('receive-pg-container').style.display = 'block';
+        
+        rPeer.on('open', () => {
+            const conn = rPeer.connect(PREFIX + code, { reliable: true }); 
+            activeConn = conn;
+            let meta = null, chunks = [], totalRecv = 0;
+            
+            conn.on('data', async d => {
+                if(d.type === 'text') {
+                    let finalTxt = d.data;
+                    if(d.encrypted) {
+                        const pass = prompt("🔐 Encrypted Message! Enter Password:");
+                        if(!pass) return;
+                        try {
+                            const res = await fetch(d.data); const blob = await res.blob();
+                            const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
+                            finalTxt = await ptBlob.text();
+                        } catch(e) { return alert("❌ Wrong Password!"); }
+                    }
+                    document.getElementById('receivedText').innerText = finalTxt;
+                    document.getElementById('receivedText-container').style.display = 'block';
+                    pgBar.style.width = '100%';
+                }
+                else if(d.type === 'meta') { 
+                    meta = d; 
+                    document.getElementById('mobileDownloadArea').style.display = 'block'; 
+                }
+                else if(d.type === 'chunk') { 
+                    chunks[d.index] = d.data; totalRecv += d.data.byteLength;
+                    if(meta) pgBar.style.width = (totalRecv / meta.size * 100) + '%';
+                }
+                else if(d.type === 'done') {
+                    const btn = document.getElementById('btn-save-file');
+                    let finalBlob = new Blob(chunks);
+
+                    if (meta && meta.encrypted) {
+                        const pass = prompt("🔐 This file is encrypted. Enter password to decrypt:");
+                        if (!pass) {
+                            btn.innerText = "❌ CANCELED"; return;
+                        }
+                        try {
+                            finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
+                            btn.innerText = "✅ DECRYPTED! SAVE";
+                            btn.style.background = "#10b981";
+                        } catch (e) {
+                            alert("❌ Wrong password!");
+                            btn.innerText = "❌ WRONG PASSWORD"; return;
+                        }
+                    } else {
+                        btn.innerText = I18N[currLang].save;
+                        btn.style.background = "#10b981";
+                    }
+
+                    btn.onclick = () => {
+                        const u = window.URL.createObjectURL(finalBlob);
+                        const a = document.createElement('a');
+                        a.href = u;
+                        a.download = meta.name.replace('.enc', '');
+                        a.click();
+
+                        if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                        
+                        addHistory("Received: " + meta.name.replace('.enc', ''), "file");
+
+                        setTimeout(() => { 
+                            resetReceiver(); 
+                            rPeer.destroy(); 
+                        }, 1000); 
+                    };
+                }
+            });
+        });
+    }
+
+    /* --- [通用工具函数] --- */
     function addHistory(name, type) {
         let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type });
@@ -755,26 +847,17 @@ function startReceiving() {
         const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
     }
-
     function copyReceivedText() { 
         navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
         alert("Copied!"); 
-        
-        // 【这是新加的】复制完立刻给发送方发信号，触发阅后即毁
-        if(activeConn && activeConn.open) {
-            activeConn.send({ type: 'confirm_save' }); 
-        }
-        
+        if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); }
         resetReceiver(); 
     }
-    // --- 覆盖到这里结束，下面紧跟着是 detectAdBlock 函数 ---
-
     function detectAdBlock() {
         setTimeout(() => {
             const topAd = document.getElementById('top-ad-zone');
             const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
             if (topAd.offsetHeight < 20 || !hasContent) {
-                // 这里的 ID 改成新的了
                 document.getElementById('safety-notice-view').style.display = 'flex';
                 document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
             }
@@ -782,10 +865,13 @@ function startReceiving() {
         return false;
     }
 
+    /* --- [界面交互逻辑] --- */
     function showPolicy(type) {
+        // 由于篇幅限制，隐私政策弹窗依然只保留中英，其他语言默认显示英文
         const modal = document.getElementById('policyModal');
         const body = document.getElementById('policyBody');
-        const lang = currLang || 'en';
+        const langKey = currLang === 'zh' ? 'zh' : 'en';
+        
         const contents = {
             priv: {
                 en: `<h2>Privacy Policy</h2><p><strong>1. Zero Logs:</strong> We do not track IP addresses or metadata.<br><strong>2. P2P Encryption:</strong> Everything happens in your browser via WebRTC.<br><strong>3. Transient:</strong> Closing the tab wipes all session data.</p>`,
@@ -800,9 +886,10 @@ function startReceiving() {
                 zh: `<h2>关于我们</h2><p>效率至上。FlashDrop Pro 是一款专注于安全、高速数据共享的隐私工具。</p>`
             }
         };
-        body.innerHTML = contents[type][lang] || contents[type]['en'];
+        body.innerHTML = contents[type][langKey];
         modal.style.display = 'flex';
     }
+
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; if(expiryTimerIdx) clearInterval(expiryTimerIdx); }
@@ -810,6 +897,8 @@ function startReceiving() {
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
     function renderStagedList() { const list = document.getElementById('stagedList'); list.style.display = stagedFiles.length ? 'block' : 'none'; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>📄 ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); }
+    
+    /* --- [QR 扫描器逻辑] --- */
     async function toggleTorch() { if (!videoTrack) return; torchOn = !torchOn; try { await videoTrack.applyConstraints({ advanced: [{ torch: torchOn }] }); } catch (e) {} }
     async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { alert("Camera failed"); closeScanner(); } }
     function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
@@ -818,16 +907,5 @@ function startReceiving() {
     
     window.onload = () => { initStars(); applyI18N(); renderHistory(); detectAdBlock(); };
 </script>
-<div id="crypto-modal" class="crypto-modal">
-    <div class="crypto-modal-card">
-        <h3 style="color: #6366f1; margin: 0; font-weight: 900;">Set Password</h3>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">AES-256 Client-Side Encryption</p>
-        <input type="password" id="crypto-password" placeholder="Min 6 characters">
-        <div style="display: flex; gap: 10px;">
-            <button class="action-btn" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
-            <button class="action-btn" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
