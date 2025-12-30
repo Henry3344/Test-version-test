@@ -367,47 +367,47 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
             <div class="card">
                 <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
                 <div id="panel-send" class="panel active">
-                    <div class="share-grid">
-                        <div class="column-box">
-                            <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
-                            <div id="stagedList"></div>
-                            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
-                        </div>
-                        <div class="column-box">
-                            <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
-                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
-                        </div>
-                    </div>
-                    <div style="margin: 15px 0; display: flex; justify-content: center; align-items: center; gap: 10px;">
-    <div id="crypto-toggle" onclick="toggleCryptoMode()">
-        <span id="lock-icon">🤖</span>
-        <span id="lock-text" style="font-size: 11px; font-weight: 900; color: var(--text-muted);">自动算法加密</span>
+    <div style="margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px;">
+        <div id="crypto-toggle" style="width: 100%; justify-content: center; padding: 12px;" onclick="toggleCryptoMode()">
+            <span id="lock-icon">🤖</span>
+            <span id="lock-text" style="font-size: 14px; font-weight: 900;">自动算法加密</span>
+        </div>
+        
+        <div style="font-size: 12px; color: var(--text-muted);">
+            下载次数限制: 
+            <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;">
+                <option value="1">1 Time</option>
+                <option value="3">3 Times</option>
+                <option value="5">5 Times</option>
+                <option value="999">Unlimited</option>
+            </select>
+        </div>
     </div>
-    
-    <div style="font-size: 12px; color: var(--text-muted);">
-        Limit: 
-        <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:6px 12px; border-radius:8px;">
-            <option value="1">1 Time</option>
-            <option value="3">3 Times</option>
-            <option value="5">5 Times</option>
-            <option value="999">Unlimited</option>
-        </select>
+
+    <div class="share-grid">
+        <div class="column-box">
+            <label class="file-zone" for="fileInput"><div style="font-size: 42px;">📂</div><div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div></label>
+            <div id="stagedList"></div>
+            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
+        </div>
+        <div class="column-box">
+            <div class="text-zone"><div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900;">Quick Text</div><textarea id="quickText" placeholder="Paste..."></textarea></div>
+            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+        </div>
+    </div>
+
+    <div id="senderCodeArea">
+        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
+        <div class="code-wrapper">
+            <div class="code-display" id="myCode">000000</div>
+            <button id="eye-btn" onmousedown="showPass()" onmouseup="hidePass()" ontouchstart="showPass()" ontouchend="hidePass()" style="display:none;">👁️</button>
+        </div>
+        <div id="qrcode"></div>
+        <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
+        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
+        <button class="action-btn" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
     </div>
 </div>
-                    <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
-                    <div id="senderCodeArea">
-                        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
-                        <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5;"></p>
-                        <div id="qrcode"></div>
-                        <div class="code-wrapper">
-    <div class="code-display" id="myCode">000000</div>
-    <button id="eye-btn" onmousedown="showPass()" onmouseup="hidePass()" ontouchstart="showPass()" ontouchend="hidePass()">👁️‍🗨️</button>
-</div>
-                        <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
-                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
-                        <button class="action-btn" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
-                    </div>
-                </div>
 
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
@@ -866,16 +866,5 @@ function copyReceivedText() {
     
     window.onload = () => { initStars(); applyI18N(); renderHistory(); detectAdBlock(); };
 </script>
-<div id="crypto-modal" class="crypto-modal">
-    <div class="crypto-modal-card">
-        <h3 style="color: #6366f1; margin: 0; font-weight: 900;">Set Password</h3>
-        <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">AES-256 Client-Side Encryption</p>
-        <input type="password" id="crypto-password" placeholder="Min 6 characters">
-        <div style="display: flex; gap: 10px;">
-            <button class="action-btn" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
-            <button class="action-btn" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
-        </div>
-    </div>
-</div>
 </body>
 </html>
