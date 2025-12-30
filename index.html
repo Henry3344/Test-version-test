@@ -88,32 +88,64 @@
         .code-display { font-size: 72px; letter-spacing: 12px; font-weight: 900; color: #a5b4fc; margin: 20px 0; text-shadow: 0 0 40px rgba(99, 102, 241, 0.7); }
         #qrcode { background: white; padding: 15px; border-radius: 18px; display: inline-block; box-shadow: 0 0 30px rgba(255,255,255,0.15); }
 
-.receive-input-container { 
-    position: relative; 
-    width: 100%; 
-    max-width: 420px; 
-    display: flex; 
-    align-items: center; 
-    background: rgba(15, 23, 42, 0.7); /* 变成半透明磨砂感 */
-    border: 2px solid #6366f1; /* 换成亮紫色边框 */
-    border-radius: 20px; 
-    overflow: hidden; 
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); /* 增加紫色微光 */
+/* --- 修复后的接收输入框样式 --- */
+
+/* 1. 容器：使用 Flex 布局，确保横向排列 */
+.receive-input-container {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    display: flex !important; /* 强制使用 Flex，把按钮拉回来 */
+    align-items: center;
+    background: rgba(15, 23, 42, 0.7); /* 半透明玻璃感 */
+    border: 2px solid #6366f1; /* 紫色边框 */
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
 }
 
-input#targetCode { 
-    flex: 1; 
-    padding: 18px; 
-    border: none; 
-    background: transparent; 
-    color: white; 
-    font-size: 28px; /* 42px太大会挤变形，28px更有质感且够大 */
-    text-align: center; 
-    outline: none; 
+/* 2. 输入框：占用剩余空间，文字居中 */
+#targetCode {
+    flex: 1; /* 关键：让它只占用按钮剩下的空间，别全占满了 */
+    padding: 18px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 22px;
+    text-align: center !important; /* 强制居中 */
+    outline: none;
     font-weight: 800;
+    min-width: 0; /* 防止在小屏幕上把容器撑爆 */
 }
-        #btn-scan { background: transparent; border: none; border-left: 1.5px solid rgba(255,255,255,0.2); color: var(--text-muted); font-size: 14px; font-weight: 800; padding: 0 15px; height: 50px; cursor: pointer; white-space: nowrap; transition: 0.3s; }
-        #btn-scan:hover { color: var(--primary); }
+
+/* 占位符样式微调 */
+#targetCode::placeholder {
+    color: rgba(148, 163, 184, 0.5);
+    font-weight: normal;
+}
+
+/* 3. 扫码按钮：确保它显示出来 */
+#btn-scan {
+    display: flex; /* 确保自身内容居中 */
+    align-items: center;
+    height: auto; /* 高度自动撑满容器 */
+    align-self: stretch; /* 纵向拉伸填满 */
+    background: rgba(255,255,255,0.05);
+    border: none;
+    border-left: 1px solid rgba(255,255,255,0.1); /* 左侧分割线 */
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 800;
+    padding: 0 20px;
+    cursor: pointer;
+    white-space: nowrap; /* 防止文字换行 */
+    transition: 0.3s;
+}
+
+#btn-scan:hover {
+    color: white;
+    background: rgba(99, 102, 241, 0.2);
+}
 
         .pg-container { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; margin: 15px 0; display: none; position: relative; }
         .pg-bar { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; box-shadow: 0 0 10px var(--primary); }
