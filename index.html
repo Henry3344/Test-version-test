@@ -221,6 +221,18 @@ details[open] summary::after { content: '-'; transform: rotate(90deg); }
 .crypto-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 10001; display: none; justify-content: center; align-items: center; }
 .crypto-modal-card { background: #111827; border: 1px solid #6366f1; padding: 30px; border-radius: 24px; width: 320px; text-align: center; }
 .crypto-modal input { width: 100%; padding: 12px; background: #030712; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; margin: 15px 0; text-align: center; }
+/* --- 新增：下载中闪烁提示动画 --- */
+@keyframes flash-text { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+.blink-warn { 
+    animation: flash-text 1.5s infinite; 
+    font-size: 10px; 
+    color: #fbbf24; /* 醒目的黄色 */
+    font-weight: 900; 
+    margin: 0 5px;
+    text-align: center;
+    white-space: nowrap;
+}
+@media (max-width: 400px) { .blink-warn { font-size: 9px; } }
     </style>
 </head>
 <body>
@@ -832,7 +844,7 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         });
     }
 
-    /* --- [接收端逻辑 - 已修复速度与ETA显示] --- */
+    /* --- [接收端逻辑 - 含速度、ETA 及 闪烁警告] --- */
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
@@ -840,15 +852,26 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         
         document.getElementById('receive-pg-container').style.display = 'block';
         
+        // 简易的本地化警告语映射，免去你修改上方配置的麻烦
+        const warnTextMap = {
+            en: "Downloading... Keep Open!",
+            zh: "正在下载... 请勿关闭页面！",
+            ja: "ダウンロード中... 閉じないで！",
+            ko: "다운로드 중... 닫지 마세요!",
+            es: "Descargando... ¡No cierres!",
+            hi: "डाउनलोड हो रहा है... बंद न करें!"
+        };
+        const warnText = warnTextMap[currLang] || warnTextMap.en;
+        
         rPeer.on('open', () => {
             const conn = rPeer.connect(PREFIX + code, { reliable: true }); 
             activeConn = conn;
             let meta = null, chunks = [], totalRecv = 0;
-            // 新增：计时变量
             let startTime = 0, lastUpdate = 0;
             
             conn.on('data', async d => {
                 if(d.type === 'text') {
+                    // ... (文字处理逻辑不变) ...
                     let finalTxt = d.data;
                     if(d.encrypted) {
                         const pass = prompt("🔐 Encrypted Message! Enter Password:");
@@ -865,29 +888,38 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
                 }
                 else if(d.type === 'meta') { 
                     meta = d; 
-                    startTime = Date.now(); // 开始计时
+                    startTime = Date.now(); 
                     document.getElementById('mobileDownloadArea').style.display = 'block'; 
-                    document.getElementById('receiveNerdStats').style.display = 'flex'; // 显示速度栏
+                    
+                    // --- 核心修改：在这里插入闪烁警告语 ---
+                    const stats = document.getElementById('receiveNerdStats');
+                    stats.style.display = 'flex';
+                    stats.innerHTML = `
+                        <span id="nerd-speed">0.0 MB/s</span>
+                        <span class="blink-warn">${warnText}</span>
+                        <span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>
+                    `;
                 }
                 else if(d.type === 'chunk') { 
                     chunks[d.index] = d.data; 
                     totalRecv += d.data.byteLength;
                     
                     if(meta) {
-                        // 更新进度条
                         pgBar.style.width = (totalRecv / meta.size * 100) + '%';
                         
-                        // --- 新增：计算速度与 ETA ---
+                        // 计算速度和时间
                         const now = Date.now();
-                        // 每 500ms 更新一次 UI，避免频繁重绘
                         if (now - lastUpdate > 500 || totalRecv === meta.size) {
-                            const duration = (now - startTime) / 1000; // 已耗时(秒)
-                            const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; // MB/s
+                            const duration = (now - startTime) / 1000; 
+                            const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; 
                             const remainingBytes = meta.size - totalRecv;
-                            const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; // 剩余秒数
+                            const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; 
                             
-                            document.getElementById('nerd-speed').innerText = speed.toFixed(1) + ' MB/s';
-                            document.getElementById('nerd-eta').innerText = 'ETA: ' + Math.ceil(eta) + 's';
+                            const spdEl = document.getElementById('nerd-speed');
+                            const etaEl = document.getElementById('nerd-eta');
+                            if(spdEl) spdEl.innerText = speed.toFixed(1) + ' MB/s';
+                            if(etaEl) etaEl.innerText = 'ETA: ' + Math.ceil(eta) + 's';
+                            
                             lastUpdate = now;
                         }
                     }
@@ -896,9 +928,10 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
                     const btn = document.getElementById('btn-save-file');
                     let finalBlob = new Blob(chunks);
                     
-                    // 传输完成，进度条和数据拉满
                     pgBar.style.width = '100%';
-                    document.getElementById('nerd-eta').innerText = 'ETA: 0s';
+                    // 下载完成，移除警告语，显示完成状态
+                    const stats = document.getElementById('receiveNerdStats');
+                    if(stats) stats.innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`;
 
                     if (meta && meta.encrypted) {
                         const pass = prompt("🔐 This file is encrypted. Enter password to decrypt:");
@@ -926,7 +959,6 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
                         a.click();
 
                         if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
-                        
                         addHistory("Received: " + meta.name.replace('.enc', ''), "file");
 
                         setTimeout(() => { 
