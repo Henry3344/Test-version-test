@@ -669,10 +669,16 @@ Limit: <select id="downloadLimit" style="background:#0f172a; color:#fff; border:
         ).join('');
     }
 
-    /* --- [广告与等待机制] --- */
+    /* --- [广告与等待机制 - 已修复键盘自动收起] --- */
     function triggerAd(mode) {
         if(detectAdBlock()) return;
-        if(mode === 'receive' && document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
+        
+        // [修复] 接收模式下，先收起键盘，再校验
+        if(mode === 'receive') {
+            document.getElementById('targetCode').blur(); // 核心代码：强制关闭手机键盘
+            if(document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
+        }
+
         if(mode === 'send-file' && stagedFiles.length === 0) { alert(I18N[currLang].fileErr); return; }
         if(mode === 'send-text' && !document.getElementById('quickText').value.trim()) { alert(I18N[currLang].textErr); return; }
 
