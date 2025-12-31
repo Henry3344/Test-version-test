@@ -576,6 +576,7 @@
     let isAdBlockIgnored = false; 
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
+    /* --- [1. 语言自动检测与应用] --- */
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
@@ -631,6 +632,7 @@
         }
     }
 
+    /* --- [2. 拖拽功能修复] --- */
     function initDragAndDrop() {
         const dz = document.getElementById('drop-zone');
         const handlers = ['dragenter', 'dragover', 'dragleave', 'drop'];
@@ -662,6 +664,7 @@
         });
     }
 
+    /* --- [3. 广告检测] --- */
     function dismissAdBlock() {
         isAdBlockIgnored = true; 
         document.getElementById('safety-notice-view').style.display = 'none';
@@ -716,6 +719,7 @@
         }, 100);
     }
 
+    /* --- [加密模块：600000次迭代] --- */
     let isEncrypted = false, aesKey = "";
     const FlashDropCrypto = {
         async deriveKey(pass, salt) {
@@ -804,6 +808,7 @@
         if(checkbox) checkbox.checked = isEncrypted;
     }
 
+    /* --- [P2P 通信核心 (含自毁监听)] --- */
     async function initSender() {
         if(peer) peer.destroy(); 
         currentDownloads = 0; 
@@ -830,7 +835,7 @@
 
         peer.on('connection', c => {
             c.on('data', d => { 
-                // [自毁逻辑] 接收端发来 'security_burn' 信号时触发
+                // [自毁逻辑]：如果收到 security_burn，立即销毁
                 if (d.type === 'security_burn') {
                     alert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times. Session destroyed.");
                     resetSender();
@@ -888,7 +893,7 @@
         });
     }
 
-    /* --- [接收端逻辑：加入3次错误检测] --- */
+    /* --- [接收端逻辑 (含3次错误检测)] --- */
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
@@ -919,12 +924,12 @@
                         let attempts = 0;
                         while(true) {
                             const pass = prompt(`🔐 Encrypted! Attempt ${attempts+1}/3. Enter Password:`);
-                            if(!pass) return; 
+                            if(!pass) return; // 用户点取消，不做任何事
                             try {
                                 const res = await fetch(d.data); const blob = await res.blob();
                                 const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
                                 finalTxt = await ptBlob.text();
-                                break; // 成功则跳出循环
+                                break; // 成功，跳出循环
                             } catch(e) {
                                 attempts++;
                                 if(attempts >= 3) {
@@ -977,6 +982,7 @@
 
                     if (meta && meta.encrypted) {
                         let attempts = 0;
+                        // 文件加密：点击保存时触发3次尝试
                         btn.onclick = async () => {
                             while(true) {
                                 const pass = prompt(`🔐 Encrypted File! Attempt ${attempts+1}/3. Enter Password:`);
@@ -984,7 +990,7 @@
                                 try {
                                     finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
                                     
-                                    // 成功解密：创建下载链接
+                                    // 成功：下载并添加记录
                                     const u = window.URL.createObjectURL(finalBlob);
                                     const a = document.createElement('a'); a.href = u;
                                     a.download = meta.name.replace('.enc', ''); a.click();
@@ -992,7 +998,7 @@
                                     if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
                                     addHistory("Received: " + meta.name.replace('.enc', ''), "file");
                                     setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
-                                    return; // 结束函数
+                                    return;
 
                                 } catch (e) {
                                     attempts++;
@@ -1007,7 +1013,7 @@
                             }
                         };
                         btn.innerText = "🔐 DECRYPT & SAVE";
-                        btn.style.background = "#f59e0b"; // 黄色提示加密
+                        btn.style.background = "#f59e0b"; 
                     } else {
                         btn.innerText = I18N[currLang].save; btn.style.background = "#10b981";
                         btn.onclick = () => {
@@ -1059,15 +1065,21 @@
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     
+    // [核心修复] 强制回顶 + 失焦
     function resetSender() { 
         if(peer) peer.destroy(); 
         document.getElementById('senderCodeArea').style.display = 'none'; 
         stagedFiles = []; 
         renderStagedList(); 
+        
+        // 1. 强制失焦，收起键盘
         const quickText = document.getElementById('quickText');
         quickText.value = ""; 
         quickText.blur(); 
+        
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
+        
+        // 2. 强制回顶
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
         setTimeout(() => window.scrollTo(0,0), 300);
     }
