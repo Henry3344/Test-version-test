@@ -65,8 +65,11 @@
         .share-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 15px; margin-bottom: 15px; align-items: stretch; }
         @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
         .column-box { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
-        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
         
+        /* --- [修复] 添加 drop-zone 样式 --- */
+        #drop-zone { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; background: rgba(3, 7, 18, 0.95); display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        
+        .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
         .file-zone.drag-active, #drop-zone.drag-active { background: rgba(99, 102, 241, 0.3); border-color: #fff; transform: scale(1.02); }
         
         .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
@@ -136,6 +139,10 @@
         .protection-btn:has(input:checked) .state.off { display: none !important; }
         .protection-btn:has(input:checked) .state.on { display: flex !important; }
 
+        /* --- [修复] 添加 crypto-modal 样式 --- */
+        .crypto-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); z-index: 6000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .crypto-modal-card { background: #1e293b; padding: 25px; border-radius: 20px; border: 1px solid var(--border); width: 90%; max-width: 350px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+        
         /* 密码强度条高级样式 */
         .strength-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; }
         .strength-track { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; overflow: hidden; }
@@ -571,7 +578,6 @@
             techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"]
         }
     };
-
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     let isAdBlockIgnored = false; 
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
@@ -632,35 +638,35 @@
         }
     }
 
-    /* --- [2. 拖拽功能修复] --- */
+    /* --- [2. 拖拽功能修复 - 关键点] --- */
     function initDragAndDrop() {
         const dz = document.getElementById('drop-zone');
-        const handlers = ['dragenter', 'dragover', 'dragleave', 'drop'];
-        handlers.forEach(name => {
-            document.body.addEventListener(name, preventDefaults, false);
-        });
-
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-
+        
+        // 只有检测到文件进入窗口时，才显示黑色遮罩
         document.body.addEventListener('dragenter', (e) => { 
             if (e.dataTransfer.types && e.dataTransfer.types.includes('Files')) {
-                dz.style.display = 'flex'; 
+                e.preventDefault();
+                dz.style.display = 'flex'; // 显示
             }
         });
+
+        // 各种防止浏览器默认打开文件的操作
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => {
+            document.body.addEventListener(name, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
         
+        // 离开遮罩层时隐藏
         dz.addEventListener('dragleave', (e) => { 
             if(e.target === dz) dz.style.display = 'none'; 
         });
         
+        // 放手时
         dz.addEventListener('drop', (e) => {
-            dz.style.display = 'none';
+            dz.style.display = 'none'; // 隐藏
             const dt = e.dataTransfer;
             const files = dt.files;
             handleFiles(files);
-            document.getElementById('tab-send').click();
+            document.getElementById('tab-send').click(); // 自动切换到发送页
         });
     }
 
@@ -753,7 +759,7 @@
 
     function showCryptoModal() { 
         if(isEncrypted) { isEncrypted = false; aesKey = ""; updateLockUI(); return; }
-        document.getElementById('crypto-modal').style.display = 'flex'; 
+        document.getElementById('crypto-modal').style.display = 'flex'; // 显式调用显示
     }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
     
@@ -808,7 +814,7 @@
         if(checkbox) checkbox.checked = isEncrypted;
     }
 
-    /* --- [P2P 通信核心 (含自毁监听)] --- */
+    /* --- [P2P 通信核心] --- */
     async function initSender() {
         if(peer) peer.destroy(); 
         currentDownloads = 0; 
@@ -835,7 +841,6 @@
 
         peer.on('connection', c => {
             c.on('data', d => { 
-                // [自毁逻辑]：如果收到 security_burn，立即销毁
                 if (d.type === 'security_burn') {
                     alert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times. Session destroyed.");
                     resetSender();
@@ -893,7 +898,7 @@
         });
     }
 
-    /* --- [接收端逻辑 (含3次错误检测)] --- */
+    /* --- [接收端逻辑] --- */
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
@@ -901,14 +906,7 @@
         
         document.getElementById('receive-pg-container').style.display = 'block';
         
-        const warnTextMap = {
-            en: "Downloading... Keep Open!",
-            zh: "正在下载... 请勿关闭页面！",
-            ja: "ダウンロード中... 閉じないで！",
-            ko: "다운로드 중... 닫지 마세요!",
-            es: "Descargando... ¡No cierres!",
-            hi: "डाउनलोड हो रहा है... बंद न करें!"
-        };
+        const warnTextMap = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" };
         const warnText = warnTextMap[currLang] || warnTextMap.en;
         
         rPeer.on('open', () => {
@@ -924,16 +922,16 @@
                         let attempts = 0;
                         while(true) {
                             const pass = prompt(`🔐 Encrypted! Attempt ${attempts+1}/3. Enter Password:`);
-                            if(!pass) return; // 用户点取消，不做任何事
+                            if(!pass) return; 
                             try {
                                 const res = await fetch(d.data); const blob = await res.blob();
                                 const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
                                 finalTxt = await ptBlob.text();
-                                break; // 成功，跳出循环
+                                break; 
                             } catch(e) {
                                 attempts++;
                                 if(attempts >= 3) {
-                                    conn.send({ type: 'security_burn' }); // 发送自毁指令
+                                    conn.send({ type: 'security_burn' }); 
                                     alert("❌ SECURITY BREACH: Data Wiped.");
                                     resetReceiver();
                                     return;
@@ -982,15 +980,12 @@
 
                     if (meta && meta.encrypted) {
                         let attempts = 0;
-                        // 文件加密：点击保存时触发3次尝试
                         btn.onclick = async () => {
                             while(true) {
                                 const pass = prompt(`🔐 Encrypted File! Attempt ${attempts+1}/3. Enter Password:`);
                                 if (!pass) return;
                                 try {
                                     finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
-                                    
-                                    // 成功：下载并添加记录
                                     const u = window.URL.createObjectURL(finalBlob);
                                     const a = document.createElement('a'); a.href = u;
                                     a.download = meta.name.replace('.enc', ''); a.click();
@@ -1003,7 +998,7 @@
                                 } catch (e) {
                                     attempts++;
                                     if(attempts >= 3) {
-                                        conn.send({ type: 'security_burn' }); // 自毁
+                                        conn.send({ type: 'security_burn' });
                                         alert("❌ SECURITY BREACH: Data Wiped.");
                                         resetReceiver();
                                         return;
@@ -1065,21 +1060,18 @@
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     
-    // [核心修复] 强制回顶 + 失焦
     function resetSender() { 
         if(peer) peer.destroy(); 
         document.getElementById('senderCodeArea').style.display = 'none'; 
         stagedFiles = []; 
         renderStagedList(); 
         
-        // 1. 强制失焦，收起键盘
         const quickText = document.getElementById('quickText');
         quickText.value = ""; 
         quickText.blur(); 
         
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
         
-        // 2. 强制回顶
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
         setTimeout(() => window.scrollTo(0,0), 300);
     }
