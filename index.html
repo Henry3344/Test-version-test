@@ -161,7 +161,7 @@
 
         #btn-torch { position: absolute; top: 30px; right: 30px; width: 45px; height: 45px; border-radius: 50%; background: rgba(0,0,0,0.4); border: 1.5px solid white; color: white; font-size: 20px; cursor: pointer; backdrop-filter: blur(4px); display: flex; justify-content: center; align-items: center; z-index: 10001; }
 
-        /* 步骤条流光特效 */
+        /* [特效] 步骤条流光特效 */
         .steps-bar { 
             position: relative; display: flex; justify-content: space-between; align-items: center; 
             margin-bottom: 25px; width: 100%; overflow: hidden; padding: 10px 0;
@@ -460,7 +460,7 @@
             drop: "松手上传", fileLab: "拖拽 / 点击", 
             shareF: "分享文件", shareT: "分享文字", 
             connect: "立即下载", save: "📥 保存文件", 
-            recv: "👀 查看文字", decryptRecv: "🔓 解密并查看", decryptSave: "🔓 解密并保存",
+            recv: "👀 查看文字", decryptRecv: "🔓 解密并查看", decryptSave: "🔓 解密并保存", saveNow: "💾 点击保存",
 
             exp: "有效期: ", copyLink: "📋 复制链接", stop: "停止分享",
             guide: "请对方扫描二维码或输入下方验证码。", 
@@ -501,7 +501,7 @@
             drop: "ここにドロップ", fileLab: "クリックして選択", 
             shareF: "ファイルを共有", shareT: "テキストを共有", 
             connect: "ダウンロード", save: "📥 保存する", 
-            recv: "👀 テキスト表示", decryptRecv: "🔓 復号して表示", decryptSave: "🔓 復号して保存",
+            recv: "👀 テキスト表示", decryptRecv: "🔓 復号して表示", decryptSave: "🔓 復号して保存", saveNow: "💾 保存をクリック",
 
             exp: "有効期限: ", copyLink: "📋 リンクをコピー", stop: "停止",
             guide: "QRコードをスキャンするか、コードを入力してください。", 
@@ -542,7 +542,7 @@
             drop: "여기에 드롭", fileLab: "파일 선택 / 클릭", 
             shareF: "파일 공유", shareT: "텍스트 공유", 
             connect: "다운로드", save: "📥 저장", 
-            recv: "👀 텍스트 보기", decryptRecv: "🔓 복호화 및 보기", decryptSave: "🔓 복호화 및 저장",
+            recv: "👀 텍스트 보기", decryptRecv: "🔓 복호화 및 보기", decryptSave: "🔓 복호화 및 저장", saveNow: "💾 저장하려면 클릭",
 
             exp: "만료: ", copyLink: "📋 링크 복사", stop: "중지",
             guide: "QR 코드를 스캔하거나 코드를 입력하세요.", 
@@ -583,7 +583,7 @@
             drop: "SOLTAR AQUÍ", fileLab: "Soltar / Clic", 
             shareF: "COMPARTIR ARCHIVOS", shareT: "COMPARTIR TEXTO", 
             connect: "DESCARGAR", save: "📥 GUARDAR", 
-            recv: "👀 VER TEXTO", decryptRecv: "🔓 DESCIFRAR Y VER", decryptSave: "🔓 DESCIFRAR Y GUARDAR",
+            recv: "👀 VER TEXTO", decryptRecv: "🔓 DESCIFRAR Y VER", decryptSave: "🔓 DESCIFRAR Y GUARDAR", saveNow: "💾 CLIC PARA GUARDAR",
 
             exp: "Expira: ", copyLink: "📋 COPIAR ENLACE", stop: "DETENER",
             guide: "Escanea el QR o introduce el código.", 
@@ -624,7 +624,7 @@
             drop: "यहाँ छोड़ें", fileLab: "चुनें / क्लिक करें", 
             shareF: "फ़ाइलें साझा करें", shareT: "텍스트 साझा करें", 
             connect: "डाउनलोड", save: "📥 सहेजें", 
-            recv: "👀 टेक्स्ट देखें", decryptRecv: "🔓 डिक्रिप्ट करें और देखें", decryptSave: "🔓 डिक्रिप्ट करें और सहेजें",
+            recv: "👀 टेक्स्ट देखें", decryptRecv: "🔓 डिक्रिप्ट करें और देखें", decryptSave: "🔓 डिक्रिप्ट करें और सहेजें", saveNow: "💾 सहेजने के लिए क्लिक करें",
 
             exp: "समाप्त: ", copyLink: "📋 लिंक कॉपी करें", stop: "रोकें",
             guide: "QR स्कैन करें या कोड दर्ज करें।", 
@@ -664,12 +664,15 @@
     let downloadDotsIdx = null; 
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
+    /* --- [1. 语言自动检测与应用] --- */
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang];
+
         const tagEl = document.getElementById('currentLangTag');
         if(tagEl) tagEl.innerText = d.tag;
+
         const map = {
             'tab-send': d.tabSend, 'tab-receive': d.tabReceive,
             'drop-text': d.drop, 'label-files': d.fileLab,
@@ -679,7 +682,10 @@
             'guideText': d.guide, 'foot-coffee': d.coffee,
             'link-priv': d.hPriv, 'link-site': d.hSite, 'link-us': d.hUs,
             'btn-scan': d.orScan, 'history-title-text': d.histTitle,
+            
+            // 4步骤
             'step-1': d.step1, 'step-2': d.step2, 'step-3': d.step3, 'step-4': d.step4,
+
             'hero-title': d.heroTitle, 'signal-1': d.sig1, 'signal-2': d.sig2, 'signal-3': d.sig3,
             'modal-pass-title': d.modalTitle, 'btn-enable-pass': d.btnEnable, 'btn-cancel-pass': d.btnCancel,
             'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, 
@@ -690,6 +696,7 @@
             'faq-q7': d.faqQ7, 'faq-a7': d.faqA7, 'faq-q8': d.faqQ8, 'faq-a8': d.faqA8,
             'faq-q9': d.faqQ9, 'faq-a9': d.faqA9
         };
+
         for (const [id, text] of Object.entries(map)) {
             const el = document.getElementById(id);
             if(el) { 
@@ -697,35 +704,45 @@
                 else { el.innerHTML = text; }
             }
         }
+
         const badgeContainer = document.getElementById('trust-badges');
         if(badgeContainer) {
             badgeContainer.innerHTML = d.badges.map(b => `<span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">${b}</span>`).join('');
         }
     }
 
+    /* --- [2. 拖拽功能] --- */
     function initDragAndDrop() {
         const dz = document.getElementById('drop-zone');
-        document.body.addEventListener('dragenter', (e) => { if (e.dataTransfer.types && e.dataTransfer.types.includes('Files')) { e.preventDefault(); dz.style.display = 'flex'; } });
+        document.body.addEventListener('dragenter', (e) => { 
+            if (e.dataTransfer.types && e.dataTransfer.types.includes('Files')) { e.preventDefault(); dz.style.display = 'flex'; } 
+        });
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => { document.body.addEventListener(name, (e) => { e.preventDefault(); e.stopPropagation(); }, false); });
         dz.addEventListener('dragleave', (e) => { if(e.target === dz) dz.style.display = 'none'; });
         dz.addEventListener('drop', (e) => { dz.style.display = 'none'; handleFiles(e.dataTransfer.files); document.getElementById('tab-send').click(); });
     }
 
+    /* --- [3. 广告与验证] --- */
     function dismissAdBlock() { isAdBlockIgnored = true; document.getElementById('safety-notice-view').style.display = 'none'; document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); }
 
     function triggerAd(mode) {
         if(isAdBlockIgnored) { mode.startsWith('send') ? initSender() : startReceiving(); return; }
         if(detectAdBlock()) return;
+        
+        // [修复] 接收模式下，先检查验证码，为空则不显示 Loading
         if(mode === 'receive') {
             document.getElementById('targetCode').blur(); 
-            if(document.getElementById('targetCode').value.length < 6) { alert(I18N[currLang].inputErr); return; }
+            const codeVal = document.getElementById('targetCode').value;
+            if(!codeVal || codeVal.length < 6) { alert(I18N[currLang].inputErr); return; }
         }
+        
         if(mode === 'send-file' && stagedFiles.length === 0) { alert(I18N[currLang].fileErr); return; }
         if(mode === 'send-text' && !document.getElementById('quickText').value.trim()) { alert(I18N[currLang].textErr); return; }
 
         const modal = document.getElementById('adModal'); const adPg = document.getElementById('ad-pg-bar'); const timerText = document.getElementById('ad-timer-text'); const title = document.getElementById('ad-wait-title'); const techPhrases = I18N[currLang].techPhrases;
         modal.style.display = 'flex'; adPg.style.width = '0%'; 
         let elapsed = 0; const totalMs = 5000;
+
         const itv = setInterval(() => { 
             elapsed += 100; const pct = (elapsed / totalMs) * 100; const rem = Math.ceil((totalMs - elapsed) / 1000);
             adPg.style.width = pct + '%'; timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`;
@@ -734,6 +751,7 @@
         }, 100);
     }
 
+    /* --- [加密模块] --- */
     let isEncrypted = false, aesKey = "";
     const FlashDropCrypto = {
         async deriveKey(pass, salt) {
@@ -774,6 +792,7 @@
     }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
 
+    /* --- [Sender Logic] --- */
     async function initSender() {
         if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
@@ -807,6 +826,7 @@
         });
     }
 
+    /* --- [Receiver Logic - Single Button Dynamic] --- */
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
@@ -823,6 +843,7 @@
             let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
             
             conn.on('data', async d => {
+                // --- TEXT ---
                 if(d.type === 'text') {
                     if(downloadDotsIdx) clearInterval(downloadDotsIdx);
                     const label = d.encrypted ? I18N[currLang].decryptRecv : I18N[currLang].recv;
@@ -851,16 +872,21 @@
                         document.getElementById('receivedText').innerText = finalTxt;
                         document.getElementById('receivedText-container').style.display = 'block';
                         pgBar.style.width = '100%';
+                        // 复原
                         btn.onclick = () => triggerAd('receive');
                         btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)";
                         if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
                     };
                 }
+                // --- FILE META ---
                 else if(d.type === 'meta') { 
                     meta = d; startTime = Date.now(); 
                     const stats = document.getElementById('receiveNerdStats'); stats.style.display = 'flex';
-                    stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading...</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`;
+                    const warnTextMap = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" };
+                    const warnText = warnTextMap[currLang] || warnTextMap.en;
+                    stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">${warnText}</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`;
                 }
+                // --- FILE CHUNK ---
                 else if(d.type === 'chunk') { 
                     chunks[d.index] = d.data; totalRecv += d.data.byteLength;
                     if(meta) {
@@ -878,39 +904,62 @@
                         }
                     }
                 }
+                // --- FILE DONE ---
                 else if(d.type === 'done') {
                     if(downloadDotsIdx) clearInterval(downloadDotsIdx);
+                    
                     const label = (meta && meta.encrypted) ? I18N[currLang].decryptSave : I18N[currLang].save;
                     const bg = (meta && meta.encrypted) ? "#f59e0b" : "#10b981";
-                    btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1";
+                    
+                    btn.innerText = label; 
+                    btn.style.background = bg; 
+                    btn.disabled = false; btn.style.opacity = "1";
                     
                     const stats = document.getElementById('receiveNerdStats');
                     if(stats) stats.innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`;
                     pgBar.style.width = '100%';
                     let finalBlob = new Blob(chunks);
 
+                    // [修复] 重写点击逻辑：解密 -> 变绿 -> 保存
                     btn.onclick = async () => {
                         if (meta && meta.encrypted) {
                             let attempts = 0;
                             while(true) {
                                 const pass = prompt(`🔐 Encrypted File! Attempt ${attempts+1}/3. Enter Password:`);
-                                if (!pass) return;
+                                if (!pass) return; // 取消不下载
                                 try {
                                     finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
-                                    break;
+                                    
+                                    // 重点：解密成功后，按钮变绿提示用户点击下载
+                                    btn.innerText = I18N[currLang].saveNow || "💾 SAVE NOW";
+                                    btn.style.background = "#10b981";
+                                    
+                                    // 再次绑定点击事件执行下载
+                                    btn.onclick = () => {
+                                        const u = window.URL.createObjectURL(finalBlob);
+                                        const a = document.createElement('a'); a.href = u;
+                                        a.download = meta.name.replace('.enc', ''); a.click();
+                                        if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                                        addHistory("Received: " + meta.name.replace('.enc', ''), "file");
+                                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
+                                    };
+                                    return; // 退出解密循环，等待用户点击Save Now
+
                                 } catch (e) {
                                     attempts++;
                                     if(attempts >= 3) { conn.send({ type: 'security_burn' }); alert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; }
                                     alert(`❌ Wrong Password! ${3 - attempts} attempts remaining.`);
                                 }
                             }
+                        } else {
+                            // 非加密，直接下载
+                            const u = window.URL.createObjectURL(finalBlob);
+                            const a = document.createElement('a'); a.href = u;
+                            a.download = meta.name.replace('.enc', ''); a.click();
+                            if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                            addHistory("Received: " + meta.name.replace('.enc', ''), "file");
+                            setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
                         }
-                        const u = window.URL.createObjectURL(finalBlob);
-                        const a = document.createElement('a'); a.href = u;
-                        a.download = meta.name.replace('.enc', ''); a.click();
-                        if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
-                        addHistory("Received: " + meta.name.replace('.enc', ''), "file");
-                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
                     };
                 }
             });
@@ -929,8 +978,8 @@
     }
     function copyReceivedText() { 
         navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
+        // [修复] 复制后完全重置
         alert("Copied!"); 
-        // [修复] 复制后重置接收区域
         document.getElementById('receivedText').innerText = "";
         document.getElementById('receivedText-container').style.display = 'none';
         
