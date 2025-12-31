@@ -658,13 +658,13 @@
         ).join('');
     }
 
-    /* --- [2. 拖拽功能修复 & UI逻辑] --- */
+    /* --- [2. 拖拽功能修复] --- */
     function initDragAndDrop() {
         const dz = document.getElementById('drop-zone');
-        const fz = document.getElementById('file-drop-area'); 
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            document.body.addEventListener(eventName, preventDefaults, false);
+        // 同时给 全局 和 文件区域 都加监听
+        const handlers = ['dragenter', 'dragover', 'dragleave', 'drop'];
+        handlers.forEach(name => {
+            document.body.addEventListener(name, preventDefaults, false);
         });
 
         function preventDefaults(e) {
@@ -672,9 +672,10 @@
             e.stopPropagation();
         }
 
-        // 全屏拖入效果
+        // 拖入显示全屏覆盖层
         document.body.addEventListener('dragenter', () => { dz.style.display = 'flex'; });
         
+        // 覆盖层上的拖拽事件
         dz.addEventListener('dragleave', (e) => { 
             if(e.target === dz) dz.style.display = 'none'; 
         });
@@ -684,11 +685,12 @@
             const dt = e.dataTransfer;
             const files = dt.files;
             handleFiles(files);
+            // 自动切换到发送Tab
             document.getElementById('tab-send').click();
         });
     }
 
-    /* --- [3. 广告检测 & 狠心拒绝] --- */
+    /* --- [3. 广告检测] --- */
     function dismissAdBlock() {
         isAdBlockIgnored = true; 
         document.getElementById('safety-notice-view').style.display = 'none';
@@ -833,7 +835,7 @@
         if(checkbox) checkbox.checked = isEncrypted;
     }
 
-    /* --- [P2P 通信核心] --- */
+    /* --- [PeerJS 传输核心] --- */
     async function initSender() {
         if(peer) peer.destroy(); 
         currentDownloads = 0; 
@@ -1048,7 +1050,7 @@
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     
-    // [修复] 界面消失BUG：传输结束后滚回顶部
+    // [核心修复] 重置发送界面时，自动滚回顶部，防止界面“消失”
     function resetSender() { 
         if(peer) peer.destroy(); 
         document.getElementById('senderCodeArea').style.display = 'none'; 
@@ -1056,7 +1058,8 @@
         renderStagedList(); 
         document.getElementById('quickText').value = ""; 
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
-        // 核心修复代码：滚回顶部
+        
+        // 关键行：滚回顶部
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
     }
     
@@ -1071,7 +1074,6 @@
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
     
-    // 初始化所有功能
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); };
 </script>
 </body>
