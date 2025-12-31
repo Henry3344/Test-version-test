@@ -148,12 +148,19 @@
         .blink-warn { animation: flash-text 1.5s infinite; font-size: 10px; color: #fbbf24; font-weight: 900; margin: 0 5px; text-align: center; white-space: nowrap; }
         @media (max-width: 400px) { .blink-warn { font-size: 9px; } }
 
-        /* --- 核心修改：AES-256 新按钮样式 --- */
+        /* AES-256 按钮样式 */
         .protection-btn { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; background: #1e293b; border: 1.5px solid #334155; border-radius: 8px; padding: 0 12px; height: 40px; min-width: 160px; font-weight: 700; font-size: 13px; transition: all 0.2s; margin-right: 10px; }
         .protection-btn input { display: none; }
         .protection-btn:has(input:checked) { background: #10b981; border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
         .protection-btn:has(input:checked) .state.off { display: none !important; }
         .protection-btn:has(input:checked) .state.on { display: flex !important; }
+
+        /* --- [新增] 密码强度条高级样式 (HSL平滑变色) --- */
+        .strength-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; width: 100%; }
+        .strength-track { flex: 1; height: 6px; background: rgba(255, 255, 255, 0.1); border-radius: 3px; overflow: hidden; }
+        /* 丝滑过渡动画 cubic-bezier */
+        #strength-bar-fill { height: 100%; width: 0%; background-color: #ef4444; border-radius: 3px; transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.3s ease; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        #strength-text { font-size: 11px; font-weight: 800; color: #64748b; min-width: 60px; text-align: right; transition: color 0.3s ease; }
     </style>
 </head>
 <body>
@@ -172,7 +179,7 @@
         
         <button class="action-btn" id="btn-ruthless" onclick="dismissAdBlock()" 
                 style="background: transparent; border: 1.5px solid #374151; color: #9ca3af; margin-top: 12px; padding: 12px; font-size: 12px;">
-            No thanks (Session only)
+            <span id="btn-ruthless-text">No thanks (Session only)</span>
         </button>
 
         <div style="margin-top: 20px; font-size: 11px; color: var(--text-muted); opacity: 0.6;">Efficiency & Privacy First.</div>
@@ -245,13 +252,19 @@
 
                         <div id="crypto-modal" class="crypto-modal">
                             <div class="crypto-modal-card">
-                                <h3 id="modal-pass-title" style="color: #6366f1; margin: 0;">Set Password</h3>
-                                <input type="password" id="crypto-password" placeholder="Min 8 chars (A-Z, a-z, 0-9, #@!)" 
+                                <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 15px 0;">Set Password</h3>
+                                
+                                <input type="password" id="crypto-password" placeholder="Type a strong password..." 
                                        oninput="checkStrength(this.value)"
-                                       style="margin-bottom: 5px;">
-                                <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-bottom:15px; overflow:hidden; text-align:left;">
-                                    <div id="strength-bar-fill" style="width:0%; height:100%; background:#ef4444; transition:all 0.3s ease;"></div>
+                                       style="margin-bottom: 8px;">
+                                
+                                <div class="strength-wrapper">
+                                    <div class="strength-track">
+                                        <div id="strength-bar-fill"></div>
+                                    </div>
+                                    <div id="strength-text" style="opacity:0.7">Empty</div>
                                 </div>
+
                                 <div style="display: flex; gap: 10px;">
                                     <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
                                     <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
@@ -375,7 +388,7 @@
     <button class="action-btn" style="width:180px; background:#334155;" onclick="closeScanner()">CLOSE</button>
 </div>
 <script>
-    /* --- [多语言配置中心 - 已添加 AES 按钮 & 狠心拒绝按钮] --- */
+    /* --- [多语言配置中心 - 已添加 7级强度提示 & 狠心拒绝] --- */
     const I18N = {
         en: { 
             tabSend: "Send", tabReceive: "Receive", 
@@ -396,7 +409,9 @@
             sig1: "No Limits", sig2: "P2P Only", sig3: "Auto-Wipe",
             modalTitle: "Set Password", btnEnable: "ENABLE", btnCancel: "CANCEL",
             aesOff: "AES-256 OFF", aesOn: "AES-256 ON",
-            btnRuthless: "Ruthless Refusal (Session only)", // 新增
+            btnRuthless: "Ruthless Refusal (Session only)",
+            // [新增] 7级强度提示
+            strengthLevels: ["Very Weak", "Weak", "Medium", "Moderate", "Strong", "Very Strong", "Unbreakable"],
             faqTitle: "Common Questions",
             faqQ1: "Do my files ever touch your servers?", faqA1: "No. Files are sent directly between browsers via P2P. Never stored on our servers.",
             faqQ2: "Do you store logs or track users?", faqA2: "No. We don't store IPs, logs, or track user identities.",
@@ -428,7 +443,9 @@
             sig1: "无限制", sig2: "仅P2P", sig3: "自动销毁",
             modalTitle: "设置密码", btnEnable: "启用保护", btnCancel: "取消",
             aesOff: "AES-256 关闭", aesOn: "AES-256 开启",
-            btnRuthless: "狠心拒绝（仅这次）", // 新增
+            btnRuthless: "狠心拒绝（仅这次）",
+            // [新增] 7级强度提示
+            strengthLevels: ["极弱", "弱", "中等", "稍强", "强", "极强", "特别强"],
             faqTitle: "常见问题",
             faqQ1: "文件会经过服务器吗？", faqA1: "不会。文件通过 P2P 直接在浏览器间传输，绝不存储在服务器上。",
             faqQ2: "会记录日志吗？", faqA2: "不会。我们不记录 IP、日志或用户身份。",
@@ -460,7 +477,8 @@
             sig1: "無制限", sig2: "P2Pのみ", sig3: "自動消去",
             modalTitle: "パスワード設定", btnEnable: "有効にする", btnCancel: "キャンセル",
             aesOff: "AES-256 オフ", aesOn: "AES-256 オン", 
-            btnRuthless: "拒否する（今回のみ）", // 新增
+            btnRuthless: "拒否する（今回のみ）",
+            strengthLevels: ["極弱", "弱", "普通", "やや強", "強", "極強", "最強"],
             faqTitle: "よくある質問",
             faqQ1: "サーバーに保存されますか？", faqA1: "いいえ。P2Pで直接転送され、サーバーには保存されません。",
             faqQ2: "ログは保存されますか？", faqA2: "いいえ。IPやログは一切保存しません。",
@@ -492,7 +510,8 @@
             sig1: "무제한", sig2: "P2P 전용", sig3: "자동 삭제",
             modalTitle: "비밀번호 설정", btnEnable: "활성화", btnCancel: "취소",
             aesOff: "AES-256 끄기", aesOn: "AES-256 켜기",
-            btnRuthless: "거절하기 (이번만)", // 新增
+            btnRuthless: "거절하기 (이번만)",
+            strengthLevels: ["매우 약함", "약함", "보통", "약간 강함", "강함", "매우 강함", "최강"],
             faqTitle: "자주 묻는 질문",
             faqQ1: "서버에 저장되나요?", faqA1: "아니요. P2P로 직접 전송됩니다.",
             faqQ2: "로그가 남나요?", faqA2: "아니요. IP나 기록을 저장하지 않습니다.",
@@ -524,7 +543,8 @@
             sig1: "Sin Límites", sig2: "Solo P2P", sig3: "Auto-Borrado",
             modalTitle: "Contraseña", btnEnable: "ACTIVAR", btnCancel: "CANCELAR",
             aesOff: "AES-256 OFF", aesOn: "AES-256 ON", 
-            btnRuthless: "Rechazar (Solo esta vez)", // 新增
+            btnRuthless: "Rechazar (Solo esta vez)",
+            strengthLevels: ["Muy débil", "Débil", "Media", "Moderada", "Fuerte", "Muy fuerte", "Imbatible"],
             faqTitle: "Preguntas Frecuentes",
             faqQ1: "¿Se guardan en servidores?", faqA1: "No. Se envían directamente entre navegadores (P2P).",
             faqQ2: "¿Guardáis registros?", faqA2: "No. No guardamos IPs ni metadatos.",
@@ -556,7 +576,8 @@
             sig1: "कोई सीमा नहीं", sig2: "केवल P2P", sig3: "ऑटो-वाइप",
             modalTitle: "पासवर्ड सेट करें", btnEnable: "सक्षम करें", btnCancel: "रद्द करें",
             aesOff: "AES-256 बंद", aesOn: "AES-256 चालू",
-            btnRuthless: "अस्वीकार करें (केवल इस बार)", // 新增
+            btnRuthless: "अस्वीकार करें (केवल इस बार)",
+            strengthLevels: ["बहुत कमजोर", "कमजोर", "मध्यम", "थोड़ा मजबूत", "मजबूत", "बहुत मजबूत", "अटूट"],
             faqTitle: "सामान्य प्रश्न",
             faqQ1: "क्या फ़ाइलें सर्वर पर जाती हैं?", faqA1: "नहीं। फ़ाइलें सीधे P2P के माध्यम से भेजी जाती हैं।",
             faqQ2: "क्या आप लॉग रखते हैं?", faqA2: "नहीं। हम IP या डेटा स्टोर नहीं करते।",
@@ -572,10 +593,10 @@
     };
 
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
-    let isAdBlockIgnored = false; // [核心修改] 狠心拒绝的临时标志
+    let isAdBlockIgnored = false; // [狠心拒绝] 状态位
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
-    /* --- [语言自动检测与应用] --- */
+    /* --- [语言自动检测与应用 - 适配新加的按钮和强度等级] --- */
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
@@ -597,7 +618,7 @@
             'signal-1': d.sig1, 'signal-2': d.sig2, 'signal-3': d.sig3,
             'modal-pass-title': d.modalTitle, 'btn-enable-pass': d.btnEnable, 'btn-cancel-pass': d.btnCancel,
             'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, 
-            'btn-ruthless': d.btnRuthless, // 新增：更新“狠心拒绝”按钮文字
+            'btn-ruthless': d.btnRuthless, // [适配] 狠心拒绝按钮
             'faq-title': d.faqTitle,
             'faq-q1': d.faqQ1, 'faq-a1': d.faqA1,
             'faq-q2': d.faqQ2, 'faq-a2': d.faqA2,
@@ -612,7 +633,16 @@
 
         for (const [id, text] of Object.entries(map)) {
             const el = document.getElementById(id);
-            if(el) el.innerHTML = text; 
+            if(el) { 
+                // 针对按钮内的 span 单独处理，或者直接替换按钮内容
+                if(id === 'btn-ruthless') {
+                    // 按钮里可能包了span，直接找span改或者整个改
+                    const span = document.getElementById('btn-ruthless-text');
+                    if(span) span.innerText = text; else el.innerText = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            }
         }
 
         const badgeContainer = document.getElementById('trust-badges');
@@ -621,15 +651,15 @@
         ).join('');
     }
 
-    /* --- [广告与等待机制 - 核心修改：延时4000ms + 狠心拒绝功能] --- */
+    /* --- [广告与等待机制 - 4秒延时 + 狠心拒绝跳过] --- */
     function dismissAdBlock() {
-        isAdBlockIgnored = true; // 标记为已拒绝，本次会话不再检测
+        isAdBlockIgnored = true; // 设为 true，本次会话不再弹
         document.getElementById('safety-notice-view').style.display = 'none';
-        document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); // 既然屏蔽了，就隐藏占位符
+        document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
     }
 
     function triggerAd(mode) {
-        // 修改：如果用户刚才点了狠心拒绝，这里就不再走检测流程
+        // [检测开关] 如果用户点了狠心拒绝，直接通过
         if(isAdBlockIgnored) {
             mode.startsWith('send') ? initSender() : startReceiving();
             return;
@@ -715,28 +745,47 @@
     }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
     
-    /* --- [密码强度视觉反馈 (红/黄/绿)] --- */
+    /* --- [核心算法：积分制密码强度检测 (0-100分 + HSL变色 + 7级提示)] --- */
     function checkStrength(p) {
         const bar = document.getElementById('strength-bar-fill');
+        const txt = document.getElementById('strength-text');
+        
         let score = 0;
-        if (p.length >= 8) score++;      
-        if (/[A-Z]/.test(p)) score++;    
-        if (/[a-z]/.test(p)) score++;    
-        if (/[0-9]/.test(p)) score++;    
-        if (/[^A-Za-z0-9]/.test(p)) score++; 
-
-        if (p.length === 0) { 
-            bar.style.width = '0%'; 
-        } else if (p.length < 8 || score < 3) { 
-            bar.style.width = '30%'; bar.style.background = '#ef4444'; 
-        } else if (score < 5) { 
-            bar.style.width = '60%'; bar.style.background = '#f59e0b'; 
-        } else { 
-            bar.style.width = '100%'; bar.style.background = '#10b981'; 
+        if(!p) {
+            bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444';
+            txt.innerText = 'Empty'; return;
         }
+
+        // 1. 长度分：每位 3 分 (长度即正义)
+        score += p.length * 3;
+        
+        // 2. 种类分：每种 10 分 (鼓励混合)
+        if (/[A-Z]/.test(p)) score += 10;
+        if (/[a-z]/.test(p)) score += 10;
+        if (/[0-9]/.test(p)) score += 10;
+        if (/[^A-Za-z0-9]/.test(p)) score += 10;
+
+        // 封顶 100 分 (40位纯字母就已经 120分了，肯定满分)
+        if (score > 100) score = 100;
+
+        // 计算颜色 HSL: 0(红) -> 120(绿) 丝滑过渡
+        const hue = Math.floor((score / 100) * 120);
+        
+        bar.style.width = `${score}%`;
+        bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; // 亮度45%比较醒目
+
+        // 计算文字等级 (0-6)
+        // 0-14分:极弱, 15-29分:弱 ... 90-100分:特别强
+        const levels = I18N[currLang].strengthLevels;
+        let idx = Math.floor(score / 14.5); 
+        if(idx >= levels.length) idx = levels.length - 1;
+        
+        txt.innerText = levels[idx];
+        // 文字颜色也跟着变色，更加直观
+        txt.style.color = `hsl(${hue}, 80%, 40%)`;
     }
 
-    /* --- [强制 8位 + 复杂度校验] --- */
+    /* --- [确认加密：只要分数够高或者符合基本要求即可] --- */
     function confirmEncryption() {
         const p = document.getElementById('crypto-password').value;
         const hasUpper = /[A-Z]/.test(p);
@@ -745,6 +794,8 @@
         const hasSym = /[^A-Za-z0-9]/.test(p);
         const isLongEnough = p.length >= 8;
 
+        // 规则：要么满足严格的复杂度校验，要么长度超级长(>20位)也可以放行
+        // 这里还是保留你的“严格要求”逻辑，保证安全性
         if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) {
             alert("Password too weak!\nMust be at least 8 characters and include:\n- Uppercase (A-Z)\n- Lowercase (a-z)\n- Number (0-9)\n- Special Character (!@#$)");
             return;
@@ -955,11 +1006,11 @@
         resetReceiver(); 
     }
     function detectAdBlock() {
-        // [修改] 如果用户已经点击狠心拒绝，则直接跳过检测
+        // [修改] 如果标记了狠心拒绝，则跳过
         if(isAdBlockIgnored) return false;
 
         setTimeout(() => {
-            if(isAdBlockIgnored) return; // 再次检查，防止定时器期间用户点击了拒绝
+            if(isAdBlockIgnored) return; // 二次检查
 
             const topAd = document.getElementById('top-ad-zone');
             const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
@@ -967,7 +1018,7 @@
                 document.getElementById('safety-notice-view').style.display = 'flex';
                 document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
             }
-        }, 4000); // 核心修改：延时改为 4000ms
+        }, 4000); // 延时改为 4000
         return false;
     }
 
