@@ -65,7 +65,8 @@
         @media (max-width: 550px) { .share-grid { grid-template-columns: 1fr; } }
         .column-box { display: flex; flex-direction: column; gap: 10px; min-height: 220px; }
         .file-zone { border: 2.5px dashed var(--border); border-radius: 20px; padding: 25px; background: rgba(15, 23, 42, 0.5); cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 150px; text-align: center; transition: 0.3s; backdrop-filter: blur(15px); }
-        /* 拖拽激活样式 */
+        
+        /* [新增] 拖拽激活时的样式 */
         .file-zone.drag-active, #drop-zone.drag-active { background: rgba(99, 102, 241, 0.3); border-color: #fff; transform: scale(1.02); }
         
         .text-zone { border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
@@ -394,7 +395,7 @@
     /* --- [多语言配置中心] --- */
     const I18N = {
         en: { 
-            tag: "EN", // 语言标签显示
+            tag: "EN", 
             tabSend: "Send", tabReceive: "Receive", 
             badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], 
             drop: "DROP TO STAGE", fileLab: "Drop / Click", 
@@ -603,13 +604,13 @@
     let isAdBlockIgnored = false; 
     const PREFIX = "fd-pro-", CHUNK_SIZE = 262144;
 
-    /* --- [1. 语言自动检测与应用 - 动态更新右上角标签] --- */
+    /* --- [1. 语言自动检测与应用] --- */
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang];
 
-        // 核心修改：动态更新语言标签 (EN -> CN / ES / JP ...)
+        // 动态更新语言标签 (EN -> CN / ES ...)
         document.getElementById('currentLangTag').innerText = d.tag;
 
         const map = {
@@ -641,7 +642,14 @@
 
         for (const [id, text] of Object.entries(map)) {
             const el = document.getElementById(id);
-            if(el) el.innerHTML = text; 
+            if(el) { 
+                if(id === 'btn-ruthless') {
+                    const span = document.getElementById('btn-ruthless-text');
+                    if(span) span.innerText = text; else el.innerText = text;
+                } else {
+                    el.innerHTML = text;
+                }
+            }
         }
 
         const badgeContainer = document.getElementById('trust-badges');
@@ -650,12 +658,11 @@
         ).join('');
     }
 
-    /* --- [2. 拖拽功能修复：添加完整事件监听] --- */
+    /* --- [2. 拖拽功能修复 & UI逻辑] --- */
     function initDragAndDrop() {
         const dz = document.getElementById('drop-zone');
-        const fz = document.getElementById('file-drop-area'); // 对应 panel 里的区域
+        const fz = document.getElementById('file-drop-area'); 
         
-        // 阻止默认行为
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             document.body.addEventListener(eventName, preventDefaults, false);
         });
@@ -665,10 +672,9 @@
             e.stopPropagation();
         }
 
-        // 拖入显示全屏覆盖层
+        // 全屏拖入效果
         document.body.addEventListener('dragenter', () => { dz.style.display = 'flex'; });
         
-        // 覆盖层上的拖拽事件
         dz.addEventListener('dragleave', (e) => { 
             if(e.target === dz) dz.style.display = 'none'; 
         });
@@ -678,12 +684,11 @@
             const dt = e.dataTransfer;
             const files = dt.files;
             handleFiles(files);
-            // 如果不在发送面板，自动切换过去
             document.getElementById('tab-send').click();
         });
     }
 
-    /* --- [3. 广告检测：4秒延时 + 狠心拒绝] --- */
+    /* --- [3. 广告检测 & 狠心拒绝] --- */
     function dismissAdBlock() {
         isAdBlockIgnored = true; 
         document.getElementById('safety-notice-view').style.display = 'none';
@@ -776,7 +781,7 @@
     }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
     
-    /* --- [密码强度检测：积分制+HSL变色] --- */
+    /* --- [密码强度检测] --- */
     function checkStrength(p) {
         const bar = document.getElementById('strength-bar-fill');
         const txt = document.getElementById('strength-text');
@@ -828,7 +833,7 @@
         if(checkbox) checkbox.checked = isEncrypted;
     }
 
-    /* --- [PeerJS 传输逻辑] --- */
+    /* --- [P2P 通信核心] --- */
     async function initSender() {
         if(peer) peer.destroy(); 
         currentDownloads = 0; 
@@ -1007,7 +1012,7 @@
         });
     }
 
-    /* --- [通用工具函数] --- */
+    /* --- [通用工具] --- */
     function addHistory(name, type) {
         let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
         h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type });
@@ -1040,10 +1045,21 @@
         return false;
     }
 
-    /* --- [辅助逻辑] --- */
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
-    function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('quickText').value = ""; if(expiryTimerIdx) clearInterval(expiryTimerIdx); }
+    
+    // [修复] 界面消失BUG：传输结束后滚回顶部
+    function resetSender() { 
+        if(peer) peer.destroy(); 
+        document.getElementById('senderCodeArea').style.display = 'none'; 
+        stagedFiles = []; 
+        renderStagedList(); 
+        document.getElementById('quickText').value = ""; 
+        if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
+        // 核心修复代码：滚回顶部
+        window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    }
+    
     function resetReceiver() { document.getElementById('targetCode').value = ""; document.getElementById('mobileDownloadArea').style.display = 'none'; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receiveNerdStats').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; activeConn = null; }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
@@ -1055,7 +1071,7 @@
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
     
-    // 初始化所有功能：星星背景、多语言、拖拽监听、历史记录、广告检测
+    // 初始化所有功能
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); };
 </script>
 </body>
