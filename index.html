@@ -239,7 +239,14 @@
                         <div id="crypto-modal" class="crypto-modal">
                             <div class="crypto-modal-card">
                                 <h3 id="modal-pass-title" style="color: #6366f1; margin: 0;">Set Password</h3>
-                                <input type="password" id="crypto-password" placeholder="Min 6 characters">
+                                <input type="password" id="crypto-password" placeholder="Min 8 chars (A-Z, a-z, 0-9, #@!)" 
+                                       oninput="checkStrength(this.value)"
+                                       style="margin-bottom: 5px;">
+                                
+                                <div style="width:100%; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-bottom:15px; overflow:hidden; text-align:left;">
+                                    <div id="strength-bar-fill" style="width:0%; height:100%; background:#ef4444; transition:all 0.3s ease;"></div>
+                                </div>
+
                                 <div style="display: flex; gap: 10px;">
                                     <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 10px;" onclick="confirmEncryption()">ENABLE</button>
                                     <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 10px; background: #374151;" onclick="closeCryptoModal()">CANCEL</button>
@@ -257,6 +264,7 @@
                             </select>
                         </div>
                     </div>
+
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
                     <div id="senderCodeArea">
                         <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
@@ -382,7 +390,7 @@
             heroSub: "Direct P2P transfer. Optional AES-256 encryption. No servers.",
             sig1: "No Limits", sig2: "P2P Only", sig3: "Auto-Wipe",
             modalTitle: "Set Password", btnEnable: "ENABLE", btnCancel: "CANCEL",
-            aesOff: "AES-256 OFF", aesOn: "AES-256 ON", // 新增
+            aesOff: "AES-256 OFF", aesOn: "AES-256 ON", 
             faqTitle: "Common Questions",
             faqQ1: "Do my files ever touch your servers?", faqA1: "No. Files are sent directly between browsers via P2P. Never stored on our servers.",
             faqQ2: "Do you store logs or track users?", faqA2: "No. We don't store IPs, logs, or track user identities.",
@@ -413,7 +421,7 @@
             heroSub: "点对点直连。可选 AES-256 加密。不经服务器。",
             sig1: "无限制", sig2: "仅P2P", sig3: "自动销毁",
             modalTitle: "设置密码", btnEnable: "启用保护", btnCancel: "取消",
-            aesOff: "AES-256 关闭", aesOn: "AES-256 开启", // 新增
+            aesOff: "AES-256 关闭", aesOn: "AES-256 开启",
             faqTitle: "常见问题",
             faqQ1: "文件会经过服务器吗？", faqA1: "不会。文件通过 P2P 直接在浏览器间传输，绝不存储在服务器上。",
             faqQ2: "会记录日志吗？", faqA2: "不会。我们不记录 IP、日志或用户身份。",
@@ -444,7 +452,7 @@
             heroSub: "P2P直接転送。AES-256暗号化オプション。サーバーなし。",
             sig1: "無制限", sig2: "P2Pのみ", sig3: "自動消去",
             modalTitle: "パスワード設定", btnEnable: "有効にする", btnCancel: "キャンセル",
-            aesOff: "AES-256 オフ", aesOn: "AES-256 オン", // 新增
+            aesOff: "AES-256 オフ", aesOn: "AES-256 オン", 
             faqTitle: "よくある質問",
             faqQ1: "サーバーに保存されますか？", faqA1: "いいえ。P2Pで直接転送され、サーバーには保存されません。",
             faqQ2: "ログは保存されますか？", faqA2: "いいえ。IPやログは一切保存しません。",
@@ -475,7 +483,7 @@
             heroSub: "직접 P2P 전송. 선택적 AES-256 암호화.",
             sig1: "무제한", sig2: "P2P 전용", sig3: "자동 삭제",
             modalTitle: "비밀번호 설정", btnEnable: "활성화", btnCancel: "취소",
-            aesOff: "AES-256 끄기", aesOn: "AES-256 켜기", // 新增
+            aesOff: "AES-256 끄기", aesOn: "AES-256 켜기",
             faqTitle: "자주 묻는 질문",
             faqQ1: "서버에 저장되나요?", faqA1: "아니요. P2P로 직접 전송됩니다.",
             faqQ2: "로그가 남나요?", faqA2: "아니요. IP나 기록을 저장하지 않습니다.",
@@ -506,7 +514,7 @@
             heroSub: "Transferencia P2P directa. Cifrado AES-256 opcional.",
             sig1: "Sin Límites", sig2: "Solo P2P", sig3: "Auto-Borrado",
             modalTitle: "Contraseña", btnEnable: "ACTIVAR", btnCancel: "CANCELAR",
-            aesOff: "AES-256 OFF", aesOn: "AES-256 ON", // 新增
+            aesOff: "AES-256 OFF", aesOn: "AES-256 ON", 
             faqTitle: "Preguntas Frecuentes",
             faqQ1: "¿Se guardan en servidores?", faqA1: "No. Se envían directamente entre navegadores (P2P).",
             faqQ2: "¿Guardáis registros?", faqA2: "No. No guardamos IPs ni metadatos.",
@@ -537,7 +545,7 @@
             heroSub: "सीधा P2P स्थानांतरण। वैकल्पिक AES-256 एन्क्रिप्शन।",
             sig1: "कोई सीमा नहीं", sig2: "केवल P2P", sig3: "ऑटो-वाइप",
             modalTitle: "पासवर्ड सेट करें", btnEnable: "सक्षम करें", btnCancel: "रद्द करें",
-            aesOff: "AES-256 बंद", aesOn: "AES-256 चालू", // 新增
+            aesOff: "AES-256 बंद", aesOn: "AES-256 चालू",
             faqTitle: "सामान्य प्रश्न",
             faqQ1: "क्या फ़ाइलें सर्वर पर जाती हैं?", faqA1: "नहीं। फ़ाइलें सीधे P2P के माध्यम से भेजी जाती हैं।",
             faqQ2: "क्या आप लॉग रखते हैं?", faqA2: "नहीं। हम IP या डेटा स्टोर नहीं करते।",
@@ -576,7 +584,7 @@
             'hero-title': d.heroTitle, 'hero-subtitle': d.heroSub,
             'signal-1': d.sig1, 'signal-2': d.sig2, 'signal-3': d.sig3,
             'modal-pass-title': d.modalTitle, 'btn-enable-pass': d.btnEnable, 'btn-cancel-pass': d.btnCancel,
-            'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, // 新增：更新按钮文字
+            'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, 
             'faq-title': d.faqTitle,
             'faq-q1': d.faqQ1, 'faq-a1': d.faqA1,
             'faq-q2': d.faqQ2, 'faq-a2': d.faqA2,
@@ -600,7 +608,7 @@
         ).join('');
     }
 
-    /* --- [广告与等待机制] --- */
+    /* --- [广告与等待机制 - 核心修改：延时改为 4000ms] --- */
     function triggerAd(mode) {
         if(detectAdBlock()) return;
         
@@ -681,13 +689,46 @@
         document.getElementById('crypto-modal').style.display = 'flex'; 
     }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
+    
+    /* --- [核心修改：密码强度视觉反馈 (红/黄/绿)] --- */
+    function checkStrength(p) {
+        const bar = document.getElementById('strength-bar-fill');
+        let score = 0;
+        if (p.length >= 8) score++;      
+        if (/[A-Z]/.test(p)) score++;    
+        if (/[a-z]/.test(p)) score++;    
+        if (/[0-9]/.test(p)) score++;    
+        if (/[^A-Za-z0-9]/.test(p)) score++; 
+
+        if (p.length === 0) { 
+            bar.style.width = '0%'; 
+        } else if (p.length < 8 || score < 3) { 
+            bar.style.width = '30%'; bar.style.background = '#ef4444'; 
+        } else if (score < 5) { 
+            bar.style.width = '60%'; bar.style.background = '#f59e0b'; 
+        } else { 
+            bar.style.width = '100%'; bar.style.background = '#10b981'; 
+        }
+    }
+
+    /* --- [核心修改：强制 8位 + 复杂度校验] --- */
     function confirmEncryption() {
         const p = document.getElementById('crypto-password').value;
-        if(p.length < 6) return alert("Min 6 chars!");
+        const hasUpper = /[A-Z]/.test(p);
+        const hasLower = /[a-z]/.test(p);
+        const hasNum = /[0-9]/.test(p);
+        const hasSym = /[^A-Za-z0-9]/.test(p);
+        const isLongEnough = p.length >= 8;
+
+        if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) {
+            alert("Password too weak!\nMust be at least 8 characters and include:\n- Uppercase (A-Z)\n- Lowercase (a-z)\n- Number (0-9)\n- Special Character (!@#$)");
+            return;
+        }
+
         aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal();
     }
+
     function updateLockUI() {
-        // 更新 checkbox 状态，CSS 会自动处理图标和颜色
         const checkbox = document.getElementById('protection-toggle-input');
         if(checkbox) checkbox.checked = isEncrypted;
     }
@@ -896,7 +937,7 @@
                 document.getElementById('safety-notice-view').style.display = 'flex';
                 document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
             }
-        }, 1500);
+        }, 4000); // 核心修改：延时改为 4000ms
         return false;
     }
 
