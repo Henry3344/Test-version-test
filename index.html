@@ -272,6 +272,131 @@
         
         .step-item:first-child .step-dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
         .step-item:first-child span { color: white; }
+/* 搜索栏容器 */
+        .search-bar-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 12px auto 0 auto;
+            position: relative;
+            padding: 0 15px;
+            box-sizing: border-box;
+        }
+
+        .search-bar {
+            width: 100%;
+            height: 48px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1.5px solid var(--border);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .search-bar:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .search-text {
+            flex: 1;
+            color: var(--text);
+            font-size: 15px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            height: 24px;
+            line-height: 24px;
+        }
+
+        .search-text::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            background: linear-gradient(to left, rgba(15, 23, 42, 0.95), transparent);
+            pointer-events: none;
+        }
+
+        .search-divider {
+            width: 1px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 0 12px;
+        }
+
+        .search-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .search-bar:hover .search-icon {
+            color: var(--primary);
+        }
+
+        /* 下拉列表 */
+        .search-dropdown {
+            position: absolute;
+            top: 56px;
+            left: 15px;
+            right: 15px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-height: 360px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            display: none;
+            flex-direction: column;
+            z-index: 9999;
+        }
+
+        .search-dropdown.show {
+            display: flex;
+        }
+
+        .dropdown-section {
+            padding: 8px 0;
+        }
+
+        .dropdown-title {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 8px 20px;
+            opacity: 0.8;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            font-size: 14px;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: white;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.1);
+            margin: 4px 20px;
+        }
     </style>
 </head>
 <body>
@@ -310,6 +435,27 @@
             <div id="currentLangTag" style="font-size:11px; color:var(--primary); font-weight:900; margin-left:12px; border:1.5px solid var(--primary); padding:2px 6px; border-radius:6px;">EN</div>
         </div>
         <div class="trust-badges" id="trust-badges" style="display: flex; justify-content: center; align-items: center; gap: 5px; margin-top: 8px; width: 100%; flex-wrap: nowrap;"></div>
+<!-- 新增：搜索栏 -->
+        <div class="search-bar-container">
+            <div class="search-bar" id="searchBar">
+                <div class="search-text" id="searchPlaceholder">Loading blogs...</div>
+                <div class="search-divider"></div>
+                <div class="search-icon">🔍</div>
+            </div>
+
+            <!-- 下拉列表 -->
+            <div class="search-dropdown" id="searchDropdown">
+                <div class="dropdown-section">
+                    <div class="dropdown-title">热门文章</div>
+                    <div id="hotList"></div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-section">
+                    <div class="dropdown-title">最近访问</div>
+                    <div id="historyList"></div>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;" id="drop-text">DROP TO STAGE</h2></div>
@@ -1593,6 +1739,136 @@
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
     
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); };
+// ==================== 新增：搜索栏逻辑 ====================
+
+    let blogPosts = [];
+    let currentIndex = 0;
+    let carouselInterval = null;
+
+    // 加载 post.html 中的博客列表
+    async function loadBlogPosts() {
+        try {
+            const res = await fetch('/post.html?' + Date.now()); // 防缓存
+            const text = await res.text();
+            // 提取 JSON（因为 post.html 是脚本输出）
+            const jsonMatch = text.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+                blogPosts = JSON.parse(jsonMatch[0]);
+                startCarousel();
+                renderHotList();
+            } else {
+                document.getElementById('searchPlaceholder').innerText = 'No blogs found';
+            }
+        } catch (e) {
+            document.getElementById('searchPlaceholder').innerText = 'Load failed';
+        }
+    }
+
+    // 轮播
+    function startCarousel() {
+        if (blogPosts.length === 0) return;
+        const placeholder = document.getElementById('searchPlaceholder');
+        placeholder.innerText = blogPosts[currentIndex].title;
+
+        carouselInterval = setInterval(() => {
+            currentIndex = (currentIndex + 1) % blogPosts.length;
+            placeholder.innerText = blogPosts[currentIndex].title;
+        }, 3500);
+    }
+
+    // 渲染热门（前5）
+    function renderHotList() {
+        const container = document.getElementById('hotList');
+        const hot = blogPosts.slice(0, 5);
+        container.innerHTML = hot.map(p => 
+            `<div class="dropdown-item" data-url="${p.url}">${p.title}</div>`
+        ).join('');
+    }
+
+    // 渲染历史记录（最近5）
+    function renderHistoryList() {
+        const container = document.getElementById('historyList');
+        let history = JSON.parse(localStorage.getItem('fd_search_history') || '[]');
+        history = history.slice(0, 5);
+        if (history.length === 0) {
+            container.innerHTML = '<div class="dropdown-item" style="color:var(--text-muted);font-size:12px;">暂无记录</div>';
+            return;
+        }
+        container.innerHTML = history.map(item => 
+            `<div class="dropdown-item" data-url="${item.url}">${item.title}</div>`
+        ).join('');
+    }
+
+    // 添加到历史
+    function addToHistory(title, url) {
+        let history = JSON.parse(localStorage.getItem('fd_search_history') || '[]');
+        // 去重
+        history = history.filter(h => h.url !== url);
+        history.unshift({title, url});
+        history = history.slice(0, 10); // 最多存10条
+        localStorage.setItem('fd_search_history', JSON.stringify(history));
+    }
+
+    // 跳转并记录
+    function navigateTo(url, title) {
+        if (url) {
+            addToHistory(title, url);
+            window.location.href = url;
+        }
+    }
+
+    // 初始化搜索栏事件
+    function initSearchBar() {
+        const bar = document.getElementById('searchBar');
+        const dropdown = document.getElementById('searchDropdown');
+        const placeholder = document.getElementById('searchPlaceholder');
+
+        bar.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('show');
+            renderHistoryList();
+        });
+
+        // 点击下拉项
+        dropdown.addEventListener('click', (e) => {
+            const item = e.target.closest('.dropdown-item');
+            if (item && item.dataset.url) {
+                const title = item.innerText.trim();
+                navigateTo(item.dataset.url, title);
+            }
+        });
+
+        // 点击放大镜或当前标题也跳转当前轮播项
+        document.querySelector('.search-icon').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const current = blogPosts[currentIndex];
+            if (current) navigateTo(current.url, current.title);
+        });
+
+        placeholder.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const current = blogPosts[currentIndex];
+            if (current) navigateTo(current.url, current.title);
+        });
+
+        // 点击页面其他地方关闭下拉
+        document.addEventListener('click', () => {
+            dropdown.classList.remove('show');
+        });
+
+        // 加载博客数据
+        loadBlogPosts();
+    }
+
+    // ==================== 原有 window.onload 修改 ====================
+    window.onload = () => { 
+        initStars(); 
+        applyI18N(); 
+        initDragAndDrop(); 
+        renderHistory(); 
+        detectAdBlock(); 
+        initSearchBar();  // 新增初始化
+    };
 </script>
 </body>
 </html>
