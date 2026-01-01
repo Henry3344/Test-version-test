@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     
     <style>
-        :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; --ai: #8b5cf6; }
+        :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; --warning: #f59e0b; --ai: #8b5cf6; }
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
@@ -43,12 +43,13 @@
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         
-        /* 状态指示灯区域样式 */
+        /* [修改] 状态指示灯区域样式 (只保留 Online/Offline) */
         .status-container { display: flex; flex-direction: column; align-items: center; margin-right: 12px; }
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); margin-bottom: 2px; }
+        
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
         .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
-        
+
         .status-text { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
         .status-text.online { color: var(--success); }
         .status-text.offline { color: var(--danger); }
@@ -546,38 +547,6 @@
         <button class="action-btn" onclick="document.getElementById('alert-modal').style.display='none'" style="padding: 12px;">OK</button>
     </div>
 </div>
-
-<div id="pass-input-modal" class="crypto-modal" style="z-index: 99999;">
-    <div class="crypto-modal-card">
-        <h3 id="pass-input-title" style="color: #f59e0b; margin: 0 0 5px 0; font-size: 18px; text-align: center;">🔐 Enter Password</h3>
-        <div id="pass-error-msg"></div>
-        
-        <div class="pwd-group">
-            <input type="password" id="alert-password-input" placeholder="Type password..." style="text-align: center;" 
-                   onkeyup="updateFingerprint(this.value, 'recv-fingerprint', 'recv-hash-hint')">
-            <div class="pwd-divider"></div>
-            <div class="pwd-toggle" onclick="togglePwd('alert-password-input', this)">🙈</div>
-        </div>
-
-        <p id="recv-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
-
-        <div id="recv-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.5));"></div>
-
-        <div style="display: flex; gap: 10px; margin-top: 10px;">
-            <button class="action-btn" id="btn-pass-confirm" style="flex: 1; padding: 12px; margin:0; background: #f59e0b;">UNLOCK</button>
-            <button class="action-btn" id="btn-pass-cancel" style="flex: 1; padding: 12px; background: #334155; margin:0;">CANCEL</button>
-        </div>
-    </div>
-</div>
-
-<div id="scanner-modal">
-    <div class="scanner-container">
-        <video id="video-preview" playsinline></video>
-        <div class="scan-frame"><div class="scan-line"></div></div>
-        <button id="btn-torch" onclick="toggleTorch()">🔦</button>
-    </div>
-    <button class="action-btn" style="width:180px; background:#334155; margin-top: 20px; z-index:10002;" onclick="closeScanner()">CLOSE</button>
-</div>
 <script>
     /* --- [功能增强：密码可见性切换] --- */
     function togglePwd(inputId, btn) {
@@ -627,7 +596,7 @@
     const I18N = {
         en: { 
             tag: "EN", 
-            on: "Online", off: "Offline", // [状态文字]
+            on: "Online", off: "Offline", // [状态文字：仅保留红绿状态]
             
             tabSend: "Send", tabReceive: "Receive", 
             badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], 
@@ -686,7 +655,7 @@
         },
         zh: { 
             tag: "CN",
-            on: "在线", off: "离线", // [状态文字]
+            on: "在线", off: "离线", 
 
             tabSend: "发送", tabReceive: "接收", 
             badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 极速传输", "📂 阅后即焚"], 
@@ -745,7 +714,7 @@
         },
         ja: { 
             tag: "JP",
-            on: "オンライン", off: "オフライン", // [状态文字]
+            on: "オンライン", off: "オフライン", 
 
             tabSend: "送信", tabReceive: "受信", 
             badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], 
@@ -803,7 +772,7 @@
         },
         ko: { 
             tag: "KR",
-            on: "온라인", off: "오프라인", // [状态文字]
+            on: "온라인", off: "오프라인", 
 
             tabSend: "보내기", tabReceive: "받기", 
             badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], 
@@ -861,7 +830,7 @@
         },
         es: { 
             tag: "ES",
-            on: "En línea", off: "Desconectado", // [状态文字]
+            on: "En línea", off: "Desconectado", 
 
             tabSend: "Enviar", tabReceive: "Recibir", 
             badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], 
@@ -982,7 +951,7 @@
     const PREFIX = "fd-pro-";
     const CHUNK_SIZE = 64 * 1024; 
 
-    /* --- [AI 引擎：含隐私敏感词检测] --- */
+    /* --- [AI 引擎：含隐私敏感词检测 & 自动清理逻辑] --- */
     const AIEngine = {
         analyze(files) {
             const tags = new Set();
@@ -998,7 +967,7 @@
                 zip: ['zip','rar','7z','tar','gz','iso','dmg','pkg']
             };
 
-            // 敏感词库 (多语言混合)
+            // 敏感词库 (多语言混合：ID, 护照, 房产证, 简历等)
             const sensitiveKeywords = [
                 'id', 'passport', 'visa', 'resume', 'cv', 'address', 'phone', 'email', 'secret', 'bank', 'statement', 'tax', 'ssn', 'insurance', 'contract',
                 '身份证', '护照', '简历', '住址', '房产', '银行', '账单', '税', '保险', '合同', '指纹', '姓名', '性别', '民族',
@@ -1062,40 +1031,37 @@
         }
     };
 
-    /* [状态切换逻辑：只保留 Online/Offline] */
-    function updateConnectionStatus(isOnline) {
+    /* [核心修改] 网络状态切换逻辑：只监听浏览器网络连接 (navigator.onLine) */
+    function checkNetworkStatus() {
+        const isOnline = navigator.onLine; // 获取浏览器是否有网
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
         const d = I18N[currLang] || I18N['en'];
         
         // 移除旧状态
-        dot.classList.remove('online', 'offline', 'checking');
-        text.classList.remove('online', 'offline', 'checking');
+        dot.classList.remove('online', 'offline');
+        text.classList.remove('online', 'offline');
         
         if (isOnline) {
             dot.classList.add('online');
             text.classList.add('online');
-            text.innerText = d.on;
+            text.innerText = d.on; // 显示 "Online" 或 "在线"
         } else {
             dot.classList.add('offline');
             text.classList.add('offline');
-            text.innerText = d.off;
+            text.innerText = d.off; // 显示 "Offline" 或 "离线"
         }
     }
 
     function applyI18N() {
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
-        const d = I18N[currLang] || I18N['en']; // Fallback
+        const d = I18N[currLang] || I18N['en']; 
         const tagEl = document.getElementById('currentLangTag');
         if(tagEl) tagEl.innerText = d.tag;
         
-        // 刷新状态文字
-        const statusText = document.getElementById('status-text');
-        if(statusText) {
-            if(statusText.classList.contains('online')) statusText.innerText = d.on;
-            else statusText.innerText = d.off;
-        }
+        // 刷新状态文字 (确保语言切换时状态文字也跟着变)
+        checkNetworkStatus();
         
         const map = {
             'tab-send': d.tabSend, 'tab-receive': d.tabReceive,
@@ -1158,7 +1124,7 @@
             const toggle = modal.querySelector('.pwd-toggle');
             if(toggle) toggle.innerText = "🙈";
             
-            /* 重置状态 */
+            /* 重置状态：指纹隐藏 */
             document.getElementById('recv-fingerprint').innerText = "";
             document.getElementById('recv-fingerprint').style.display = 'none';
             document.getElementById('recv-hash-hint').style.display = 'none';
@@ -1339,20 +1305,20 @@
         peer = new Peer(PREFIX + code);
         
         peer.on('open', () => {
-            updateConnectionStatus(true); // Online
             const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             startExpiryTimer();
         });
         
-        peer.on('error', () => { updateConnectionStatus(false); });
-        peer.on('disconnected', () => { updateConnectionStatus(false); });
-
+        // PeerJS 错误或断开不影响左上角网络灯（那个只看 window.onLine）
         peer.on('connection', c => {
             c.on('data', d => { 
                 if (d.type === 'security_burn') { showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); resetSender(); return; }
-                if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } 
+                if(d.type === 'confirm_save') { 
+                    currentDownloads++; 
+                    if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
+                } 
             });
             c.on('open', async () => {
                 let textValue = document.getElementById('quickText').value.trim(); 
@@ -1391,7 +1357,6 @@
         downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400);
 
         rPeer.on('open', () => {
-            updateConnectionStatus(true); // Online
             const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn;
             let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
             
@@ -1432,6 +1397,8 @@
                         pgBar.style.width = '100%';
                         btn.onclick = () => triggerAd('receive');
                         btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)";
+                        
+                        // 发送确认，触发发送方重置
                         if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
                     };
                 }
@@ -1486,7 +1453,10 @@
                                         const u = window.URL.createObjectURL(finalBlob);
                                         const a = document.createElement('a'); a.href = u;
                                         a.download = meta.name.replace('.enc', ''); a.click();
+                                        
+                                        // 接收方点保存后，发送信号给发送方，触发 AI 区域重置
                                         if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                                        
                                         addHistory("Received: " + meta.name.replace('.enc', ''), "file");
                                         setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
                                     };
@@ -1505,7 +1475,10 @@
                             const u = window.URL.createObjectURL(finalBlob);
                             const a = document.createElement('a'); a.href = u;
                             a.download = meta.name.replace('.enc', ''); a.click();
+                            
+                            // 接收方点保存后，发送信号给发送方，触发 AI 区域重置
                             if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                            
                             addHistory("Received: " + meta.name.replace('.enc', ''), "file");
                             setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
                         }
@@ -1513,9 +1486,6 @@
                 }
             });
         });
-        
-        rPeer.on('error', () => { updateConnectionStatus(false); });
-        rPeer.on('disconnected', () => { updateConnectionStatus(false); });
     }
 
     function addHistory(name, type) {
@@ -1560,14 +1530,17 @@
         document.getElementById('senderCodeArea').style.display = 'none'; 
         stagedFiles = []; 
         renderStagedList(); 
+        
+        /* [核心修改] 收到确认信号后，隐藏 AI 区域 */
         document.getElementById('ai-suggestions').style.display = 'none';
+        document.getElementById('ai-privacy-alert').style.display = 'none'; 
+        
         const quickText = document.getElementById('quickText');
         quickText.value = ""; quickText.blur();
         updateTextCount(quickText);
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
         setTimeout(() => window.scrollTo(0,0), 300);
-        updateConnectionStatus(false); // Reset to offline on stop
     }
     
     function resetReceiver() { 
@@ -1585,7 +1558,6 @@
         const badge = document.getElementById('recv-text-count');
         if(badge) badge.style.display = 'none';
         activeConn = null; 
-        updateConnectionStatus(false); // Reset to offline
     }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     
@@ -1594,6 +1566,10 @@
     function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
+    
+    /* [核心修改] 绑定网络状态监听 */
+    window.addEventListener('online', () => checkNetworkStatus());
+    window.addEventListener('offline', () => checkNetworkStatus());
     
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); };
 </script>
