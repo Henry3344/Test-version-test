@@ -9,17 +9,55 @@
     <style>
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --self-msg: #4f46e5; --other-msg: #334155; --danger: #ef4444; }
         * { box-sizing: border-box; outline: none; }
+        /* [修复] body 布局为 flex column，确保高度计算正确 */
         body { font-family: -apple-system, sans-serif; background: var(--bg); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
         
         .stars-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%); pointer-events: none; }
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: moveStars linear infinite; }
         @keyframes moveStars { from { transform: translateY(0); } to { transform: translateY(-1000px); } }
 
-        /* 顶部导航 */
-        .navbar { height: 60px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; backdrop-filter: blur(10px); }
+        /* 顶部导航 (固定高度 60px) */
+        .navbar { height: 60px; min-height: 60px; background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid #334155; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; backdrop-filter: blur(10px); }
         .logo { font-size: 18px; font-weight: 900; color: white; cursor: pointer; }
         .logo span { color: var(--primary); }
         .room-info { font-size: 12px; color: #94a3b8; font-family: monospace; }
+
+        /* [核心修复] 聊天区域：使用 flex: 1 自动填满剩余空间，不再溢出 */
+        #chat-ui { 
+            display: none; 
+            flex-direction: column; 
+            flex: 1; /* 关键：占据剩余高度 */
+            min-height: 0; /* 关键：防止 flex 子元素溢出 */
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: rgba(17, 24, 39, 0.5); 
+            border-left: 1px solid #334155; 
+            border-right: 1px solid #334155; 
+            position: relative; /* 确保定位正确 */
+        }
+        
+        #msg-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
+        .msg-bubble { max-width: 75%; padding: 10px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; position: relative; animation: popIn 0.3s ease; }
+        .msg-self { align-self: flex-end; background: var(--self-msg); color: white; border-bottom-right-radius: 4px; }
+        .msg-other { align-self: flex-start; background: var(--other-msg); color: #e2e8f0; border-bottom-left-radius: 4px; }
+        .sys-msg { align-self: center; font-size: 11px; color: #64748b; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 10px; margin: 10px 0; }
+        
+        @keyframes popIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+
+        /* 输入区域 (固定在底部) */
+        .input-area { 
+            padding: 15px; 
+            background: #0f172a; 
+            border-top: 1px solid #334155; 
+            display: flex; 
+            gap: 10px; 
+            align-items: center; 
+            width: 100%;
+            z-index: 50; /* 确保层级 */
+        }
+        #msg-input { margin: 0; text-align: left; }
+        #btn-send { width: auto; padding: 0 25px; }
 
         /* 登录/设置层 */
         #setup-panel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 200; background: rgba(3, 7, 18, 0.95); display: flex; justify-content: center; align-items: center; flex-direction: column; backdrop-filter: blur(15px); padding: 20px; transition: 0.3s; }
@@ -33,26 +71,10 @@
         .btn-secondary { background: transparent; border: 1.5px solid #374151; color: #94a3b8; margin-top: 10px; }
         .btn-danger { background: var(--danger); }
 
-        /* 聊天区域 */
-        #chat-ui { display: none; flex-direction: column; height: 100%; width: 100%; max-width: 800px; margin: 0 auto; background: rgba(17, 24, 39, 0.5); border-left: 1px solid #334155; border-right: 1px solid #334155; }
-        
-        #msg-container { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; scroll-behavior: smooth; }
-        .msg-bubble { max-width: 75%; padding: 10px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; word-wrap: break-word; position: relative; animation: popIn 0.3s ease; }
-        .msg-self { align-self: flex-end; background: var(--self-msg); color: white; border-bottom-right-radius: 4px; }
-        .msg-other { align-self: flex-start; background: var(--other-msg); color: #e2e8f0; border-bottom-left-radius: 4px; }
-        .sys-msg { align-self: center; font-size: 11px; color: #64748b; background: rgba(0,0,0,0.2); padding: 4px 10px; border-radius: 10px; margin: 10px 0; }
-        
-        @keyframes popIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
-
-        /* 输入区域 */
-        .input-area { padding: 15px; background: #0f172a; border-top: 1px solid #334155; display: flex; gap: 10px; align-items: center; }
-        #msg-input { margin: 0; text-align: left; }
-        #btn-send { width: auto; padding: 0 25px; }
-
         /* 状态指示 */
         .online-count { position: fixed; top: 70px; right: 20px; background: rgba(16, 185, 129, 0.2); color: #10b981; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid rgba(16, 185, 129, 0.3); display: none; }
 
-        /* [新增] 通用模态框样式 */
+        /* 模态框样式 */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { background: #111827; padding: 25px; border-radius: 20px; border: 1px solid #374151; width: 90%; max-width: 320px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 20px 60px rgba(0,0,0,0.6); }
         .modal-title { font-size: 16px; color: white; font-weight: 800; margin-bottom: 15px; text-align: center; }
@@ -100,6 +122,7 @@
 
     <div id="chat-ui">
         <div id="msg-container"></div>
+        
         <div class="input-area">
             <input type="text" id="msg-input" placeholder="Type a secure message..." onkeydown="if(event.key==='Enter') sendMessage()">
             <button class="btn" id="btn-send" onclick="sendMessage()">➤</button>
@@ -129,7 +152,7 @@
 
     </div>
 <script>
-    /* --- 1. UI: Modal System (The "Native" Feel) --- */
+    /* --- 1. UI: Modal System (Native Feel & Shake Effect) --- */
     const overlay = document.getElementById('modal-overlay');
     const boxAlert = document.getElementById('box-alert');
     const boxPass = document.getElementById('box-password');
@@ -147,32 +170,44 @@
         overlay.style.display = 'flex';
     }
 
-    // [核心] Promise化的密码弹窗
-    // mode: 'create' (设置密码) or 'join' (输入密码)
-    function requestPassword(mode) {
+    // [核心] 密码弹窗：支持错误震动反馈
+    // attemptsLeft: 如果传入数字，说明是解密失败重试，触发震动和红字
+    function requestPassword(modeOrAttempts) {
         return new Promise((resolve) => {
+            const isRetry = typeof modeOrAttempts === 'number';
+            const mode = isRetry ? 'join' : (modeOrAttempts || 'join');
+            
             // UI Setup
             const title = mode === 'create' ? "🔑 Set Room Password" : "🔐 Enter Room Password";
             const desc = mode === 'create' ? "Create a key for encryption." : "Ask the host for the key.";
-            const btnText = mode === 'create' ? "CREATE" : "JOIN";
+            const btnText = mode === 'create' ? "CREATE" : "UNLOCK";
             
             document.getElementById('pass-title-text').innerText = title;
             document.getElementById('pass-desc-text').innerText = desc;
             document.getElementById('btn-pass-confirm').innerText = btnText;
             
             const inp = document.getElementById('inp-modal-pass');
+            const errDiv = document.getElementById('pass-error-msg');
             const btnConfirm = document.getElementById('btn-pass-confirm');
             const btnCancel = document.getElementById('btn-pass-cancel');
             
-            inp.value = "";
-            document.getElementById('pass-error-msg').innerText = ""; // Clear errors
+            // 状态重置或错误提示
+            if (isRetry) {
+                inp.value = ""; // 清空让用户重填
+                errDiv.innerText = `❌ Wrong Password! ${modeOrAttempts} attempts left.`;
+                inp.classList.add('input-error');
+                setTimeout(() => inp.classList.remove('input-error'), 500); // 移除震动类以便下次触发
+            } else {
+                inp.value = "";
+                errDiv.innerText = "";
+            }
             
             boxAlert.style.display = 'none';
             boxPass.style.display = 'flex';
             overlay.style.display = 'flex';
             inp.focus();
 
-            // Event Handlers
+            // 事件绑定 (一次性)
             const cleanup = () => {
                 btnConfirm.onclick = null;
                 btnCancel.onclick = null;
@@ -182,12 +217,21 @@
             const confirm = () => {
                 const val = inp.value.trim();
                 if(!val) {
+                    // 空值震动
                     inp.classList.add('input-error');
-                    setTimeout(()=>inp.classList.remove('input-error'), 400);
+                    setTimeout(() => inp.classList.remove('input-error'), 400);
                     return;
                 }
                 cleanup();
-                closeModal();
+                // 注意：这里不立即关闭 closeModal()，如果是 Join 模式，要等解密验证成功才关
+                // 但为了 UI 流畅，Create 模式可以直接关
+                if (mode === 'create') closeModal(); 
+                else {
+                    // Join 模式暂时隐藏，显示 loading 状态（可选），或者直接先关掉，解密失败再弹
+                    // 为了符合你的"原地震动"需求，我们这里先保留界面，等外部逻辑决定
+                    // 但由于 PeerJS 是异步连接，这里先隐藏，等收到消息解密失败时再再次调用 requestPassword 弹出
+                    closeModal(); 
+                }
                 resolve(val);
             };
 
@@ -235,29 +279,28 @@
     let connections = [];
     let isHost = false;
 
-    // 流程A: 创建房间 -> 弹窗设密码 -> 生成ID
+    // 流程A: 创建房间
     async function startCreateFlow() {
         const pass = await requestPassword('create');
-        if(!pass) return; // Cancelled
+        if(!pass) return; 
         
         roomPass = pass;
         isHost = true;
-        // Host ID prefixed with 'fc-'
         const randomId = "fc-" + Math.floor(Math.random() * 900000 + 100000);
         initPeer(randomId);
     }
 
-    // 流程B: 输入ID -> 检查ID -> 弹窗输密码 -> 连接
+    // 流程B: 加入房间
     async function startJoinFlow() {
         const targetId = document.getElementById('inp-join-id').value.trim();
         if(!targetId) return showCustomAlert("Please enter a Room ID first.");
         
         const pass = await requestPassword('join');
-        if(!pass) return; // Cancelled
+        if(!pass) return; 
 
         roomPass = pass;
         isHost = false;
-        initPeer(null, targetId); // Client gets auto ID
+        initPeer(null, targetId); 
     }
 
     function initPeer(customId, targetIdToConnect) {
@@ -265,14 +308,12 @@
         
         peer.on('open', (id) => {
             if(isHost) {
-                // Host UI
                 document.getElementById('menu-main').style.display = 'none';
                 document.getElementById('menu-wait').style.display = 'block';
                 document.getElementById('host-id-display').innerText = id;
                 new QRCode(document.getElementById('qrcode'), { text: id, width: 140, height: 140 });
                 updateStatus("Waiting for peers...");
             } else {
-                // Client UI
                 updateStatus("Connecting...");
                 const conn = peer.connect(targetIdToConnect, { reliable: true });
                 handleConnection(conn);
@@ -287,45 +328,59 @@
         connections.push(conn);
         
         conn.on('open', () => {
-            // 连接成功：切换到聊天主界面
+            // 连接建立：隐藏设置层，显示聊天层
             document.getElementById('setup-panel').style.display = 'none';
-            document.getElementById('chat-ui').style.display = 'flex';
+            document.getElementById('chat-ui').style.display = 'flex'; // 关键：flex布局配合CSS实现高度自适应
             document.getElementById('online-badge').style.display = 'block';
             updateStatus(isHost ? "Room Active (Host)" : "Connected to Host");
             
-            renderMessage("System: Secure connection established.", "sys");
+            // 发送一条加密的欢迎/握手消息，用于验证密码是否正确
+            if (isHost) {
+                setTimeout(async () => {
+                    const handshake = await ChatCrypto.encrypt("System: Secure Connection Established.", roomPass);
+                    conn.send(handshake);
+                }, 500);
+            }
         });
 
         conn.on('data', async (data) => {
-            // 收到数据 (Uint8Array) -> 尝试解密
+            // 收到数据 -> 尝试解密
             if (data instanceof Uint8Array || data instanceof ArrayBuffer) {
-                const text = await ChatCrypto.decrypt(data, roomPass);
+                let text = await ChatCrypto.decrypt(data, roomPass);
                 
                 if (text) {
                     // 解密成功：显示消息
-                    renderMessage(text, "other");
+                    renderMessage(text, text.startsWith("System:") ? "sys" : "other");
                     
-                    // [房主逻辑] 如果我是房主，我要把这条加密消息转发给其他人 (广播)
+                    // [房主逻辑] 广播给其他人
                     if(isHost) {
                         connections.forEach(c => {
-                            // 转发给除了发送者以外的所有人，且直接转发加密包，省电！
                             if(c !== conn && c.open) c.send(data); 
                         });
                     }
                 } else {
-                    // 解密失败：通常是因为密码不一致
-                    renderMessage("⚠️ System: Decrypt Failed. Wrong Room Password?", "sys");
+                    // [核心] 解密失败 -> 密码不对！
+                    // 再次弹出密码框，并传入剩余次数(模拟)触发震动效果
+                    // 这里我们模拟还剩 2 次机会来触发红色震动
+                    const newPass = await requestPassword(2); 
+                    if (newPass) {
+                        roomPass = newPass; // 更新密码
+                        // 尝试再次解密刚才的消息
+                        const retryText = await ChatCrypto.decrypt(data, roomPass);
+                        if(retryText) renderMessage(retryText, "other");
+                    }
                 }
             }
         });
 
         conn.on('close', () => {
             connections = connections.filter(c => c !== conn);
+            // 如果我是访客，且没有连接了，说明房主跑路了
             if(connections.length === 0 && !isHost) {
                 showCustomAlert("Host ended the session.");
-                setTimeout(() => location.reload(), 2000);
+                setTimeout(() => location.reload(), 2500);
             } else {
-                renderMessage("System: A peer left the room.", "sys");
+                renderMessage("System: A peer left.", "sys");
             }
         });
     }
@@ -335,12 +390,13 @@
         const text = input.value.trim();
         if(!text) return;
 
-        if(connections.length === 0) {
-            renderMessage("System: Waiting for peers to join...", "sys");
+        // 如果没人在线，提示一下
+        if(connections.length === 0 && isHost) {
+            renderMessage("System: Waiting for peers...", "sys");
             return;
         }
 
-        // 1. 加密 (10k Lite 模式，秒发)
+        // 1. 加密 (10k Lite 模式)
         const encryptedData = await ChatCrypto.encrypt(text, roomPass);
 
         // 2. 发送给所有连接者
@@ -348,7 +404,7 @@
             if(c.open) c.send(encryptedData);
         });
 
-        // 3. 本地渲染 (自己看)
+        // 3. 本地渲染
         renderMessage(text, "self");
         input.value = "";
         input.focus();
