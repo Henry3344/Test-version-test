@@ -1762,7 +1762,7 @@ let carouselInterval = null;
 
 async function loadBlogPosts() {
     try {
-        const res = await fetch('/post.html?' + Date.now());
+        const res = await fetch('post.html?' + Date.now());  // 去掉前面的 /
         if (!res.ok) throw new Error('Not found');
         const text = await res.text();
         const jsonMatch = text.match(/\[[\s\S]*\]/);
