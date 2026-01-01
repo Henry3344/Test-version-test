@@ -75,9 +75,12 @@
         .file-zone.drag-active, #drop-zone.drag-active { background: rgba(99, 102, 241, 0.3); border-color: #fff; transform: scale(1.02); }
         
         .text-zone { position: relative; border: 1.5px solid var(--border); border-radius: 20px; padding: 20px; background: rgba(15, 23, 42, 0.5); display: flex; flex-direction: column; flex: 1; min-height: 150px; backdrop-filter: blur(15px); }
+        /* 接收端只读模式下的样式微调 */
+        .text-zone.readonly { border-color: var(--success); background: rgba(16, 185, 129, 0.05); }
+        
         textarea { background: transparent; border: none; color: white; resize: none; width: 100%; flex: 1; font-size: 14px; margin-top: 8px; }
 
-        /* [新增] 右上角计数器小标签样式 */
+        /* 右上角计数器小标签样式 */
         .zone-badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 800; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 6px; pointer-events: none; border: 1px solid rgba(255,255,255,0.05); }
 
         #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; }
@@ -92,7 +95,7 @@
         button.action-btn:active { transform: scale(0.97); }
 
         .nerd-stats { display: flex; justify-content: space-between; font-size: 11px; color: var(--success); font-family: monospace; font-weight: 900; margin-bottom: 10px; align-items: center; }
-        #receivedText-container { display: none; margin-top: 20px; background: rgba(99, 102, 241, 0.15); border: 1px solid var(--primary); padding: 15px; border-radius: 18px; }
+        #receivedText-container { display: none; margin-top: 20px; width:100%; }
         
         .history-box { width: 100%; max-width: 600px; margin-top: 40px; padding: 0 15px; }
         .history-title { font-size: 13px; font-weight: 900; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -356,7 +359,13 @@
                         <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
                         <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
                         
-                        <div id="receivedText-container"><div id="receivedText" style="color:white; margin-bottom:15px; word-break: break-all;"></div><button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()">📋 COPY</button></div>
+                        <div id="receivedText-container">
+                            <div class="text-zone readonly" style="min-height: 200px; position:relative;">
+                                <div id="recv-text-count" class="zone-badge" style="display:none;">0 Chars</div>
+                                <div id="receivedText" style="white-space: pre-wrap; word-break: break-all; color: var(--text); font-family: monospace; font-size: 14px; line-height: 1.6;"></div>
+                            </div>
+                            <button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()" style="margin-top: 15px;">📋 COPY</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -578,7 +587,7 @@
                 vid: ['mp4','mov','avi','mkv','webm','3gp'],
                 doc: ['pdf','doc','docx','xls','xlsx','txt','md','ppt','pptx'],
                 code: ['html','css','js','py','c','cpp','json','java','rb','php'],
-                zip: ['zip','rar','7z','tar','gz','iso','dmg','pkg']
+                zip: ['zip','rar','7z','tar','gz','iso','dmg']
             };
 
             Array.from(files).forEach(f => {
@@ -759,14 +768,12 @@
     }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
     
+    /* [修改] 简单的 handleFiles 只负责添加数据，渲染交给 renderStagedList */
     function handleFiles(files) { 
         stagedFiles = stagedFiles.concat(Array.from(files)); 
         renderStagedList(); 
-        const aiTags = AIEngine.analyze(stagedFiles);
-        AIEngine.renderTags(aiTags);
     }
 
-    /* [新增] 根据文件后缀名获取对应图标 */
     function getFileIcon(name) {
         const ext = name.split('.').pop().toLowerCase();
         if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️';
@@ -774,20 +781,19 @@
         if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵';
         if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦';
         if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻';
-        return '📄'; // 默认
+        return '📄'; 
     }
 
-    /* [修改] 渲染列表时使用动态图标，并更新文件计数器 */
+    /* [核心修改] 渲染时联动 AI 分析：删除/添加都会触发 */
     function renderStagedList() { 
         const list = document.getElementById('stagedList'); 
         list.style.display = stagedFiles.length ? 'block' : 'none'; 
         
-        // 渲染列表：现在调用 getFileIcon(f.name) 替代固定的 📄
         list.innerHTML = stagedFiles.map((f, i) => 
             `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`
         ).join('');
         
-        // 更新右上角文件计数器
+        // 文件变动 -> 更新计数器
         const badge = document.getElementById('file-count-badge');
         if(stagedFiles.length > 0) {
             badge.style.display = 'block';
@@ -795,9 +801,13 @@
         } else {
             badge.style.display = 'none';
         }
+
+        // 文件变动 -> 触发 AI 分析
+        // 这里的关键是每次 render 都重新计算 AI 标签，哪怕是删除操作
+        const aiTags = AIEngine.analyze(stagedFiles);
+        AIEngine.renderTags(aiTags);
     }
 
-    /* [新增] 实时更新文字字数 */
     function updateTextCount(el) {
         const len = el.value.length;
         const badge = document.getElementById('text-count-badge');
@@ -809,7 +819,29 @@
         }
     }
 
-    /* --- [核心逻辑：发送端 (含背压控制)] --- */
+    /* [新增] 打字机特效函数 */
+    function typeWriterEffect(element, text) {
+        element.innerText = ""; // 清空
+        let i = 0;
+        const speed = text.length > 200 ? 1 : 10; // 内容多就快一点
+        const badge = document.getElementById('recv-text-count');
+        
+        function type() {
+            if (i < text.length) {
+                element.innerText += text.charAt(i);
+                i++;
+                // 实时更新接收端字符计数器
+                if(badge) {
+                    badge.style.display = 'block';
+                    badge.innerText = `${i} Chars`;
+                }
+                setTimeout(type, speed);
+            }
+        }
+        type();
+    }
+
+    /* --- 发送端逻辑 --- */
     async function initSender() {
         if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
@@ -829,31 +861,24 @@
             c.on('open', async () => {
                 let textValue = document.getElementById('quickText').value.trim(); 
                 
-                // 1. 发送文本
                 if(textValue) {
                     if(isEncrypted) { const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); const reader = new FileReader(); reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); reader.readAsDataURL(encryptedTextBlob); } 
                     else { c.send({ type: 'text', data: textValue, encrypted: false }); }
                     addHistory("Sent: Text", "text");
                 }
 
-                // 2. 发送文件 (核心修复：加入流式控制)
                 if(stagedFiles && stagedFiles.length > 0) {
                     let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip";
-                    
                     if (stagedFiles.length === 1) { fb = stagedFiles[0]; } 
                     else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); }
-                    
                     if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; }
                     
                     c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted });
 
                     const arrayBuffer = await fb.arrayBuffer();
                     for (let i = 0; i < fb.size; i += CHUNK_SIZE) {
-                        while (c.bufferSize > 1024 * 1024) {
-                            await new Promise(r => setTimeout(r, 50));
-                        }
-                        const chunkData = arrayBuffer.slice(i, i + CHUNK_SIZE);
-                        c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: chunkData });
+                        while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); }
+                        c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) });
                     }
                     c.send({ type: 'done' }); 
                     addHistory("Sent: " + fn, "file");
@@ -862,7 +887,7 @@
         });
     }
 
-    /* --- [核心逻辑：接收端] --- */
+    /* --- 接收端逻辑 --- */
     function startReceiving() {
         const code = document.getElementById('targetCode').value;
         const rPeer = new Peer();
@@ -909,8 +934,12 @@
                                 }
                             }
                         }
-                        document.getElementById('receivedText').innerText = finalTxt;
+                        
+                        // [修改] 使用打字机特效显示文字
+                        const textBox = document.getElementById('receivedText');
                         document.getElementById('receivedText-container').style.display = 'block';
+                        typeWriterEffect(textBox, finalTxt); // 触发特效
+
                         pgBar.style.width = '100%';
                         btn.onclick = () => triggerAd('receive');
                         btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)";
@@ -1013,6 +1042,11 @@
         showCustomAlert("Copied!"); 
         document.getElementById('receivedText').innerText = "";
         document.getElementById('receivedText-container').style.display = 'none';
+        
+        // 重置计数器
+        const badge = document.getElementById('recv-text-count');
+        if(badge) badge.style.display = 'none';
+
         if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); }
         resetReceiver(); 
     }
@@ -1041,10 +1075,7 @@
         document.getElementById('ai-suggestions').style.display = 'none';
         const quickText = document.getElementById('quickText');
         quickText.value = ""; quickText.blur();
-        
-        // [新增] 重置计数器
         updateTextCount(quickText);
-        
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
         setTimeout(() => window.scrollTo(0,0), 300);
@@ -1062,6 +1093,10 @@
         document.getElementById('receive-pg-container').style.display = 'none'; 
         document.getElementById('receiveNerdStats').style.display = 'none'; 
         document.getElementById('receivedText-container').style.display = 'none'; 
+        // 确保接收端计数器也被隐藏
+        const badge = document.getElementById('recv-text-count');
+        if(badge) badge.style.display = 'none';
+        
         activeConn = null; 
     }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
