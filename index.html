@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     
     <style>
-        :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; --warning: #f59e0b; --ai: #8b5cf6; }
+        :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; --ai: #8b5cf6; }
         * { box-sizing: border-box; outline: none; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); margin: 0; min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column; }
         
@@ -43,21 +43,15 @@
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         
-        /* [修改] 状态指示灯区域样式 (新增 checking 状态) */
+        /* 状态指示灯区域样式 */
         .status-container { display: flex; flex-direction: column; align-items: center; margin-right: 12px; }
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); margin-bottom: 2px; }
-        
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
         .status-dot.offline { background: var(--danger); box-shadow: 0 0 15px var(--danger); }
         
-        /* 黄色呼吸灯效果 */
-        .status-dot.checking { background: var(--warning); box-shadow: 0 0 15px var(--warning); animation: pulse-yellow 1.5s infinite; }
-        @keyframes pulse-yellow { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
-
         .status-text { font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.3s; }
         .status-text.online { color: var(--success); }
         .status-text.offline { color: var(--danger); }
-        .status-text.checking { color: var(--warning); }
 
         .trust-badges { display: flex; gap: 8px; margin-top: 10px; font-size: 10px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); flex-wrap: nowrap; justify-content: center; width: 100%; overflow: hidden; }
         .trust-badges span { background: rgba(99, 102, 241, 0.2); padding: 4px 8px; border-radius: 6px; border: 1.5px solid var(--border); color: #c7d2fe; white-space: nowrap; flex-shrink: 0; }
@@ -309,8 +303,8 @@
     <nav class="navbar">
         <div class="logo-wrap">
             <div class="status-container">
-                <div id="status-dot" class="status-dot checking"></div>
-                <div id="status-text" class="status-text checking">Checking...</div>
+                <div id="status-dot" class="status-dot offline"></div>
+                <div id="status-text" class="status-text offline">Offline</div>
             </div>
             
             <div class="logo">⚡ Flash<span>Drop</span> Pro</div>
@@ -614,7 +608,7 @@
         el.style.display = 'block';
         if(hint) hint.style.display = 'block';
         
-        // 极速哈希计算
+        // 极速哈希计算 (SHA-256)
         const msgBuffer = new TextEncoder().encode(val);
         const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
         const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -629,12 +623,11 @@
         el.innerText = res;
     }
 
-    /* --- [多语言配置中心：含 Checking/Online/Offline 状态] --- */
+    /* --- [多语言配置中心：全文本无删减版] --- */
     const I18N = {
         en: { 
             tag: "EN", 
-            /* [新增] 三种网络状态 */
-            chk: "Checking...", on: "Online", off: "Offline",
+            on: "Online", off: "Offline", // [状态文字]
             
             tabSend: "Send", tabReceive: "Receive", 
             badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], 
@@ -658,9 +651,9 @@
             hashHintSend: "Visual Check: If receiver's emojis match these, the key is correct!",
             hashHintRecv: "Visual Check: If the key matches, the emojis will match!",
             
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(Selected types)",
-            privWarn: "⚠️ Privacy Alert: Filenames indicate sensitive info (ID/Passport/Address). Highly recommend enabling AES-256 encryption!",
+            privWarn: "⚠️ Privacy Alert: Filenames indicate sensitive info (ID/Passport/Address etc.). Highly recommend enabling AES-256 encryption!",
             
             step1: "Select Files<br><span style='font-size:9px; opacity:0.7'>(Type Text)</span>", 
             step2: "Set AES-256<br><span style='font-size:9px; opacity:0.7'>(Option)</span>", 
@@ -678,22 +671,22 @@
             aiInsight: "✨ AI Insights", aiLocal: "Local Processing",
             aiTags: { img: "🖼️ Image", vid: "🎬 Video", doc: "📄 Document", code: "💻 Code", zip: "📦 Archive", big: "🐘 Large File" },
             
-            faqQ1: "Do my files pass through your servers?", faqA1: "No. FlashDrop Pro utilizes a serverless P2P architecture powered by WebRTC.",
-            faqQ2: "Do you retain any logs or metadata?", faqA2: "Absolutely not. We operate on a 'Zero-Knowledge' basis.",
+            /* [FAQ 全文本] */
+            faqQ1: "Do my files pass through your servers?", faqA1: "No. FlashDrop Pro utilizes a serverless P2P architecture powered by WebRTC. Data streams directly between peers.",
+            faqQ2: "Do you retain any logs or metadata?", faqA2: "Absolutely not. We operate on a 'Zero-Knowledge' basis. We do not store IP addresses or file logs.",
             faqQ3: "What encryption standards are used?", faqA3: "All transfers are secured via WebRTC's DTLS/SRTP. Optional password protection adds AES-256-GCM.",
             faqQ4: "Is my IP address visible?", faqA4: "Due to P2P nature, the recipient needs your IP to connect. Use VPN for anonymity.",
             faqQ5: "Is it safe for confidential documents?", faqA5: "Yes. Data never rests on a third-party server, minimizing attack surface.",
             faqQ6: "Can I recover files after closing tab?", faqA6: "No. Data exists only in RAM. Once closed, it is lost forever.",
             faqQ7: "Can staff access my files?", faqA7: "Impossible. We have no keys and no storage.",
             faqQ8: "Is password mandatory?", faqA8: "Optional, but recommended for sensitive data on local networks.",
-            faqQ9: "Can you reset lost password?", faqA9: "No. We don't store passwords.",
+            faqQ9: "Can you reset lost password?", faqA9: "No. We don't store passwords. Data cannot be recovered without it.",
             
             techPhrases: ["Generating RSA-4096 Key...", "Initializing WebRTC Handshake...", "Establishing P2P Tunnel...", "Synchronizing Peer Signals...", "Channel Secured!"]
         },
         zh: { 
             tag: "CN",
-            /* [新增] 三种网络状态 */
-            chk: "检测中...", on: "在线", off: "离线",
+            on: "在线", off: "离线", // [状态文字]
 
             tabSend: "发送", tabReceive: "接收", 
             badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 极速传输", "📂 阅后即焚"], 
@@ -717,7 +710,7 @@
             hashHintSend: "AES-256密钥设置好后，只要接收方的emoji与下方的emoji相符即为密钥正确！",
             hashHintRecv: "只要输入的AES-256密钥一致，emoji就会一致！",
 
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(以下是你已选中的文件类型)",
             privWarn: "⚠️ 隐私提醒：文件名包含敏感信息（身份证/护照/房产证等）。强烈建议开启 AES-256 加密！",
 
@@ -737,6 +730,7 @@
             aiInsight: "✨ AI 智能分析", aiLocal: "本地处理",
             aiTags: { img: "🖼️ 图像", vid: "🎬 视频", doc: "📄 文档", code: "💻 代码", zip: "📦 压缩包", big: "🐘 大文件" },
 
+            /* [FAQ 全文本] */
             faqQ1: "文件会经过你们的服务器吗？", faqA1: "不会。FlashDrop Pro 采用 WebRTC 无服务器 P2P 架构。数据直连传输。",
             faqQ2: "你们会保留日志吗？", faqA2: "绝不。我们零知识运营，不存 IP 或日志。",
             faqQ3: "使用什么加密？", faqA3: "WebRTC 强制 DTLS/SRTP。密码保护增加 AES-256-GCM。",
@@ -751,8 +745,7 @@
         },
         ja: { 
             tag: "JP",
-            /* [新增] 三种网络状态 */
-            chk: "確認中...", on: "オンライン", off: "オフライン",
+            on: "オンライン", off: "オフライン", // [状态文字]
 
             tabSend: "送信", tabReceive: "受信", 
             badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], 
@@ -775,7 +768,7 @@
             hashHintSend: "AES-256キー設定後、受信側の絵文字と一致していればキーは正しいです！",
             hashHintRecv: "入力したAES-256キーが一致すれば、絵文字も一致します！",
 
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(選択されたファイル形式)",
             privWarn: "⚠️ プライバシー警告：ファイル名に機密情報（ID/パスポート/住所など）が含まれています。AES-256暗号化を強く推奨します！",
 
@@ -795,6 +788,7 @@
             aiInsight: "✨ AI 分析", aiLocal: "ローカル処理",
             aiTags: { img: "🖼️ 画像", vid: "🎬 動画", doc: "📄 文書", code: "💻 コード", zip: "📦 圧縮", big: "🐘 大容量" },
 
+            /* [FAQ 全文本] */
             faqQ1: "サーバーを経由しますか？", faqA1: "いいえ。WebRTCによるP2P直接転送です。",
             faqQ2: "ログは保存されますか？", faqA2: "いいえ。ゼロ知識ベースで、ログは一切保存しません。",
             faqQ3: "暗号化方式は？", faqA3: "WebRTCのDTLS/SRTPに加え、AES-256-GCMが利用可能です。",
@@ -804,12 +798,12 @@
             faqQ7: "運営は見れますか？", faqA7: "不可能です。鍵もデータも持ちません。",
             faqQ8: "パスワードは必須？", faqA8: "任意ですが、推奨します。",
             faqQ9: "リセットできますか？", faqA9: "いいえ。紛失すると復元できません。",
+
             techPhrases: ["RSA鍵を生成中...", "WebRTCハンドシェイク...", "P2Pトンネル確立中...", "信号を同期中...", "安全な接続完了!"]
         },
         ko: { 
             tag: "KR",
-            /* [新增] 三种网络状态 */
-            chk: "확인 중...", on: "온라인", off: "오프라인",
+            on: "온라인", off: "오프라인", // [状态文字]
 
             tabSend: "보내기", tabReceive: "받기", 
             badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], 
@@ -832,7 +826,7 @@
             hashHintSend: "AES-256 키 설정 후 수신자의 이모티콘과 일치하면 키가 올바른 것입니다!",
             hashHintRecv: "입력한 AES-256 키가 일치하면 이모티콘도 일치합니다!",
             
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(선택된 파일 유형)",
             privWarn: "⚠️ 개인정보 경고: 파일명에 민감한 정보(신분증/여권/주소 등)가 포함되어 있습니다. AES-256 암호화를 강력히 권장합니다!",
 
@@ -852,6 +846,7 @@
             aiInsight: "✨ AI 인사이트", aiLocal: "로컬 처리",
             aiTags: { img: "🖼️ 이미지", vid: "🎬 동영상", doc: "📄 문서", code: "💻 코드", zip: "📦 압축", big: "🐘 대용량" },
 
+            /* [FAQ 全文本] */
             faqQ1: "서버를 통과하나요?", faqA1: "아니요. WebRTC P2P로 직접 전송됩니다.",
             faqQ2: "로그를 보관하나요?", faqA2: "아니요. 제로 지식 원칙을 따릅니다.",
             faqQ3: "암호화 방식은?", faqA3: "WebRTC 암호화 + 선택적 AES-256-GCM.",
@@ -861,12 +856,12 @@
             faqQ7: "운영자가 볼 수 있나요?", faqA7: "불가능합니다. 키가 없습니다.",
             faqQ8: "비번은 필수인가요?", faqA8: "선택입니다.",
             faqQ9: "비번 리셋 가능?", faqA9: "불가능합니다.",
+
             techPhrases: ["RSA 키 생성 중...", "WebRTC 연결 중...", "P2P 터널 수립 중...", "동기화 중...", "보안 연결 완료!"]
         },
         es: { 
             tag: "ES",
-            /* [新增] 三种网络状态 */
-            chk: "Comprobando...", on: "En línea", off: "Desconectado",
+            on: "En línea", off: "Desconectado", // [状态文字]
 
             tabSend: "Enviar", tabReceive: "Recibir", 
             badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], 
@@ -889,7 +884,7 @@
             hashHintSend: "Una vez configurada la clave AES-256, si los emojis coinciden, ¡la clave es correcta!",
             hashHintRecv: "¡Si la clave AES-256 coincide, los emojis también coincidirán!",
 
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(Tipos seleccionados)",
             privWarn: "⚠️ Alerta de privacidad: Los nombres de archivo indican información confidencial (ID/Pasaporte/Dirección). ¡Se recomienda encarecidamente el cifrado AES-256!",
 
@@ -909,6 +904,7 @@
             aiInsight: "✨ Análisis IA", aiLocal: "Procesamiento Local",
             aiTags: { img: "🖼️ Imagen", vid: "🎬 Video", doc: "📄 Documento", code: "💻 Código", zip: "📦 Archivo", big: "🐘 Grande" },
 
+            /* [FAQ 全文本] */
             faqQ1: "¿Pasan por servidores?", faqA1: "No. Usa arquitectura P2P sin servidor.",
             faqQ2: "¿Guardan registros?", faqA2: "No. Operamos con 'Conocimiento Cero'.",
             faqQ3: "¿Qué cifrado usan?", faqA3: "DTLS/SRTP de WebRTC + AES-256 opcional.",
@@ -918,12 +914,12 @@
             faqQ7: "¿El personal lo ve?", faqA7: "Imposible. No tenemos claves.",
             faqQ8: "¿Contraseña obligatoria?", faqA8: "Opcional.",
             faqQ9: "¿Restablecer contraseña?", faqA9: "No. No la guardamos.",
+
             techPhrases: ["Generando Clave RSA...", "Iniciando WebRTC...", "Túnel P2P...", "Sincronizando...", "¡Canal Seguro!"]
         },
         hi: { 
             tag: "HI",
-            /* [新增] 三种网络状态 */
-            chk: "जाँच हो रही है...", on: "ऑनलाइन", off: "ऑफ़लाइन",
+            on: "ऑनलाइन", off: "ऑफ़लाइन", // [状态文字]
 
             tabSend: "भेजें", tabReceive: "प्राप्त करें", 
             badges: ["🔒 P2P एन्क्रिप्शन", "🕵️ कोई लॉग नहीं", "⚡ तीव्र गति", "📂 ऑटो-वाइप"], 
@@ -946,7 +942,7 @@
             hashHintSend: "AES-256 कुंजी सेट करने के बाद, यदि इमोजी मेल खाते हैं, तो कुंजी सही है!",
             hashHintRecv: "यदि दर्ज की गई AES-256 कुंजी मेल खाती है, तो इमोजी भी मेल खाएंगे!",
             
-            /* AI & 隐私相关 */
+            /* AI & 隐私相关 (完整) */
             aiNote: "(चयनित प्रकार)",
             privWarn: "⚠️ गोपनीयता चेतावनी: फ़ाइल नाम में संवेदनशील जानकारी (आईडी/पासपोर्ट/पता) है। AES-256 एन्क्रिप्शन की अत्यधिक अनुशंसा की जाती है!",
 
@@ -966,6 +962,7 @@
             aiInsight: "✨ AI अंतर्दृष्टि", aiLocal: "स्थानीय प्रसंस्करण",
             aiTags: { img: "🖼️ चित्र", vid: "🎬 वीडियो", doc: "📄 दस्तावेज़", code: "💻 कोड", zip: "📦 संग्रह", big: "🐘 बड़ी फ़ाइल" },
 
+            /* [FAQ 全文本] */
             faqQ1: "क्या सर्वर से गुजरता है?", faqA1: "नहीं। P2P सीधा स्थानांतरण।",
             faqQ2: "क्या लॉग रखते हैं?", faqA2: "नहीं। जीरो-नॉलेज।",
             faqQ3: "एन्क्रिप्शन क्या है?", faqA3: "WebRTC + AES-256-GCM।",
@@ -975,17 +972,17 @@
             faqQ7: "क्या आप देख सकते हैं?", faqA7: "नहीं। हमारे पास चाबी नहीं है।",
             faqQ8: "क्या पासवर्ड जरूरी है?", faqA8: "वैकल्पिक।",
             faqQ9: "पासवर्ड रीसेट?", faqA9: "नहीं। हम स्टोर नहीं करते।",
+
             techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"]
         }
     };
-
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     let isAdBlockIgnored = false; 
     let downloadDotsIdx = null; 
     const PREFIX = "fd-pro-";
     const CHUNK_SIZE = 64 * 1024; 
 
-    /* --- [AI 引擎升级：隐私敏感词检测] --- */
+    /* --- [AI 引擎：含隐私敏感词检测] --- */
     const AIEngine = {
         analyze(files) {
             const tags = new Set();
@@ -1065,24 +1062,25 @@
         }
     };
 
-    /* [新增] 三态指示灯切换逻辑 */
-    function updateConnectionStatus(status) { // status: 'checking', 'online', 'offline'
+    /* [状态切换逻辑：只保留 Online/Offline] */
+    function updateConnectionStatus(isOnline) {
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
+        const d = I18N[currLang] || I18N['en'];
         
-        // 重置所有状态类
+        // 移除旧状态
         dot.classList.remove('online', 'offline', 'checking');
         text.classList.remove('online', 'offline', 'checking');
         
-        // 添加新状态
-        dot.classList.add(status);
-        text.classList.add(status);
-        
-        // 更新文字
-        const d = I18N[currLang] || I18N['en'];
-        if(status === 'online') text.innerText = d.on;
-        else if(status === 'offline') text.innerText = d.off;
-        else text.innerText = d.chk; // checking
+        if (isOnline) {
+            dot.classList.add('online');
+            text.classList.add('online');
+            text.innerText = d.on;
+        } else {
+            dot.classList.add('offline');
+            text.classList.add('offline');
+            text.innerText = d.off;
+        }
     }
 
     function applyI18N() {
@@ -1092,12 +1090,11 @@
         const tagEl = document.getElementById('currentLangTag');
         if(tagEl) tagEl.innerText = d.tag;
         
-        // [修改] 刷新状态文字
+        // 刷新状态文字
         const statusText = document.getElementById('status-text');
         if(statusText) {
             if(statusText.classList.contains('online')) statusText.innerText = d.on;
-            else if(statusText.classList.contains('offline')) statusText.innerText = d.off;
-            else statusText.innerText = d.chk;
+            else statusText.innerText = d.off;
         }
         
         const map = {
@@ -1115,7 +1112,6 @@
             'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, 
             'btn-ruthless-text': d.btnRuthless, 'faq-title': d.faqTitle,
             'pass-input-title': d.passTitle, 'btn-pass-confirm': d.passUnlock, 'btn-pass-cancel': d.passCancel,
-            // 括号说明更新
             'ai-insight-note': d.aiNote
         };
         for (const [id, text] of Object.entries(map)) {
@@ -1130,7 +1126,6 @@
         // 更新指纹提示语
         const sendHint = document.getElementById('send-hash-hint');
         if(sendHint) sendHint.innerText = d.hashHintSend || "";
-        
         const recvHint = document.getElementById('recv-hash-hint');
         if(recvHint) recvHint.innerText = d.hashHintRecv || "";
 
@@ -1163,7 +1158,7 @@
             const toggle = modal.querySelector('.pwd-toggle');
             if(toggle) toggle.innerText = "🙈";
             
-            /* 清空并隐藏上次的指纹 */
+            /* 重置状态 */
             document.getElementById('recv-fingerprint').innerText = "";
             document.getElementById('recv-fingerprint').style.display = 'none';
             document.getElementById('recv-hash-hint').style.display = 'none';
@@ -1250,7 +1245,6 @@
         pwdInput.type = "password";
         const toggle = document.querySelector('#crypto-modal .pwd-toggle');
         if(toggle) toggle.innerText = "🙈";
-        /* 清空并隐藏指纹 */
         document.getElementById('send-fingerprint').innerText = "";
         document.getElementById('send-fingerprint').style.display = 'none';
         document.getElementById('send-hash-hint').style.display = 'none';
@@ -1302,8 +1296,10 @@
             list.innerHTML = stagedFiles.map((f, i) => 
                 `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`
             ).join('');
-            const aiTags = AIEngine.analyze(stagedFiles);
-            AIEngine.renderTags(aiTags);
+            
+            // AI 分析 (触发隐私检测)
+            const aiData = AIEngine.analyze(stagedFiles);
+            AIEngine.renderTags(aiData);
         }
     }
 
@@ -1343,15 +1339,15 @@
         peer = new Peer(PREFIX + code);
         
         peer.on('open', () => {
-            updateConnectionStatus('online'); // Online
+            updateConnectionStatus(true); // Online
             const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             startExpiryTimer();
         });
         
-        peer.on('error', () => { updateConnectionStatus('offline'); });
-        peer.on('disconnected', () => { updateConnectionStatus('offline'); });
+        peer.on('error', () => { updateConnectionStatus(false); });
+        peer.on('disconnected', () => { updateConnectionStatus(false); });
 
         peer.on('connection', c => {
             c.on('data', d => { 
@@ -1395,7 +1391,7 @@
         downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400);
 
         rPeer.on('open', () => {
-            updateConnectionStatus('online'); // Online
+            updateConnectionStatus(true); // Online
             const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn;
             let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
             
@@ -1518,8 +1514,8 @@
             });
         });
         
-        rPeer.on('error', () => { updateConnectionStatus('offline'); });
-        rPeer.on('disconnected', () => { updateConnectionStatus('offline'); });
+        rPeer.on('error', () => { updateConnectionStatus(false); });
+        rPeer.on('disconnected', () => { updateConnectionStatus(false); });
     }
 
     function addHistory(name, type) {
@@ -1571,7 +1567,7 @@
         if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
         window.scrollTo({ top: 0, behavior: 'smooth' }); 
         setTimeout(() => window.scrollTo(0,0), 300);
-        updateConnectionStatus('offline'); // Reset to offline on stop
+        updateConnectionStatus(false); // Reset to offline on stop
     }
     
     function resetReceiver() { 
@@ -1589,7 +1585,7 @@
         const badge = document.getElementById('recv-text-count');
         if(badge) badge.style.display = 'none';
         activeConn = null; 
-        updateConnectionStatus('offline'); // Reset to offline
+        updateConnectionStatus(false); // Reset to offline
     }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     
