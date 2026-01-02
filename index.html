@@ -379,7 +379,6 @@
                             <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
                         </div>
                     </div>
-
                     <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; flex-wrap:wrap;">
                         <label class="protection-btn" onclick="event.preventDefault(); showCryptoModal()">
                             <input type="checkbox" id="protection-toggle-input"> <span class="btn-content">
@@ -518,7 +517,6 @@
         </div>
     </footer>
 </div>
-
 <div id="policyModal" class="policy-modal" onclick="closePolicy()">
     <div class="policy-content" onclick="event.stopPropagation()">
         <span class="close-policy" onclick="closePolicy()">×</span>
@@ -971,7 +969,6 @@
             techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"]
         }
     };
-
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     let isAdBlockIgnored = false; 
     let downloadDotsIdx = null; 
@@ -1058,39 +1055,22 @@
         }
     };
 
-/* --- 新增：网络连接状态检测（WiFi / 移动数据）--- */
-    function updateNetworkStatus() {
-        if ('connection' in navigator) {
-            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            if (!conn) {
-                // 浏览器不支持，保持默认在线（绿色）
-                updateConnectionStatus(true);
-                return;
-            }
-            // effectiveType: '4g','3g','2g','slow-2g' 为移动网络，'wifi' 为 WiFi
-            const isOnline = conn.effectiveType === 'wifi' || conn.effectiveType === '4g' || conn.effectiveType === '3g';
-            updateConnectionStatus(isOnline);
-        } else {
-            // 不支持 Connection API，默认显示在线
-            updateConnectionStatus(true);
-        }
-    }
-
-/* 原有的 updateConnectionStatus 函数保持不变（用于控制圆点和文字颜色） */
-    function updateConnectionStatus(isOnline) {
+    /* [修改] 纯网络状态检测逻辑 (Online/Offline) */
+    function checkNetworkStatus() {
+        const isOnline = navigator.onLine;
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
         
+        // 移除所有状态类
+        dot.classList.remove('online', 'offline');
+        text.classList.remove('online', 'offline');
+        
         if (isOnline) {
-            dot.classList.remove('offline');
             dot.classList.add('online');
-            text.classList.remove('offline');
             text.classList.add('online');
             text.innerText = (I18N[currLang] || I18N['en']).on;
         } else {
-            dot.classList.remove('online');
             dot.classList.add('offline');
-            text.classList.remove('online');
             text.classList.add('offline');
             text.innerText = (I18N[currLang] || I18N['en']).off;
         }
@@ -1103,13 +1083,8 @@
         const tagEl = document.getElementById('currentLangTag');
         if(tagEl) tagEl.innerText = d.tag;
         
-        // [修改] 更新状态文字
-        const statusText = document.getElementById('status-text');
-        if(statusText) {
-            // 检查当前是不是红色（离线）状态
-            const isOffline = statusText.classList.contains('offline');
-            statusText.innerText = isOffline ? d.off : d.on;
-        }
+        // 立即更新一次网络状态文字
+        checkNetworkStatus();
         
         const map = {
             'tab-send': d.tabSend, 'tab-receive': d.tabReceive,
@@ -1353,17 +1328,20 @@
         if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
         
+        // [新增] 开始分享后，隐藏 AI Insights 区域
+        document.getElementById('ai-suggestions').style.display = 'none';
+        
         peer.on('open', () => {
-            updateConnectionStatus(true); // Online
+            // 这里不再更新状态灯，由 checkNetworkStatus 统一管理
             const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             startExpiryTimer();
         });
         
-        peer.on('error', () => { updateConnectionStatus(false); });
-        peer.on('disconnected', () => { updateConnectionStatus(false); });
-
+        // peer 的错误不再影响左上角状态灯，除非它能反映真实断网
+        // 保持 checkNetworkStatus 处理全局网络状态
+        
         peer.on('connection', c => {
             c.on('data', d => { 
                 if (d.type === 'security_burn') { showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); resetSender(); return; }
@@ -1406,7 +1384,6 @@
         downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400);
 
         rPeer.on('open', () => {
-            updateConnectionStatus(true); // Online
             const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn;
             let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
             
@@ -1528,9 +1505,6 @@
                 }
             });
         });
-        
-        rPeer.on('error', () => { updateConnectionStatus(false); });
-        rPeer.on('disconnected', () => { updateConnectionStatus(false); });
     }
 
     function addHistory(name, type) {
@@ -1570,15 +1544,13 @@
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     
-function resetSender() { 
+    function resetSender() { 
         if(peer) peer.destroy(); 
         document.getElementById('senderCodeArea').style.display = 'none'; 
         stagedFiles = []; 
         renderStagedList(); 
-        document.getElementById('ai-suggestions').style.display = 'none';   // ← 这一行原本就有，保留
-        document.getElementById('ai-privacy-alert').style.display = 'none'; // ← 新增：明确隐藏隐私警告
-        document.getElementById('ai-tag-container').innerHTML = '';         // ← 新增：清空标签
-
+        /* 保持 AI suggestions 隐藏，直到下次用户添加文件 */
+        document.getElementById('ai-suggestions').style.display = 'none';
         const quickText = document.getElementById('quickText');
         quickText.value = ""; quickText.blur();
         updateTextCount(quickText);
@@ -1602,7 +1574,6 @@ function resetSender() {
         const badge = document.getElementById('recv-text-count');
         if(badge) badge.style.display = 'none';
         activeConn = null; 
-        updateConnectionStatus(false); // Reset to offline
     }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     
@@ -1611,23 +1582,17 @@ function resetSender() {
     function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
-
-/* 初始化时添加网络状态监听 */
+    
     window.onload = () => { 
         initStars(); 
         applyI18N(); 
         initDragAndDrop(); 
         renderHistory(); 
         detectAdBlock(); 
-        
-        // 初始检测一次网络状态
-        updateNetworkStatus();
-        
-        // 监听网络变化（支持的浏览器会触发 change 事件）
-        if ('connection' in navigator) {
-            const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-            if (conn) conn.addEventListener('change', updateNetworkStatus);
-        }
+        /* [新增] 启动网络状态监听 */
+        window.addEventListener('online', checkNetworkStatus);
+        window.addEventListener('offline', checkNetworkStatus);
+        checkNetworkStatus(); // 初始化检测
     };
 </script>
 </body>
