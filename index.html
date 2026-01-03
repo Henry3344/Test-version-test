@@ -105,39 +105,55 @@
         #ai-tag-container { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .ai-smart-tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(139, 92, 246, 0.3); color: white; border: 1px solid rgba(139, 92, 246, 0.4); }
 
-        /* [修改] OCR 集成按钮样式 - 增强 PC 端显示 */
+        /* [优化] OCR 集成按钮样式 - 与 Share Text 保持一致 */
         .text-action-row { display: flex; gap: 10px; align-items: stretch; margin-top: auto; }
+        
         .split-btn { 
-            flex: 0.8; 
-            min-width: 140px; /* 强制最小宽度，防止PC端被挤压 */
+            flex: 0.4; /* 调窄：只占 40% 左右 */
+            min-width: 90px; /* 最小宽度限制 */
             display: flex; 
-            border: 1.5px solid #334155; 
-            border-radius: 14px; 
+            border: none;
+            border-radius: 16px; 
             overflow: hidden; 
-            background: #1e293b; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
-            flex-shrink: 0; /* 禁止被压缩 */
+            background: var(--primary); /* 与 Share 按钮同色 */
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4); 
+            transition: 0.3s;
+            flex-shrink: 0;
         }
+        
+        .split-btn:active { transform: scale(0.97); }
+
+        /* 气泡提示 (Tooltip) 样式 */
+        .tooltip-wrap {
+            flex: 1; position: relative; display: flex;
+        }
+        .tooltip-wrap:hover::after, .tooltip-wrap:active::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 120%; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.9); color: white;
+            padding: 6px 10px; font-size: 10px; border-radius: 6px;
+            white-space: nowrap; pointer-events: none; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.2);
+            opacity: 1; visibility: visible;
+        }
+        /* 默认隐藏气泡 */
+        .tooltip-wrap::after { opacity: 0; visibility: hidden; transition: 0.2s; }
+
         .split-btn button { 
-            flex: 1; 
+            width: 100%; height: 100%;
             border: none; 
             background: transparent; 
-            color: #94a3b8; 
+            color: white; 
             cursor: pointer; 
-            font-size: 11px; 
-            font-weight: 700; 
-            transition: 0.2s; 
-            padding: 12px 5px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 4px;
-            white-space: nowrap; /* 禁止文字换行 */
+            font-size: 16px; 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 0;
         }
-        .split-btn button:hover { background: rgba(255,255,255,0.05); color: white; }
-        .split-btn .separator { width: 1px; background: #334155; }
+        .split-btn button:hover { background: rgba(255,255,255,0.2); }
+        .split-btn .separator { width: 1.5px; background: rgba(255,255,255,0.3); height: 60%; margin: auto 0; }
         
-        #btn-share-text { margin-top: 0; flex: 1.2; }
+        #btn-share-text { margin-top: 0; flex: 1; /* Share 按钮占大头 */ }
 
         /* 隐私警告样式 */
         #ai-privacy-alert {
@@ -413,9 +429,13 @@
                             
                             <div class="text-action-row">
                                 <div class="split-btn">
-                                    <button id="btn-ocr-paste" onclick="triggerOCRAd('scan')">📷 Scan</button>
+                                    <div class="tooltip-wrap" id="tip-scan" data-tip="Scan / Paste">
+                                        <button id="btn-ocr-paste" onclick="triggerOCRAd('scan')">📷</button>
+                                    </div>
                                     <div class="separator"></div>
-                                    <button id="btn-ocr-upload" onclick="triggerOCRAd('upload')">📂</button>
+                                    <div class="tooltip-wrap" id="tip-upload" data-tip="Upload Image">
+                                        <button id="btn-ocr-upload" onclick="triggerOCRAd('upload')">📂</button>
+                                    </div>
                                 </div>
                                 <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
                             </div>
@@ -592,6 +612,13 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="ocrLoadingModal" style="z-index: 10000;">
+    <div style="font-size: 40px; margin-bottom: 15px; animation: spin 2s infinite linear;">⚙️</div>
+    <div id="ocr-loading-text" style="color:white; font-weight:bold; font-size:16px;">Reading Text...</div>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">Running locally in browser</div>
+</div>
+<style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+
 <div id="alert-modal" class="crypto-modal" style="z-index: 99999;">
     <div class="crypto-modal-card" style="align-items: center; text-align: center;">
         <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
@@ -644,7 +671,7 @@
         }
     }
 
-    /* --- [黑科技：可视哈希指纹 (Monkey Hash) & 自动显隐] --- */
+    /* --- [可视哈希指纹] --- */
     async function updateFingerprint(val, elId, hintId) {
         const el = document.getElementById(elId);
         const hint = document.getElementById(hintId);
@@ -665,9 +692,9 @@
             tabSend: "Send", tabReceive: "Receive", badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], drop: "DROP TO STAGE", fileLab: "Drop / Click", shareF: "SHARE FILES", shareT: "SHARE TEXT", connect: "DOWNLOAD", save: "📥 SAVE", recv: "RECEIVE", decryptRecv: "🔓 DECRYPT & VIEW", decryptSave: "🔓 DECRYPT & SAVE", saveNow: "💾 SAVE NOW", exp: "Expires: ", copyLink: "📋 COPY LINK", stop: "STOP", guide: "Scan QR or enter code on receiver device.", coffee: "Buy me a coffee", hPriv: "Privacy", hSite: "About Site", hUs: "About Us", inputErr: "Enter 6-digit code.", orScan: "or scan 📷", doneRemind: "DONE! Click SAVE above.", histTitle: "Recent History", fileErr: "Please select files first.", textErr: "Please enter text first.",
             passTitle: "🔐 Enter Password", passPlaceholder: "Type password...", passUnlock: "UNLOCK", passCancel: "CANCEL", passWrong: "Wrong Password!", passRemaining: "attempts left", passWeak: "For safety: 8+ chars, 1 Upper, 1 Lower, 1 Number, 1 Symbol.", hashHintSend: "Visual Check: If receiver's emojis match these, the key is correct!", hashHintRecv: "Visual Check: If the key matches, the emojis will match!",
             aiNote: "(Selected types)", privWarn: "⚠️ Privacy Alert: Filenames indicate sensitive info. AES-256 recommended!",
-            ocrScan: "📷 Scan/Paste", ocrUpload: "📂 Upload", ocrDone: "✅ Text Extracted!",
-            /* [新增] OCR 广告标题 */
-            ocrAdTitle: "Local OCR Processing... Please wait.",
+            ocrDone: "✅ Text Extracted!", ocrAdTitle: "Local OCR Processing... Please wait.",
+            /* [新增] Tooltips 翻译 */
+            ocrScanTip: "Scan / Paste", ocrUploadTip: "Upload Image",
             step1: "Select Files<br><span style='font-size:9px; opacity:0.7'>(Type Text)</span>", step2: "Set AES-256<br><span style='font-size:9px; opacity:0.7'>(Option)</span>", step3: "Get Code", step4: "Download",
             heroTitle: "Secure File Sharing, Even We Can’t See.", heroSub: "Direct P2P transfer. Optional AES-256 encryption. No servers.", sig1: "No Limits", sig2: "P2P Only", sig3: "Auto-Wipe", modalTitle: "Set Password", btnEnable: "ENABLE", btnCancel: "CANCEL", aesOff: "AES-256 OFF", aesOn: "AES-256 ON", btnRuthless: "Ruthless Refusal (Session only)", strengthLevels: ["Very Weak", "Weak", "Medium", "Moderate", "Strong", "Very Strong", "Unbreakable"], faqTitle: "Common Questions", aiInsight: "✨ AI Insights", aiLocal: "Local Processing", aiTags: { img: "🖼️ Image", vid: "🎬 Video", doc: "📄 Document", code: "💻 Code", zip: "📦 Archive", big: "🐘 Large File" },
             faqQ1: "Do my files pass through your servers?", faqA1: "No. FlashDrop Pro utilizes a serverless P2P architecture powered by WebRTC.", faqQ2: "Do you retain any logs or metadata?", faqA2: "Absolutely not. We operate on a 'Zero-Knowledge' basis.", faqQ3: "What encryption standards are used?", faqA3: "All transfers are secured via WebRTC's DTLS/SRTP. Optional password protection adds AES-256-GCM.", faqQ4: "Is my IP address visible?", faqA4: "Due to P2P nature, the recipient needs your IP to connect. Use VPN for anonymity.", faqQ5: "Is it safe for confidential documents?", faqA5: "Yes. Data never rests on a third-party server.", faqQ6: "Can I recover files after closing tab?", faqA6: "No. Data exists only in RAM. Once closed, it is lost forever.", faqQ7: "Can staff access my files?", faqA7: "Impossible. We have no keys and no storage.", faqQ8: "Is password mandatory?", faqA8: "Optional, but recommended for sensitive data on local networks.", faqQ9: "Can you reset lost password?", faqA9: "No. We don't store passwords.", techPhrases: ["Generating RSA-4096 Key...", "Initializing WebRTC Handshake...", "Establishing P2P Tunnel...", "Synchronizing Peer Signals...", "Channel Secured!"]
@@ -677,16 +704,16 @@
             tabSend: "发送", tabReceive: "接收", badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 极速传输", "📂 阅后即焚"], drop: "松手上传", fileLab: "拖拽 / 点击", shareF: "分享文件", shareT: "分享文字", connect: "立即下载", save: "📥 保存文件", recv: "👀 查看文字", decryptRecv: "🔓 解密并查看", decryptSave: "🔓 解密并保存", saveNow: "💾 点击保存", exp: "有效期: ", copyLink: "📋 复制链接", stop: "停止分享", guide: "请对方扫描二维码或输入下方验证码。", coffee: "请我喝杯咖啡", hPriv: "隐私政策", hSite: "关于网站", hUs: "关于我们", inputErr: "请输入6位验证码。", orScan: "扫码接收 📷", doneRemind: "传输完成！点击上方按钮保存。", histTitle: "最近记录", fileErr: "请先选择文件。", textErr: "请先输入文字。",
             passTitle: "🔐 输入密码", passPlaceholder: "在此输入...", passUnlock: "解锁", passCancel: "取消", passWrong: "❌ 密码错误！", passRemaining: "次尝试机会。", passWeak: "为了安全：至少8位，需包含大写、小写、数字及符号。", hashHintSend: "AES-256密钥设置好后，只要接收方的emoji与下方的emoji相符即为密钥正确！", hashHintRecv: "只要输入的AES-256密钥一致，emoji就会一致！",
             aiNote: "(以下是你已选中的文件类型)", privWarn: "⚠️ 隐私提醒：文件名包含敏感信息。强烈建议开启 AES-256 加密！",
-            ocrScan: "📷 截屏/粘贴", ocrUpload: "📂 上传图", ocrDone: "✅ 提取成功!",
-            /* [新增] OCR 广告标题 */
-            ocrAdTitle: "正在本地识别文字，请稍等...",
+            ocrDone: "✅ 提取成功!", ocrAdTitle: "正在本地识别文字，请稍等...",
+            /* [新增] Tooltips 翻译 */
+            ocrScanTip: "截屏 / 粘贴", ocrUploadTip: "上传图片",
             step1: "选文件<br><span style='font-size:9px; opacity:0.7'>(可输文字)</span>", step2: "设密码<br><span style='font-size:9px; opacity:0.7'>(可选加密)</span>", step3: "取件码", step4: "下载", heroTitle: "安全传输，只有天知地知你知。", heroSub: "点对点直连。可选 AES-256 加密。不经服务器。", sig1: "无限制", sig2: "仅P2P", sig3: "自动销毁", modalTitle: "设置密码", btnEnable: "启用保护", btnCancel: "取消", aesOff: "AES-256 关闭", aesOn: "AES-256 开启", btnRuthless: "狠心拒绝（仅这次）", strengthLevels: ["极弱", "弱", "中等", "稍强", "强", "极强", "特别强"], faqTitle: "常见问题", aiInsight: "✨ AI 智能分析", aiLocal: "本地处理", aiTags: { img: "🖼️ 图像", vid: "🎬 视频", doc: "📄 文档", code: "💻 代码", zip: "📦 压缩包", big: "🐘 大文件" },
             faqQ1: "文件会经过你们的服务器吗？", faqA1: "不会。FlashDrop Pro 采用 WebRTC 无服务器 P2P 架构。数据直连传输。", faqQ2: "你们会保留日志吗？", faqA2: "绝不。我们零知识运营，不存 IP 或日志。", faqQ3: "使用什么加密？", faqA3: "WebRTC 强制 DTLS/SRTP。密码保护增加 AES-256-GCM。", faqQ4: "对方能看到我IP吗？", faqA4: "P2P 需要 IP 直连。介意请用 VPN。", faqQ5: "传机密文件安全吗？", faqA5: "安全。数据不经过第三方服务器。", faqQ6: "关掉页面能恢复吗？", faqA6: "不能。数据只在内存里，关掉即焚。", faqQ7: "员工能看文件吗？", faqA7: "不能。我们没密钥也没存储。", faqQ8: "必须设密码吗？", faqA8: "可选。但建议局域网内使用时设置。", faqQ9: "能重置密码吗？", faqA9: "不能。忘了就真没了。", techPhrases: ["正在生成 RSA-4096 密钥...", "初始化 WebRTC 握手...", "建立 P2P 加密隧道...", "同步对等信号...", "安全通道已建立!"]
         },
-        ja: { tag: "JP", on: "オンライン", off: "オフライン", ocrScan: "📷 スキャン", ocrUpload: "📂 アップ", ocrDone: "✅ 完了!", ocrAdTitle: "OCR処理中...お待ちください", /* ...省略部分重复字段... */ badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], drop: "ここにドロップ", fileLab: "クリックして選択", shareF: "ファイルを共有", shareT: "テキストを共有", connect: "ダウンロード", save: "📥 保存する", recv: "👀 テキスト表示", decryptRecv: "🔓 復号して表示", decryptSave: "🔓 復号して保存", saveNow: "💾 保存をクリック", exp: "有効期限: ", copyLink: "📋 リンクをコピー", stop: "停止", guide: "QRコードをスキャンするか、コードを入力してください。", coffee: "コーヒーを奢る", hPriv: "プライバシー", hSite: "サイトについて", hUs: "私たちについて", inputErr: "6桁のコードを入力してください。", orScan: "QRスキャン 📷", doneRemind: "完了！上のボタンで保存してください。", histTitle: "最近の履歴", fileErr: "ファイルを選択してください。", textErr: "テキストを入力してください。", passTitle: "🔐 パスワード入力", passPlaceholder: "ここに入力...", passUnlock: "解除", passCancel: "キャンセル", passWrong: "❌ パスワードが違います！", passRemaining: "回試行可能。", passWeak: "安全のため：8文字以上、大文字・小文字・数字・記号を含めてください。", hashHintSend: "AES-256キー設定後、受信側の絵文字と一致していればキーは正しいです！", hashHintRecv: "入力したAES-256キーが一致すれば、絵文字も一致します！", aiNote: "(選択されたファイル形式)", privWarn: "⚠️ プライバシー警告：ファイル名に機密情報が含まれています。AES-256暗号化を強く推奨します！", step1: "ファイル選択<br><span style='font-size:9px; opacity:0.7'>(テキスト可)</span>", step2: "暗号化設定<br><span style='font-size:9px; opacity:0.7'>(任意)</span>", step3: "コード取得", step4: "ダウンロード", heroTitle: "安全なファイル共有。私たちも見えません。", heroSub: "P2P直接転送。AES-256暗号化オプション。サーバーなし。", sig1: "無制限", sig2: "P2Pのみ", sig3: "自動消去", modalTitle: "パスワード設定", btnEnable: "有効にする", btnCancel: "キャンセル", aesOff: "AES-256 オフ", aesOn: "AES-256 オン", btnRuthless: "拒否する（今回のみ）", strengthLevels: ["極弱", "弱", "普通", "やや強", "強", "極強", "最強"], faqTitle: "よくある質問", aiInsight: "✨ AI 分析", aiLocal: "ローカル処理", aiTags: { img: "🖼️ 画像", vid: "🎬 動画", doc: "📄 文書", code: "💻 コード", zip: "📦 圧縮", big: "🐘 大容量" }, faqQ1: "サーバーを経由しますか？", faqA1: "いいえ。WebRTCによるP2P直接転送です。", faqQ2: "ログは保存されますか？", faqA2: "いいえ。ゼロ知識ベースで、ログは一切保存しません。", faqQ3: "暗号化方式は？", faqA3: "WebRTCのDTLS/SRTPに加え、AES-256-GCMが利用可能です。", faqQ4: "IPは見えますか？", faqA4: "P2Pの性質上、接続にはIPが必要です。", faqQ5: "機密データは安全ですか？", faqA5: "はい。サーバーに保存されないため安全です。", faqQ6: "復元できますか？", faqA6: "いいえ。メモリ上のデータは消えます。", faqQ7: "運営は見れますか？", faqA7: "不可能です。鍵もデータも持ちません。", faqQ8: "パスワードは必須？", faqA8: "任意ですが、推奨します。", faqQ9: "リセットできますか？", faqA9: "いいえ。紛失すると復元できません。", techPhrases: ["RSA鍵を生成中...", "WebRTCハンドシェイク...", "P2Pトンネル確立中...", "信号を同期中...", "安全な接続完了!"] },
-        ko: { tag: "KR", on: "온라인", off: "오프라인", ocrScan: "📷 스캔/붙여넣기", ocrUpload: "📂 업로드", ocrDone: "✅ 완료!", ocrAdTitle: "로컬 OCR 처리 중... 잠시만 기다려주세요", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], drop: "여기에 드롭", fileLab: "파일 선택 / 클릭", shareF: "파일 공유", shareT: "텍스트 공유", connect: "다운로드", save: "📥 저장", recv: "👀 텍스트 보기", decryptRecv: "🔓 복호화 및 보기", decryptSave: "🔓 복호화 및 저장", saveNow: "💾 저장하려면 클릭", exp: "만료: ", copyLink: "📋 링크 복사", stop: "중지", guide: "QR 코드를 스캔하거나 코드를 입력하세요.", coffee: "커피 한 잔 후원", hPriv: "개인정보", hSite: "사이트 정보", hUs: "회사 소개", inputErr: "6자리 코드를 입력하세요.", orScan: "스캔하기 📷", doneRemind: "완료! 위 버튼을 눌러 저장하세요.", histTitle: "최근 기록", fileErr: "파일을 먼저 선택하세요.", textErr: "텍스트를 먼저 입력하세요.", passTitle: "🔐 비밀번호 입력", passPlaceholder: "여기에 입력...", passUnlock: "잠금 해제", passCancel: "취소", passWrong: "❌ 비밀번호 오류!", passRemaining: "회 시도 가능.", passWeak: "보안을 위해: 8자 이상, 대문자, 소문자, 숫자, 특수문자 포함.", hashHintSend: "AES-256 키 설정 후 수신자의 이모티콘과 일치하면 키가 올바른 것입니다!", hashHintRecv: "입력한 AES-256 키가 일치하면 이모티콘도 일치합니다!", aiNote: "(선택된 파일 유형)", privWarn: "⚠️ 개인정보 경고: 파일명에 민감한 정보가 포함되어 있습니다. AES-256 암호화를 강력히 권장합니다!", step1: "파일 선택<br><span style='font-size:9px; opacity:0.7'>(텍스트 가능)</span>", step2: "비번 설정<br><span style='font-size:9px; opacity:0.7'>(선택 사항)</span>", step3: "코드 받기", step4: "다운로드", heroTitle: "안전한 파일 공유. 서버 저장 없음.", heroSub: "직접 P2P 전송. 선택적 AES-256 암호화.", sig1: "무제한", sig2: "P2P 전용", sig3: "자동 삭제", modalTitle: "비밀번호 설정", btnEnable: "활성화", btnCancel: "취소", aesOff: "AES-256 끄기", aesOn: "AES-256 켜기", btnRuthless: "거절하기 (이번만)", strengthLevels: ["매우 약함", "약함", "보통", "약간 강함", "강함", "매우 강함", "최강"], faqTitle: "자주 묻는 질문", aiInsight: "✨ AI 인사이트", aiLocal: "로컬 처리", aiTags: { img: "🖼️ 이미지", vid: "🎬 동영상", doc: "📄 문서", code: "💻 코드", zip: "📦 압축", big: "🐘 대용량" }, faqQ1: "서버를 통과하나요?", faqA1: "아니요. WebRTC P2P로 직접 전송됩니다.", faqQ2: "로그를 보관하나요?", faqA2: "아니요. 제로 지식 원칙을 따릅니다.", faqQ3: "암호화 방식은?", faqA3: "WebRTC 암호화 + 선택적 AES-256-GCM.", faqQ4: "IP가 보이나요?", faqA4: "P2P 연결을 위해 필요합니다.", faqQ5: "기밀 문서에 안전한가요?", faqA5: "네. 제3자 서버에 저장되지 않습니다.", faqQ6: "복구할 수 있나요?", faqA6: "아니요. 탭을 닫으면 사라집니다.", faqQ7: "운영자가 볼 수 있나요?", faqA7: "불가능합니다. 키가 없습니다.", faqQ8: "비번은 필수인가요?", faqA8: "선택입니다.", faqQ9: "비번 리셋 가능?", faqA9: "불가능합니다.", techPhrases: ["RSA 키 생성 중...", "WebRTC 연결 중...", "P2P 터널 수립 중...", "동기화 중...", "보안 연결 완료!"] },
-        es: { tag: "ES", on: "En línea", off: "Desconectado", ocrScan: "📷 Escanear", ocrUpload: "📂 Subir", ocrDone: "✅ ¡Listo!", ocrAdTitle: "Procesando OCR local... Espere", badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], drop: "SOLTAR AQUÍ", fileLab: "Soltar / Clic", shareF: "COMPARTIR ARCHIVOS", shareT: "COMPARTIR TEXTO", connect: "DESCARGAR", save: "📥 GUARDAR", recv: "👀 VER TEXTO", decryptRecv: "🔓 DESCIFRAR Y VER", decryptSave: "🔓 DESCIFRAR Y GUARDAR", saveNow: "💾 CLIC PARA GUARDAR", exp: "Expira: ", copyLink: "📋 COPIAR ENLACE", stop: "DETENER", guide: "Escanea el QR o introduce el código.", coffee: "invítame un café", hPriv: "Privacidad", hSite: "Sobre el sitio", hUs: "Sobre nosotros", inputErr: "Introduce el código de 6 dígitos.", orScan: "o escanear 📷", doneRemind: "¡HECHO! Clic arriba para guardar.", histTitle: "Historial Reciente", fileErr: "Selecciona archivos primero.", textErr: "Introduce texto primero.", passTitle: "🔐 Contraseña", passPlaceholder: "Escribe aquí...", passUnlock: "DESBLOQUEAR", passCancel: "CANCELAR", passWrong: "❌ Contraseña incorrecta", passRemaining: "intentos restantes.", passWeak: "Seguridad: 8+ caracteres, 1 Mayúscula, 1 Minúscula, 1 Número, 1 Símbolo.", hashHintSend: "Una vez configurada la clave AES-256, si los emojis coinciden, ¡la clave es correcta!", hashHintRecv: "¡Si la clave AES-256 coincide, los emojis también coincidirán!", aiNote: "(Tipos seleccionados)", privWarn: "⚠️ Alerta de privacidad: Los nombres de archivo indican información confidencial. ¡Se recomienda encarecidamente el cifrado AES-256!", step1: "Elegir Archivos<br><span style='font-size:9px; opacity:0.7'>(o Texto)</span>", step2: "Cifrado AES<br><span style='font-size:9px; opacity:0.7'>(Opcional)</span>", step3: "Obtener Código", step4: "Descargar", heroTitle: "Intercambio seguro. Nadie nos ve.", heroSub: "Transferencia P2P directa. Cifrado AES-256 opcional.", sig1: "Sin Límites", sig2: "Solo P2P", sig3: "Auto-Borrado", modalTitle: "Contraseña", btnEnable: "ACTIVAR", btnCancel: "CANCELAR", aesOff: "AES-256 OFF", aesOn: "AES-256 ON", btnRuthless: "Rechazar (Solo esta vez)", strengthLevels: ["Muy débil", "Débil", "Media", "Moderada", "Fuerte", "Muy fuerte", "Imbatible"], faqTitle: "Preguntas Frecuentes", aiInsight: "✨ Análisis IA", aiLocal: "Procesamiento Local", aiTags: { img: "🖼️ Imagen", vid: "🎬 Video", doc: "📄 Documento", code: "💻 Código", zip: "📦 Archivo", big: "🐘 Grande" }, faqQ1: "¿Pasan por servidores?", faqA1: "No. Usa arquitectura P2P sin servidor.", faqQ2: "¿Guardan registros?", faqA2: "No. Operamos con 'Conocimiento Cero'.", faqQ3: "¿Qué cifrado usan?", faqA3: "DTLS/SRTP de WebRTC + AES-256 opcional.", faqQ4: "¿Es visible mi IP?", faqA4: "Sí, necesario para conexión directa.", faqQ5: "¿Es seguro?", faqA5: "Sí, mínima superficie de ataque.", faqQ6: "¿Se puede recuperar?", faqA6: "No. Se borra al cerrar.", faqQ7: "¿El personal lo ve?", faqA7: "Imposible. No tenemos claves.", faqQ8: "¿Contraseña obligatoria?", faqA8: "Opcional.", faqQ9: "¿Restablecer contraseña?", faqA9: "No. No la guardamos.", techPhrases: ["Generando Clave RSA...", "Iniciando WebRTC...", "Túnel P2P...", "Sincronizando...", "¡Canal Seguro!"] },
-        hi: { tag: "HI", on: "ऑनलाइन", off: "ऑफलाइन", ocrScan: "📷 स्कैन", ocrUpload: "📂 अपलोड", ocrDone: "✅ हो गया!", ocrAdTitle: "स्थानीय OCR प्रसंस्करण... कृपया प्रतीक्षा करें", badges: ["🔒 P2P एन्क्रिप्शन", "🕵️ कोई लॉग नहीं", "⚡ तीव्र गति", "📂 ऑटो-वाइप"], drop: "यहाँ छोड़ें", fileLab: "चुनें / क्लिक करें", shareF: "फ़ाइलें साझा करें", shareT: "텍스트 साझा करें", connect: "डाउनलोड", save: "📥 सहेजें", recv: "👀 टेक्स्ट देखें", decryptRecv: "🔓 डिक्रिप्ट करें और देखें", decryptSave: "🔓 डिक्रिप्ट करें और सहेजें", saveNow: "💾 सहेजने के लिए क्लिक करें", exp: "समाप्त: ", copyLink: "📋 लिंक कॉपी करें", stop: "रोकें", guide: "QR स्कैन करें या कोड दर्ज करें।", coffee: "मुझे कॉफी पिलाएं", hPriv: "गोपनीयता", hSite: "साइट के बारे में", hUs: "हमारे बारे में", inputErr: "6-अंकीय कोड दर्ज करें।", orScan: "स्कैन करें 📷", doneRemind: "पूर्ण! सहेजें पर क्लिक करें।", histTitle: "हाल का इतिहास", fileErr: "कृपया पहले फ़ाइलें चुनें।", textErr: "कृपया पहले टेक्स्ट दर्ज करें।", passTitle: "🔐 पासवर्ड दर्ज करें", passPlaceholder: "यहाँ टाइप करें...", passUnlock: "अनलॉक", passCancel: "रद्द करें", passWrong: "❌ गलत पासवर्ड!", passRemaining: "प्रयास शेष।", passWeak: "सुरक्षा के लिए: 8+ वर्ण, 1 अपरकेस, 1 लोअरकेस, 1 नंबर, 1 प्रतीक।", hashHintSend: "AES-256 कुंजी सेट करने के बाद, यदि इमोजी मेल खाते हैं, तो कुंजी सही है!", hashHintRecv: "यदि दर्ज की गई AES-256 कुंजी मेल खाती है, तो इमोजी भी मेल खाएंगे!", aiNote: "(चयनित प्रकार)", privWarn: "⚠️ गोपनीयता चेतावनी: फ़ाइल नाम में संवेदनशील जानकारी (आईडी/पासपोर्ट/पता) है। AES-256 एन्क्रिप्शन की अत्यधिक अनुशंसा की जाती है!", step1: "फ़ाइलें चुनें<br><span style='font-size:9px; opacity:0.7'>(टेक्स्ट लिखें)</span>", step2: "पासवर्ड सेट करें<br><span style='font-size:9px; opacity:0.7'>(वैकल्पिक)</span>", step3: "कोड प्राप्त करें", step4: "डाउनलोड", heroTitle: "सुरक्षित फ़ाइल शेयरिंग, हम भी नहीं देख सकते।", heroSub: "सीधा P2P स्थानांतरण। वैकल्पिक AES-256 एन्क्रिप्शन।", sig1: "कोई सीमा नहीं", sig2: "केवल P2P", sig3: "ऑटो-वाइप", modalTitle: "पासवर्ड सेट करें", btnEnable: "सक्षम करें", btnCancel: "रद्द करें", aesOff: "AES-256 बंद", aesOn: "AES-256 चालू", btnRuthless: "अस्वीकार करें (केवल इस बार)", strengthLevels: ["बहुत कमजोर", "कमजोर", "मध्यम", "थोड़ा मजबूत", "मजबूत", "बहुत मजबूत", "अटूट"], faqTitle: "सामान्य प्रश्न", aiInsight: "✨ AI अंतर्दृष्टि", aiLocal: "स्थानीय प्रसंस्करण", aiTags: { img: "🖼️ चित्र", vid: "🎬 वीडियो", doc: "📄 दस्तावेज़", code: "💻 कोड", zip: "📦 संग्रह", big: "🐘 बड़ी फ़ाइल" }, faqQ1: "क्या सर्वर से गुजरता है?", faqA1: "नहीं। P2P सीधा स्थानांतरण।", faqQ2: "क्या लॉग रखते हैं?", faqA2: "नहीं। जीरो-नॉलेज।", faqQ3: "एन्क्रिप्शन क्या है?", faqA3: "WebRTC + AES-256-GCM।", faqQ4: "क्या आईपी दिखता है?", faqA4: "हाँ, कनेक्शन के लिए।", faqQ5: "क्या यह सुरक्षित है?", faqA5: "हाँ। सर्वर पर नहीं रहता।", faqQ6: "क्या पुनर्प्राप्त कर सकते हैं?", faqA6: "नहीं। बंद करने पर खो जाता है।", faqQ7: "क्या आप देख सकते हैं?", faqA7: "नहीं। हमारे पास चाबी नहीं है।", faqQ8: "क्या पासवर्ड जरूरी है?", faqA8: "वैकल्पिक।", faqQ9: "पासवर्ड रीसेट?", faqA9: "नहीं। हम स्टोर नहीं करते।", techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"] }
+        ja: { tag: "JP", on: "オンライン", off: "オフライン", ocrDone: "✅ 完了!", ocrAdTitle: "OCR処理中...お待ちください", ocrScanTip: "スキャン / 貼付", ocrUploadTip: "画像アップロード", badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], drop: "ここにドロップ", fileLab: "クリックして選択", shareF: "ファイルを共有", shareT: "テキストを共有", connect: "ダウンロード", save: "📥 保存する", recv: "👀 テキスト表示", decryptRecv: "🔓 復号して表示", decryptSave: "🔓 復号して保存", saveNow: "💾 保存をクリック", exp: "有効期限: ", copyLink: "📋 リンクをコピー", stop: "停止", guide: "QRコードをスキャンするか、コードを入力してください。", coffee: "コーヒーを奢る", hPriv: "プライバシー", hSite: "サイトについて", hUs: "私たちについて", inputErr: "6桁のコードを入力してください。", orScan: "QRスキャン 📷", doneRemind: "完了！上のボタンで保存してください。", histTitle: "最近の履歴", fileErr: "ファイルを選択してください。", textErr: "テキストを入力してください。", passTitle: "🔐 パスワード入力", passPlaceholder: "ここに入力...", passUnlock: "解除", passCancel: "キャンセル", passWrong: "❌ パスワードが違います！", passRemaining: "回試行可能。", passWeak: "安全のため：8文字以上、大文字・小文字・数字・記号を含めてください。", hashHintSend: "AES-256キー設定後、受信側の絵文字と一致していればキーは正しいです！", hashHintRecv: "入力したAES-256キーが一致すれば、絵文字も一致します！", aiNote: "(選択されたファイル形式)", privWarn: "⚠️ プライバシー警告：ファイル名に機密情報が含まれています。AES-256暗号化を強く推奨します！", step1: "ファイル選択<br><span style='font-size:9px; opacity:0.7'>(テキスト可)</span>", step2: "暗号化設定<br><span style='font-size:9px; opacity:0.7'>(任意)</span>", step3: "コード取得", step4: "ダウンロード", heroTitle: "安全なファイル共有。私たちも見えません。", heroSub: "P2P直接転送。AES-256暗号化オプション。サーバーなし。", sig1: "無制限", sig2: "P2Pのみ", sig3: "自動消去", modalTitle: "パスワード設定", btnEnable: "有効にする", btnCancel: "キャンセル", aesOff: "AES-256 オフ", aesOn: "AES-256 オン", btnRuthless: "拒否する（今回のみ）", strengthLevels: ["極弱", "弱", "普通", "やや強", "強", "極強", "最強"], faqTitle: "よくある質問", aiInsight: "✨ AI 分析", aiLocal: "ローカル処理", aiTags: { img: "🖼️ 画像", vid: "🎬 動画", doc: "📄 文書", code: "💻 コード", zip: "📦 圧縮", big: "🐘 大容量" }, faqQ1: "サーバーを経由しますか？", faqA1: "いいえ。WebRTCによるP2P直接転送です。", faqQ2: "ログは保存されますか？", faqA2: "いいえ。ゼロ知識ベースで、ログは一切保存しません。", faqQ3: "暗号化方式は？", faqA3: "WebRTCのDTLS/SRTPに加え、AES-256-GCMが利用可能です。", faqQ4: "IPは見えますか？", faqA4: "P2Pの性質上、接続にはIPが必要です。", faqQ5: "機密データは安全ですか？", faqA5: "はい。サーバーに保存されないため安全です。", faqQ6: "復元できますか？", faqA6: "いいえ。メモリ上のデータは消えます。", faqQ7: "運営は見れますか？", faqA7: "不可能です。鍵もデータも持ちません。", faqQ8: "パスワードは必須？", faqA8: "任意ですが、推奨します。", faqQ9: "リセットできますか？", faqA9: "いいえ。紛失すると復元できません。", techPhrases: ["RSA鍵を生成中...", "WebRTCハンドシェイク...", "P2Pトンネル確立中...", "信号を同期中...", "安全な接続完了!"] },
+        ko: { tag: "KR", on: "온라인", off: "오프라인", ocrDone: "✅ 완료!", ocrAdTitle: "로컬 OCR 처리 중... 잠시만 기다려주세요", ocrScanTip: "스캔 / 붙여넣기", ocrUploadTip: "이미지 업로드", badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], drop: "여기에 드롭", fileLab: "파일 선택 / 클릭", shareF: "파일 공유", shareT: "텍스트 공유", connect: "다운로드", save: "📥 저장", recv: "👀 텍스트 보기", decryptRecv: "🔓 복호화 및 보기", decryptSave: "🔓 복호화 및 저장", saveNow: "💾 저장하려면 클릭", exp: "만료: ", copyLink: "📋 링크 복사", stop: "중지", guide: "QR 코드를 스캔하거나 코드를 입력하세요.", coffee: "커피 한 잔 후원", hPriv: "개인정보", hSite: "사이트 정보", hUs: "회사 소개", inputErr: "6자리 코드를 입력하세요.", orScan: "스캔하기 📷", doneRemind: "완료! 위 버튼을 눌러 저장하세요.", histTitle: "최근 기록", fileErr: "파일을 먼저 선택하세요.", textErr: "텍스트를 먼저 입력하세요.", passTitle: "🔐 비밀번호 입력", passPlaceholder: "여기에 입력...", passUnlock: "잠금 해제", passCancel: "취소", passWrong: "❌ 비밀번호 오류!", passRemaining: "회 시도 가능.", passWeak: "보안을 위해: 8자 이상, 대문자, 소문자, 숫자, 특수문자 포함.", hashHintSend: "AES-256 키 설정 후 수신자의 이모티콘과 일치하면 키가 올바른 것입니다!", hashHintRecv: "입력한 AES-256 키가 일치하면 이모티콘도 일치합니다!", aiNote: "(선택된 파일 유형)", privWarn: "⚠️ 개인정보 경고: 파일명에 민감한 정보가 포함되어 있습니다. AES-256 암호화를 강력히 권장합니다!", step1: "파일 선택<br><span style='font-size:9px; opacity:0.7'>(텍스트 가능)</span>", step2: "비번 설정<br><span style='font-size:9px; opacity:0.7'>(선택 사항)</span>", step3: "코드 받기", step4: "다운로드", heroTitle: "안전한 파일 공유. 서버 저장 없음.", heroSub: "직접 P2P 전송. 선택적 AES-256 암호화.", sig1: "무제한", sig2: "P2P 전용", sig3: "자동 삭제", modalTitle: "비밀번호 설정", btnEnable: "활성화", btnCancel: "취소", aesOff: "AES-256 끄기", aesOn: "AES-256 켜기", btnRuthless: "거절하기 (이번만)", strengthLevels: ["매우 약함", "약함", "보통", "약간 강함", "강함", "매우 강함", "최강"], faqTitle: "자주 묻는 질문", aiInsight: "✨ AI 인사이트", aiLocal: "로컬 처리", aiTags: { img: "🖼️ 이미지", vid: "🎬 동영상", doc: "📄 문서", code: "💻 코드", zip: "📦 압축", big: "🐘 대용량" }, faqQ1: "서버를 통과하나요?", faqA1: "아니요. WebRTC P2P로 직접 전송됩니다.", faqQ2: "로그를 보관하나요?", faqA2: "아니요. 제로 지식 원칙을 따릅니다.", faqQ3: "암호화 방식은?", faqA3: "WebRTC 암호화 + 선택적 AES-256-GCM.", faqQ4: "IP가 보이나요?", faqA4: "P2P 연결을 위해 필요합니다.", faqQ5: "기밀 문서에 안전한가요?", faqA5: "네. 제3자 서버에 저장되지 않습니다.", faqQ6: "복구할 수 있나요?", faqA6: "아니요. 탭을 닫으면 사라집니다.", faqQ7: "운영자가 볼 수 있나요?", faqA7: "불가능합니다. 키가 없습니다.", faqQ8: "비번은 필수인가요?", faqA8: "선택입니다.", faqQ9: "비번 리셋 가능?", faqA9: "불가능합니다.", techPhrases: ["RSA 키 생성 중...", "WebRTC 연결 중...", "P2P 터널 수립 중...", "동기화 중...", "보안 연결 완료!"] },
+        es: { tag: "ES", on: "En línea", off: "Desconectado", ocrDone: "✅ ¡Listo!", ocrAdTitle: "Procesando OCR local... Espere", ocrScanTip: "Escanear / Pegar", ocrUploadTip: "Subir Imagen", badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], drop: "SOLTAR AQUÍ", fileLab: "Soltar / Clic", shareF: "COMPARTIR ARCHIVOS", shareT: "COMPARTIR TEXTO", connect: "DESCARGAR", save: "📥 GUARDAR", recv: "👀 VER TEXTO", decryptRecv: "🔓 DESCIFRAR Y VER", decryptSave: "🔓 DESCIFRAR Y GUARDAR", saveNow: "💾 CLIC PARA GUARDAR", exp: "Expira: ", copyLink: "📋 COPIAR ENLACE", stop: "DETENER", guide: "Escanea el QR o introduce el código.", coffee: "invítame un café", hPriv: "Privacidad", hSite: "Sobre el sitio", hUs: "Sobre nosotros", inputErr: "Introduce el código de 6 dígitos.", orScan: "o escanear 📷", doneRemind: "¡HECHO! Clic arriba para guardar.", histTitle: "Historial Reciente", fileErr: "Selecciona archivos primero.", textErr: "Introduce texto primero.", passTitle: "🔐 Contraseña", passPlaceholder: "Escribe aquí...", passUnlock: "DESBLOQUEAR", passCancel: "CANCELAR", passWrong: "❌ Contraseña incorrecta", passRemaining: "intentos restantes.", passWeak: "Seguridad: 8+ caracteres, 1 Mayúscula, 1 Minúscula, 1 Número, 1 Símbolo.", hashHintSend: "Una vez configurada la clave AES-256, si los emojis coinciden, ¡la clave es correcta!", hashHintRecv: "¡Si la clave AES-256 coincide, los emojis también coincidirán!", aiNote: "(Tipos seleccionados)", privWarn: "⚠️ Alerta de privacidad: Los nombres de archivo indican información confidencial. ¡Se recomienda encarecidamente el cifrado AES-256!", step1: "Elegir Archivos<br><span style='font-size:9px; opacity:0.7'>(o Texto)</span>", step2: "Cifrado AES<br><span style='font-size:9px; opacity:0.7'>(Opcional)</span>", step3: "Obtener Código", step4: "Descargar", heroTitle: "Intercambio seguro. Nadie nos ve.", heroSub: "Transferencia P2P directa. Cifrado AES-256 opcional.", sig1: "Sin Límites", sig2: "Solo P2P", sig3: "Auto-Borrado", modalTitle: "Contraseña", btnEnable: "ACTIVAR", btnCancel: "CANCELAR", aesOff: "AES-256 OFF", aesOn: "AES-256 ON", btnRuthless: "Rechazar (Solo esta vez)", strengthLevels: ["Muy débil", "Débil", "Media", "Moderada", "Fuerte", "Muy fuerte", "Imbatible"], faqTitle: "Preguntas Frecuentes", aiInsight: "✨ Análisis IA", aiLocal: "Procesamiento Local", aiTags: { img: "🖼️ Imagen", vid: "🎬 Video", doc: "📄 Documento", code: "💻 Código", zip: "📦 Archivo", big: "🐘 Grande" }, faqQ1: "¿Pasan por servidores?", faqA1: "No. Usa arquitectura P2P sin servidor.", faqQ2: "¿Guardan registros?", faqA2: "No. Operamos con 'Conocimiento Cero'.", faqQ3: "¿Qué cifrado usan?", faqA3: "DTLS/SRTP de WebRTC + AES-256 opcional.", faqQ4: "¿Es visible mi IP?", faqA4: "Sí, necesario para conexión directa.", faqQ5: "¿Es seguro?", faqA5: "Sí, mínima superficie de ataque.", faqQ6: "¿Se puede recuperar?", faqA6: "No. Se borra al cerrar.", faqQ7: "¿El personal lo ve?", faqA7: "Imposible. No tenemos claves.", faqQ8: "¿Contraseña obligatoria?", faqA8: "Opcional.", faqQ9: "¿Restablecer contraseña?", faqA9: "No. No la guardamos.", techPhrases: ["Generando Clave RSA...", "Iniciando WebRTC...", "Túnel P2P...", "Sincronizando...", "¡Canal Seguro!"] },
+        hi: { tag: "HI", on: "ऑनलाइन", off: "ऑफलाइन", ocrDone: "✅ हो गया!", ocrAdTitle: "स्थानीय OCR प्रसंस्करण... कृपया प्रतीक्षा करें", ocrScanTip: "स्कैन / पेस्ट", ocrUploadTip: "छवि अपलोड करें", badges: ["🔒 P2P एन्क्रिप्शन", "🕵️ कोई लॉग नहीं", "⚡ तीव्र गति", "📂 ऑटो-वाइप"], drop: "यहाँ छोड़ें", fileLab: "चुनें / क्लिक करें", shareF: "फ़ाइलें साझा करें", shareT: "텍스트 साझा करें", connect: "डाउनलोड", save: "📥 सहेजें", recv: "👀 टेक्स्ट देखें", decryptRecv: "🔓 डिक्रिप्ट करें और देखें", decryptSave: "🔓 डिक्रिप्ट करें और सहेजें", saveNow: "💾 सहेजने के लिए क्लिक करें", exp: "समाप्त: ", copyLink: "📋 लिंक कॉपी करें", stop: "रोकें", guide: "QR स्कैन करें या कोड दर्ज करें।", coffee: "मुझे कॉफी पिलाएं", hPriv: "गोपनीयता", hSite: "साइट के बारे में", hUs: "हमारे बारे में", inputErr: "6-अंकीय कोड दर्ज करें।", orScan: "स्कैन करें 📷", doneRemind: "पूर्ण! सहेजें पर क्लिक करें।", histTitle: "हाल का इतिहास", fileErr: "कृपया पहले फ़ाइलें चुनें।", textErr: "कृपया पहले टेक्स्ट दर्ज करें।", passTitle: "🔐 पासवर्ड दर्ज करें", passPlaceholder: "यहाँ टाइप करें...", passUnlock: "अनलॉक", passCancel: "रद्द करें", passWrong: "❌ गलत पासवर्ड!", passRemaining: "प्रयास शेष।", passWeak: "सुरक्षा के लिए: 8+ वर्ण, 1 अपरकेस, 1 लोअरकेस, 1 नंबर, 1 प्रतीक।", hashHintSend: "AES-256 कुंजी सेट करने के बाद, यदि इमोजी मेल खाते हैं, तो कुंजी सही है!", hashHintRecv: "यदि दर्ज की गई AES-256 कुंजी मेल खाती है, तो इमोजी भी मेल खाएंगे!", aiNote: "(चयनित प्रकार)", privWarn: "⚠️ गोपनीयता चेतावनी: फ़ाइल नाम में संवेदनशील जानकारी (आईडी/पासपोर्ट/पता) है। AES-256 एन्क्रिप्शन की अत्यधिक अनुशंसा की जाती है!", step1: "फ़ाइलें चुनें<br><span style='font-size:9px; opacity:0.7'>(टेक्स्ट लिखें)</span>", step2: "पासवर्ड सेट करें<br><span style='font-size:9px; opacity:0.7'>(वैकल्पिक)</span>", step3: "कोड प्राप्त करें", step4: "डाउनलोड", heroTitle: "सुरक्षित फ़ाइल शेयरिंग, हम भी नहीं देख सकते।", heroSub: "सीधा P2P स्थानांतरण। वैकल्पिक AES-256 एन्क्रिप्शन।", sig1: "कोई सीमा नहीं", sig2: "केवल P2P", sig3: "ऑटो-वाइप", modalTitle: "पासवर्ड सेट करें", btnEnable: "सक्षम करें", btnCancel: "रद्द करें", aesOff: "AES-256 बंद", aesOn: "AES-256 चालू", btnRuthless: "अस्वीकार करें (केवल इस बार)", strengthLevels: ["बहुत कमजोर", "कमजोर", "मध्यम", "थोड़ा मजबूत", "मजबूत", "बहुत मजबूत", "अटूट"], faqTitle: "सामान्य प्रश्न", aiInsight: "✨ AI अंतर्दृष्टि", aiLocal: "स्थानीय प्रसंस्करण", aiTags: { img: "🖼️ चित्र", vid: "🎬 वीडियो", doc: "📄 दस्तावेज़", code: "💻 कोड", zip: "📦 संग्रह", big: "🐘 बड़ी फ़ाइल" }, faqQ1: "क्या सर्वर से गुजरता है?", faqA1: "नहीं। P2P सीधा स्थानांतरण।", faqQ2: "क्या लॉग रखते हैं?", faqA2: "नहीं। जीरो-नॉलेज।", faqQ3: "एन्क्रिप्शन क्या है?", faqA3: "WebRTC + AES-256-GCM।", faqQ4: "क्या आईपी दिखता है?", faqA4: "हाँ, कनेक्शन के लिए।", faqQ5: "क्या यह सुरक्षित है?", faqA5: "हाँ। सर्वर पर नहीं रहता।", faqQ6: "क्या पुनर्प्राप्त कर सकते हैं?", faqA6: "नहीं। बंद करने पर खो जाता है।", faqQ7: "क्या आप देख सकते हैं?", faqA7: "नहीं। हमारे पास चाबी नहीं है।", faqQ8: "क्या पासवर्ड जरूरी है?", faqA8: "वैकल्पिक।", faqQ9: "पासवर्ड रीसेट?", faqA9: "नहीं। हम स्टोर नहीं करते।", techPhrases: ["RSA कुंजी बना रहा है...", "WebRTC शुरू हो रहा है...", "P2P टनल...", "सिंक्रनाइज़ हो रहा है...", "चैनल सुरक्षित!"] }
     };
     let currLang = "en", peer = null, stagedFiles = [], currentDownloads = 0, videoTrack = null, torchOn = false, activeConn = null, expiryTimerIdx = null;
     let isAdBlockIgnored = false; 
@@ -748,16 +775,17 @@
         }
     };
 
-    /* --- [OCR 核心与广告逻辑] --- */
+    /* --- [OCR 核心逻辑] --- */
     
-    // 统一处理 OCR 流程：显示广告 -> 倒计时 -> 执行识别
+    // 1. 广告调度器
     function runOCRWithAd(imageBlob) {
-        if(detectAdBlock()) return; // 借用文件传输的广告拦截检测
+        if(detectAdBlock()) return; // 如果有拦截插件，先处理插件
         
         const modal = document.getElementById('ocrAdModal');
         const pgBar = document.getElementById('ocr-pg-bar');
         const timerText = document.getElementById('ocr-timer-text');
         
+        // 显示广告弹窗
         modal.style.display = 'flex';
         pgBar.style.width = '0%';
         
@@ -774,36 +802,44 @@
             
             if(elapsed >= totalMs) { 
                 clearInterval(itv); 
-                modal.style.display = 'none'; 
-                // 广告结束，开始真正的识别
-                performOCR(imageBlob); 
+                modal.style.display = 'none'; // 隐藏广告
+                
+                // [关键修复] 立即显示 Loading 弹窗，无缝衔接
+                document.getElementById('ocrLoadingModal').style.display = 'flex';
+                
+                // 给 UI 一点渲染时间，然后开始识别
+                setTimeout(() => performOCR(imageBlob), 100);
             } 
         }, 100);
     }
 
+    // 2. Tesseract 执行识别
     async function performOCR(imageBlob) {
-        // 此时广告已播完，显示简短的 Loading 提示（可选，或者直接显示结果）
-        document.getElementById('ocrLoadingModal').style.display = 'flex';
         try {
             const { data: { text } } = await Tesseract.recognize(imageBlob, 'eng+chi_sim+jpn+kor', {
                 logger: m => {
                     const statusText = document.getElementById('ocr-loading-text');
-                    if(m.status === 'recognizing text') statusText.innerText = `Finalizing... ${Math.floor(m.progress * 100)}%`;
+                    // 更新加载状态文案
+                    if(m.status === 'recognizing text') {
+                        statusText.innerText = `Reading... ${Math.floor(m.progress * 100)}%`;
+                    }
                 }
             });
             const textBox = document.getElementById('quickText');
+            // 追加文字
             textBox.value += (textBox.value ? "\n" : "") + text.trim();
             updateTextCount(textBox);
             showCustomAlert((I18N[currLang] || I18N['en']).ocrDone || "Text Extracted!");
         } catch (e) {
             showCustomAlert("OCR Error: " + e.message);
         } finally {
+            // 无论成功失败，关闭 Loading
             document.getElementById('ocrLoadingModal').style.display = 'none';
             document.getElementById('ocr-loading-text').innerText = "Processing Image...";
         }
     }
 
-    // 按钮点击触发器
+    // 3. 按钮触发入口
     function triggerOCRAd(mode) {
         if(mode === 'upload') {
             document.getElementById('ocrInput').click();
@@ -812,21 +848,22 @@
         }
     }
 
+    // 4. 处理文件选择
     function handleOCRFiles(files) {
         if (files.length > 0) {
-            runOCRWithAd(files[0]); // 触发广告流程
-            document.getElementById('ocrInput').value = ''; 
+            runOCRWithAd(files[0]); 
+            document.getElementById('ocrInput').value = ''; // 清空，允许重复选图
         }
     }
 
+    // 5. 处理截屏/粘贴
     async function handleOCRPaste() {
         try {
-            // 先获取流，防止 5秒广告后浏览器判定 User Gesture 失效
             const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
             const track = stream.getVideoTracks()[0];
             const imageCapture = new ImageCapture(track);
             const bitmap = await imageCapture.grabFrame();
-            track.stop(); // 立即停止录屏，保护隐私
+            track.stop(); // 立即停止流
 
             const canvas = document.createElement('canvas');
             canvas.width = bitmap.width;
@@ -835,20 +872,21 @@
             ctx.drawImage(bitmap, 0, 0);
             
             canvas.toBlob(blob => { 
-                runOCRWithAd(blob); // 拿到图片后，进广告
+                runOCRWithAd(blob); // 进广告流程
             });
         } catch (err) {
             console.log("Capture cancelled");
         }
     }
 
+    // 6. 监听 Ctrl+V 粘贴
     document.getElementById('quickText').addEventListener('paste', (e) => {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         for (const item of items) {
             if (item.kind === 'file' && item.type.startsWith('image/')) {
                 e.preventDefault();
                 const blob = item.getAsFile();
-                runOCRWithAd(blob); // 粘贴图片也进广告
+                runOCRWithAd(blob); 
                 return;
             }
         }
@@ -895,9 +933,9 @@
             'btn-ruthless-text': d.btnRuthless, 'faq-title': d.faqTitle,
             'pass-input-title': d.passTitle, 'btn-pass-confirm': d.passUnlock, 'btn-pass-cancel': d.passCancel,
             'ai-insight-note': d.aiNote,
-            // OCR 按钮文案
-            'btn-ocr-paste': d.ocrScan || "📷 Scan", 'btn-ocr-upload': d.ocrUpload || "📂",
-            'ocr-ad-title': d.ocrAdTitle || "Processing..."
+            // OCR 
+            'ocr-ad-title': d.ocrAdTitle || "Processing...",
+            'ocr-loading-text': d.ocrProcessing || "Processing..."
         };
         for (const [id, text] of Object.entries(map)) {
             const el = document.getElementById(id);
@@ -906,6 +944,11 @@
                 else { el.innerHTML = text; }
             }
         }
+        
+        // [新增] 更新 Tooltip 气泡文字
+        document.getElementById('tip-scan').setAttribute('data-tip', d.ocrScanTip || "Scan");
+        document.getElementById('tip-upload').setAttribute('data-tip', d.ocrUploadTip || "Upload");
+
         document.getElementById('alert-password-input').placeholder = d.passPlaceholder;
         document.getElementById('send-hash-hint').innerText = d.hashHintSend || "";
         document.getElementById('recv-hash-hint').innerText = d.hashHintRecv || "";
@@ -1003,7 +1046,6 @@
     function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
     function typeWriterEffect(element, text) { element.innerText = ""; let i = 0; const badge = document.getElementById('recv-text-count'); const scrollBox = document.getElementById('recv-scroll-box'); if(badge) badge.style.display = 'block'; const step = Math.max(1, Math.floor(text.length / 50)); function type() { if (i < text.length) { const chunk = text.slice(i, i + step); element.innerText += chunk; i += step; if(badge) badge.innerText = Math.min(i, text.length) + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; requestAnimationFrame(type); } else { element.innerText = text; if(badge) badge.innerText = text.length + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; } } type(); }
 
-    /* [新增] 检查 URL 参数自动跳转 */
     function checkUrlCode() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('c');
@@ -1018,8 +1060,6 @@
             const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
-            
-            /* [新增] 复制带验证码的链接 */
             document.getElementById('btn-copy-link').onclick = () => {
                 const link = `${window.location.origin}${window.location.pathname}?c=${code}`;
                 navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied! Send it to friend."); });
