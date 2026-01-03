@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>FlashDrop Pro — AI-Powered Secure Workspace</title>
 <meta name="description" content="Secure P2P file transfer with optional AES-256 encryption. No servers, no logs, no limits.">
-<meta name="keywords" content="P2P transfer, encrypted file sharing, WebRTC, privacy first, file drop">
+<meta name="keywords" content="P2P transfer, encrypted file sharing, WebRTC, privacy first, file drop, OCR, image to text">
 
 <meta name="referrer" content="no-referrer">
 
@@ -16,6 +16,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     
     <style>
         :root { --primary: #6366f1; --bg: #030712; --card: rgba(30, 41, 59, 0.85); --text: #f8fafc; --text-muted: #94a3b8; --border: #4f46e5; --nav-bg: rgba(15, 23, 42, 0.98); --danger: #ef4444; --success: #10b981; --ai: #8b5cf6; }
@@ -43,7 +44,7 @@
         .logo { font-size: 30px; font-weight: 900; color: white; letter-spacing: 2px; }
         .logo span { color: var(--primary); }
         
-        /* [修改] 状态指示灯区域样式 */
+        /* 状态指示灯区域样式 */
         .status-container { display: flex; flex-direction: column; align-items: center; margin-right: 12px; }
         .status-dot { width: 14px; height: 14px; border-radius: 50%; background: #666; transition: 0.3s; box-shadow: 0 0 10px rgba(0,0,0,0.5); margin-bottom: 2px; }
         .status-dot.online { background: var(--success); box-shadow: 0 0 15px var(--success); }
@@ -99,12 +100,22 @@
         #stagedList { display: none; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--border); border-radius: 12px; padding: 10px; margin-bottom: 10px; max-height: 120px; overflow-y: auto; }
         .staged-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 6px 10px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 5px; }
         
-        /* AI Suggestions Styles - 优化布局以容纳警告 */
+        /* AI Suggestions Styles */
         #ai-suggestions { display: none; font-size: 13px; margin-bottom: 8px; background: rgba(139, 92, 246, 0.1); padding: 12px 14px; border-radius: 12px; border-left: 3px solid var(--ai); color: #e9d5ff; text-align: left; }
         #ai-tag-container { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
         .ai-smart-tag { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: rgba(139, 92, 246, 0.3); color: white; border: 1px solid rgba(139, 92, 246, 0.4); }
 
-        /* [新增] 隐私警告样式 - 醒目的红色呼吸灯效果 */
+        /* [新增] OCR 集成按钮样式 */
+        .text-action-row { display: flex; gap: 10px; align-items: stretch; margin-top: auto; }
+        .split-btn { flex: 0.8; display: flex; border: 1.5px solid #334155; border-radius: 14px; overflow: hidden; background: #1e293b; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .split-btn button { flex: 1; border: none; background: transparent; color: #94a3b8; cursor: pointer; font-size: 11px; font-weight: 700; transition: 0.2s; padding: 12px 5px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+        .split-btn button:hover { background: rgba(255,255,255,0.05); color: white; }
+        .split-btn .separator { width: 1px; background: #334155; }
+        
+        /* Share Text 按钮调整样式，覆盖之前的 button.action-btn */
+        #btn-share-text { margin-top: 0; flex: 1.2; }
+
+        /* 隐私警告样式 */
         #ai-privacy-alert {
             display: none;
             margin-top: 10px;
@@ -375,7 +386,16 @@
                                 <div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900; margin: 20px 0 0 20px;">Quick Text</div>
                                 <textarea id="quickText" placeholder="Paste..." oninput="updateTextCount(this)"></textarea>
                             </div>
-                            <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+                            
+                            <div class="text-action-row">
+                                <div class="split-btn">
+                                    <button id="btn-ocr-paste" onclick="handleOCRPaste()">📷 Scan</button>
+                                    <div class="separator"></div>
+                                    <button id="btn-ocr-upload" onclick="document.getElementById('ocrInput').click()">📂</button>
+                                </div>
+                                <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+                            </div>
+                            <input type="file" id="ocrInput" accept="image/*" style="display:none;" onchange="handleOCRFiles(this.files)">
                         </div>
                     </div>
 
@@ -536,6 +556,13 @@
     </div>
 </div>
 
+<div class="modal-overlay" id="ocrLoadingModal" style="z-index: 9999;">
+    <div style="font-size: 40px; margin-bottom: 15px; animation: spin 2s infinite linear;">⚙️</div>
+    <div id="ocr-loading-text" style="color:white; font-weight:bold; font-size:16px;">Processing Image...</div>
+    <div style="font-size:12px; color:var(--text-muted); margin-top:5px;">Running locally in browser</div>
+</div>
+<style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+
 <div id="alert-modal" class="crypto-modal" style="z-index: 99999;">
     <div class="crypto-modal-card" style="align-items: center; text-align: center;">
         <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
@@ -620,13 +647,11 @@
         el.innerText = res;
     }
 
-    /* --- [多语言配置中心：含Online/Offline状态] --- */
+    /* --- [多语言配置中心：含Online/Offline状态 & OCR文案] --- */
     const I18N = {
         en: { 
             tag: "EN", 
-            /* [新增] 状态文字 */
             on: "Online", off: "Offline",
-            
             tabSend: "Send", tabReceive: "Receive", 
             badges: ["🔒 P2P Encrypted", "🕵️ No Logs", "⚡ High Speed", "📂 Auto-Wipe"], 
             drop: "DROP TO STAGE", fileLab: "Drop / Click", 
@@ -649,10 +674,13 @@
             hashHintSend: "Visual Check: If receiver's emojis match these, the key is correct!",
             hashHintRecv: "Visual Check: If the key matches, the emojis will match!",
             
-            /* AI & 隐私相关 */
             aiNote: "(Selected types)",
             privWarn: "⚠️ Privacy Alert: Filenames indicate sensitive info (ID/Passport/Address). Highly recommend enabling AES-256 encryption!",
             
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 Scan/Paste", ocrUpload: "📂 Upload", 
+            ocrProcessing: "🔍 Reading Image...", ocrDone: "✅ Text Extracted!",
+
             step1: "Select Files<br><span style='font-size:9px; opacity:0.7'>(Type Text)</span>", 
             step2: "Set AES-256<br><span style='font-size:9px; opacity:0.7'>(Option)</span>", 
             step3: "Get Code", step4: "Download",
@@ -683,9 +711,7 @@
         },
         zh: { 
             tag: "CN",
-            /* [新增] 状态文字 */
             on: "在线", off: "离线",
-
             tabSend: "发送", tabReceive: "接收", 
             badges: ["🔒 P2P 加密", "🕵️ 零日志", "⚡ 极速传输", "📂 阅后即焚"], 
             drop: "松手上传", fileLab: "拖拽 / 点击", 
@@ -708,9 +734,12 @@
             hashHintSend: "AES-256密钥设置好后，只要接收方的emoji与下方的emoji相符即为密钥正确！",
             hashHintRecv: "只要输入的AES-256密钥一致，emoji就会一致！",
 
-            /* AI & 隐私相关 */
             aiNote: "(以下是你已选中的文件类型)",
             privWarn: "⚠️ 隐私提醒：文件名包含敏感信息（身份证/护照/房产证等）。强烈建议开启 AES-256 加密！",
+
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 截屏/粘贴", ocrUpload: "📂 上传图", 
+            ocrProcessing: "🔍 正在识别...", ocrDone: "✅ 提取成功!",
 
             step1: "选文件<br><span style='font-size:9px; opacity:0.7'>(可输文字)</span>", 
             step2: "设密码<br><span style='font-size:9px; opacity:0.7'>(可选加密)</span>", 
@@ -742,9 +771,7 @@
         },
         ja: { 
             tag: "JP",
-            /* [新增] 状态文字 */
             on: "オンライン", off: "オフライン",
-
             tabSend: "送信", tabReceive: "受信", 
             badges: ["🔒 P2P暗号化", "🕵️ ログなし", "⚡ 高速転送", "📂 自動消去"], 
             drop: "ここにドロップ", fileLab: "クリックして選択", 
@@ -766,9 +793,12 @@
             hashHintSend: "AES-256キー設定後、受信側の絵文字と一致していればキーは正しいです！",
             hashHintRecv: "入力したAES-256キーが一致すれば、絵文字も一致します！",
 
-            /* AI & 隐私相关 */
             aiNote: "(選択されたファイル形式)",
             privWarn: "⚠️ プライバシー警告：ファイル名に機密情報（ID/パスポート/住所など）が含まれています。AES-256暗号化を強く推奨します！",
+
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 スキャン", ocrUpload: "📂 アップ", 
+            ocrProcessing: "🔍 読取中...", ocrDone: "✅ 完了!",
 
             step1: "ファイル選択<br><span style='font-size:9px; opacity:0.7'>(テキスト可)</span>", 
             step2: "暗号化設定<br><span style='font-size:9px; opacity:0.7'>(任意)</span>", 
@@ -799,9 +829,7 @@
         },
         ko: { 
             tag: "KR",
-            /* [新增] 状态文字 */
             on: "온라인", off: "오프라인",
-
             tabSend: "보내기", tabReceive: "받기", 
             badges: ["🔒 P2P 암호화", "🕵️ 로그 없음", "⚡ 고속 전송", "📂 자동 삭제"], 
             drop: "여기에 드롭", fileLab: "파일 선택 / 클릭", 
@@ -823,9 +851,12 @@
             hashHintSend: "AES-256 키 설정 후 수신자의 이모티콘과 일치하면 키가 올바른 것입니다!",
             hashHintRecv: "입력한 AES-256 키가 일치하면 이모티콘도 일치합니다!",
             
-            /* AI & 隐私相关 */
             aiNote: "(선택된 파일 유형)",
             privWarn: "⚠️ 개인정보 경고: 파일명에 민감한 정보(신분증/여권/주소 등)가 포함되어 있습니다. AES-256 암호화를 강력히 권장합니다!",
+
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 스캔/붙여넣기", ocrUpload: "📂 업로드", 
+            ocrProcessing: "🔍 인식 중...", ocrDone: "✅ 완료!",
 
             step1: "파일 선택<br><span style='font-size:9px; opacity:0.7'>(텍스트 가능)</span>", 
             step2: "비번 설정<br><span style='font-size:9px; opacity:0.7'>(선택 사항)</span>", 
@@ -856,9 +887,7 @@
         },
         es: { 
             tag: "ES",
-            /* [新增] 状态文字 */
             on: "En línea", off: "Desconectado",
-
             tabSend: "Enviar", tabReceive: "Recibir", 
             badges: ["🔒 Cifrado P2P", "🕵️ Sin Registros", "⚡ Alta Velocidad", "📂 Auto-Borrado"], 
             drop: "SOLTAR AQUÍ", fileLab: "Soltar / Clic", 
@@ -880,9 +909,12 @@
             hashHintSend: "Una vez configurada la clave AES-256, si los emojis coinciden, ¡la clave es correcta!",
             hashHintRecv: "¡Si la clave AES-256 coincide, los emojis también coincidirán!",
 
-            /* AI & 隐私相关 */
             aiNote: "(Tipos seleccionados)",
             privWarn: "⚠️ Alerta de privacidad: Los nombres de archivo indican información confidencial (ID/Pasaporte/Dirección). ¡Se recomienda encarecidamente el cifrado AES-256!",
+
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 Escanear", ocrUpload: "📂 Subir", 
+            ocrProcessing: "🔍 Leyendo...", ocrDone: "✅ ¡Listo!",
 
             step1: "Elegir Archivos<br><span style='font-size:9px; opacity:0.7'>(o Texto)</span>", 
             step2: "Cifrado AES<br><span style='font-size:9px; opacity:0.7'>(Opcional)</span>", 
@@ -913,9 +945,7 @@
         },
         hi: { 
             tag: "HI",
-            /* [新增] 状态文字 */
             on: "ऑनलाइन", off: "ऑफलाइन",
-
             tabSend: "भेजें", tabReceive: "प्राप्त करें", 
             badges: ["🔒 P2P एन्क्रिप्शन", "🕵️ कोई लॉग नहीं", "⚡ तीव्र गति", "📂 ऑटो-वाइप"], 
             drop: "यहाँ छोड़ें", fileLab: "चुनें / क्लिक करें", 
@@ -937,9 +967,12 @@
             hashHintSend: "AES-256 कुंजी सेट करने के बाद, यदि इमोजी मेल खाते हैं, तो कुंजी सही है!",
             hashHintRecv: "यदि दर्ज की गई AES-256 कुंजी मेल खाती है, तो इमोजी भी मेल खाएंगे!",
             
-            /* AI & 隐私相关 */
             aiNote: "(चयनित प्रकार)",
             privWarn: "⚠️ गोपनीयता चेतावनी: फ़ाइल नाम में संवेदनशील जानकारी (आईडी/पासपोर्ट/पता) है। AES-256 एन्क्रिप्शन की अत्यधिक अनुशंसा की जाती है!",
+
+            /* [新增] OCR 相关翻译 */
+            ocrScan: "📷 स्कैन", ocrUpload: "📂 अपलोड", 
+            ocrProcessing: "🔍 पढ़ रहा है...", ocrDone: "✅ हो गया!",
 
             step1: "फ़ाइलें चुनें<br><span style='font-size:9px; opacity:0.7'>(टेक्स्ट लिखें)</span>", 
             step2: "पासवर्ड सेट करें<br><span style='font-size:9px; opacity:0.7'>(वैकल्पिक)</span>", 
@@ -980,9 +1013,7 @@
         analyze(files) {
             const tags = new Set();
             let hasPrivacyRisk = false;
-
             if (!files || files.length === 0) return { tags: [], risk: false };
-
             const exts = {
                 img: ['jpg','jpeg','png','gif','webp','svg','bmp','tiff'],
                 vid: ['mp4','mov','avi','mkv','webm','3gp','m4v'],
@@ -990,86 +1021,132 @@
                 code: ['html','css','js','py','c','cpp','json','java','rb','php','sql','go','ts'],
                 zip: ['zip','rar','7z','tar','gz','iso','dmg','pkg']
             };
-
             const sensitiveKeywords = [
                 'id', 'passport', 'visa', 'resume', 'cv', 'address', 'phone', 'email', 'secret', 'bank', 'statement', 'tax', 'ssn', 'insurance', 'contract',
                 '身份证', '护照', '简历', '住址', '房产', '银行', '账单', '税', '保险', '合同', '指纹', '姓名', '性别', '民族',
                 'パスポート', '住所', '履歴書', '銀行', '여권', '주소', '이력서',
                 'pasaporte', 'dirección', 'banco', 'पता', 'पासपोर्ट', 'बैंक'
             ];
-
             Array.from(files).forEach(f => {
                 const name = f.name.toLowerCase();
                 const ext = name.split('.').pop();
-                
                 if(exts.img.includes(ext)) tags.add('img');
                 else if(exts.vid.includes(ext)) tags.add('vid');
                 else if(exts.doc.includes(ext)) tags.add('doc');
                 else if(exts.code.includes(ext)) tags.add('code');
                 else if(exts.zip.includes(ext)) tags.add('zip');
-                
                 if(f.size > 100 * 1024 * 1024) tags.add('big'); 
-
                 if (!hasPrivacyRisk) {
                     for (const kw of sensitiveKeywords) {
-                        if (name.includes(kw)) {
-                            hasPrivacyRisk = true;
-                            break;
-                        }
+                        if (name.includes(kw)) { hasPrivacyRisk = true; break; }
                     }
                 }
             });
-
             return { tags: Array.from(tags), risk: hasPrivacyRisk };
         },
-
         renderTags(data) {
             const container = document.getElementById('ai-tag-container');
             const wrapper = document.getElementById('ai-suggestions');
             const alertBox = document.getElementById('ai-privacy-alert');
-
-            // [逻辑保持] 无数据则隐藏
             if(!data || !data.tags || data.tags.length === 0) { 
-                wrapper.style.display = 'none'; 
-                alertBox.style.display = 'none';
-                return; 
+                wrapper.style.display = 'none'; alertBox.style.display = 'none'; return; 
             }
-            
             wrapper.style.display = 'block';
-            
             if (data.risk) {
                 alertBox.style.display = 'block';
                 const d = I18N[currLang] || I18N['en'];
                 alertBox.innerText = d.privWarn;
-            } else {
-                alertBox.style.display = 'none';
-            }
-
+            } else { alertBox.style.display = 'none'; }
             const dict = (I18N[currLang] || I18N['en']).aiTags;
             container.innerHTML = data.tags.map(t => `<span class="ai-smart-tag">${dict[t] || t}</span>`).join('');
         }
     };
 
+    /* --- [OCR 功能核心] --- */
+    async function performOCR(imageBlob) {
+        document.getElementById('ocrLoadingModal').style.display = 'flex';
+        try {
+            // 自动识别多种语言
+            const { data: { text } } = await Tesseract.recognize(imageBlob, 'eng+chi_sim+jpn+kor', {
+                logger: m => {
+                    const statusText = document.getElementById('ocr-loading-text');
+                    if(m.status === 'recognizing text') statusText.innerText = `Reading... ${Math.floor(m.progress * 100)}%`;
+                }
+            });
+            const textBox = document.getElementById('quickText');
+            // 追加文字
+            textBox.value += (textBox.value ? "\n" : "") + text.trim();
+            updateTextCount(textBox);
+            showCustomAlert((I18N[currLang] || I18N['en']).ocrDone || "Text Extracted!");
+        } catch (e) {
+            showCustomAlert("OCR Error: " + e.message);
+        } finally {
+            document.getElementById('ocrLoadingModal').style.display = 'none';
+            document.getElementById('ocr-loading-text').innerText = "Processing Image...";
+        }
+    }
+
+    /* 处理 OCR 文件上传 */
+    function handleOCRFiles(files) {
+        if (files.length > 0) {
+            performOCR(files[0]);
+            document.getElementById('ocrInput').value = ''; // 重置
+        }
+    }
+
+    /* 处理 屏幕截图 (Scan) */
+    async function handleOCRPaste() {
+        try {
+            // 调用屏幕分享接口作为截图工具
+            const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+            const track = stream.getVideoTracks()[0];
+            const imageCapture = new ImageCapture(track);
+            const bitmap = await imageCapture.grabFrame();
+            
+            // 停止录屏
+            track.stop();
+
+            // 转换 bitmap 为 blob
+            const canvas = document.createElement('canvas');
+            canvas.width = bitmap.width;
+            canvas.height = bitmap.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(bitmap, 0, 0);
+            canvas.toBlob(blob => { performOCR(blob); });
+        } catch (err) {
+            // 用户取消或不支持
+            console.log("Capture cancelled");
+        }
+    }
+
+    /* 监听粘贴事件 (Ctrl+V 图片直接识别) */
+    document.getElementById('quickText').addEventListener('paste', (e) => {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+        for (const item of items) {
+            if (item.kind === 'file' && item.type.startsWith('image/')) {
+                e.preventDefault();
+                const blob = item.getAsFile();
+                performOCR(blob);
+                return;
+            }
+        }
+    });
+
+    /* --- [常规逻辑] --- */
     function updateNetworkStatus() {
         const isOnline = navigator.onLine;
         const dot = document.getElementById('status-dot');
         const text = document.getElementById('status-text');
-        
         if (isOnline) {
-            dot.classList.remove('offline');
-            dot.classList.add('online');
-            text.classList.remove('offline');
-            text.classList.add('online');
+            dot.classList.remove('offline'); dot.classList.add('online');
+            text.classList.remove('offline'); text.classList.add('online');
             text.innerText = (I18N[currLang] || I18N['en']).on;
         } else {
-            dot.classList.remove('online');
-            dot.classList.add('offline');
-            text.classList.remove('online');
-            text.classList.add('offline');
+            dot.classList.remove('online'); dot.classList.add('offline');
+            text.classList.remove('online'); text.classList.add('offline');
             text.innerText = (I18N[currLang] || I18N['en']).off;
         }
     }
-
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
 
@@ -1077,9 +1154,7 @@
         const userLang = navigator.language.split('-')[0];
         currLang = I18N[userLang] ? userLang : "en";
         const d = I18N[currLang] || I18N['en']; 
-        const tagEl = document.getElementById('currentLangTag');
-        if(tagEl) tagEl.innerText = d.tag;
-        
+        document.getElementById('currentLangTag').innerText = d.tag;
         updateNetworkStatus();
         
         const map = {
@@ -1097,7 +1172,10 @@
             'aes-off-txt': d.aesOff, 'aes-on-txt': d.aesOn, 
             'btn-ruthless-text': d.btnRuthless, 'faq-title': d.faqTitle,
             'pass-input-title': d.passTitle, 'btn-pass-confirm': d.passUnlock, 'btn-pass-cancel': d.passCancel,
-            'ai-insight-note': d.aiNote
+            'ai-insight-note': d.aiNote,
+            // OCR 按钮文案
+            'btn-ocr-paste': d.ocrScan || "📷 Scan", 'btn-ocr-upload': d.ocrUpload || "📂",
+            'ocr-loading-text': d.ocrProcessing || "Processing..."
         };
         for (const [id, text] of Object.entries(map)) {
             const el = document.getElementById(id);
@@ -1107,23 +1185,13 @@
             }
         }
         document.getElementById('alert-password-input').placeholder = d.passPlaceholder;
-        
-        const sendHint = document.getElementById('send-hash-hint');
-        if(sendHint) sendHint.innerText = d.hashHintSend || "";
-        
-        const recvHint = document.getElementById('recv-hash-hint');
-        if(recvHint) recvHint.innerText = d.hashHintRecv || "";
-
+        document.getElementById('send-hash-hint').innerText = d.hashHintSend || "";
+        document.getElementById('recv-hash-hint').innerText = d.hashHintRecv || "";
         for(let i=1; i<=9; i++) {
              const q = document.getElementById(`faq-q${i}`); const a = document.getElementById(`faq-a${i}`);
-             if(q && d[`faqQ${i}`]) q.innerText = d[`faqQ${i}`];
-             if(a && d[`faqA${i}`]) a.innerText = d[`faqA${i}`];
+             if(q && d[`faqQ${i}`]) q.innerText = d[`faqQ${i}`]; if(a && d[`faqA${i}`]) a.innerText = d[`faqA${i}`];
         }
-
-        const badgeContainer = document.getElementById('trust-badges');
-        if(badgeContainer) {
-            badgeContainer.innerHTML = d.badges.map(b => `<span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">${b}</span>`).join('');
-        }
+        document.getElementById('trust-badges').innerHTML = d.badges.map(b => `<span class="status-tag" style="font-size: 9px; font-weight: 700; color: var(--text-muted); background: rgba(255,255,255,0.03); padding: 2px 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); white-space: nowrap; letter-spacing: 0.5px;">${b}</span>`).join('');
     }
 
     function showCustomAlert(msg) {
@@ -1138,32 +1206,18 @@
             const errDiv = document.getElementById('pass-error-msg');
             const btnOk = document.getElementById('btn-pass-confirm');
             const btnCancel = document.getElementById('btn-pass-cancel');
-            
             inp.type = "password"; 
-            const toggle = modal.querySelector('.pwd-toggle');
-            if(toggle) toggle.innerText = "🙈";
-            
-            document.getElementById('recv-fingerprint').innerText = "";
+            const toggle = modal.querySelector('.pwd-toggle'); if(toggle) toggle.innerText = "🙈";
             document.getElementById('recv-fingerprint').style.display = 'none';
             document.getElementById('recv-hash-hint').style.display = 'none';
-
             if (attemptsLeft !== undefined) {
                 errDiv.innerText = `${I18N[currLang].passWrong} ${attemptsLeft} ${I18N[currLang].passRemaining}`;
-                inp.classList.add('input-error');
-                setTimeout(() => inp.classList.remove('input-error'), 500);
-            } else {
-                errDiv.innerText = "";
-                inp.value = ""; 
-            }
-            
-            modal.style.display = 'flex';
-            inp.focus();
-
+                inp.classList.add('input-error'); setTimeout(() => inp.classList.remove('input-error'), 500);
+            } else { errDiv.innerText = ""; inp.value = ""; }
+            modal.style.display = 'flex'; inp.focus();
             const cleanup = () => { btnOk.onclick = null; btnCancel.onclick = null; inp.onkeydown = null; };
             const confirm = () => { const val = inp.value; if(val) { cleanup(); resolve(val); } };
-
-            btnOk.onclick = confirm;
-            btnCancel.onclick = () => { cleanup(); modal.style.display = 'none'; resolve(null); };
+            btnOk.onclick = confirm; btnCancel.onclick = () => { cleanup(); modal.style.display = 'none'; resolve(null); };
             inp.onkeydown = (e) => { if(e.key === 'Enter') confirm(); };
         });
     }
@@ -1186,10 +1240,8 @@
         }
         if(mode === 'send-file' && stagedFiles.length === 0) { showCustomAlert(I18N[currLang].fileErr); return; }
         if(mode === 'send-text' && !document.getElementById('quickText').value.trim()) { showCustomAlert(I18N[currLang].textErr); return; }
-
         if(isAdBlockIgnored) { mode.startsWith('send') ? initSender() : startReceiving(); return; }
         if(detectAdBlock()) return;
-
         const modal = document.getElementById('adModal'); const adPg = document.getElementById('ad-pg-bar'); const timerText = document.getElementById('ad-timer-text'); const title = document.getElementById('ad-wait-title'); const techPhrases = I18N[currLang].techPhrases;
         modal.style.display = 'flex'; adPg.style.width = '0%'; 
         let elapsed = 0; const totalMs = 5000;
@@ -1203,402 +1255,105 @@
 
     let isEncrypted = false, aesKey = "";
     const FlashDropCrypto = {
-        async deriveKey(pass, salt) {
-            const encoder = new TextEncoder(); const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]);
-            return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 600000, hash: "SHA-256" }, baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
-        },
-        async encrypt(blob, pass) {
-            const salt = crypto.getRandomValues(new Uint8Array(16)); const iv = crypto.getRandomValues(new Uint8Array(12));
-            const key = await this.deriveKey(pass, salt); const data = await blob.arrayBuffer();
-            const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data);
-            return new Blob([salt, iv, new Uint8Array(ct)]);
-        },
-        async decrypt(blob, pass) {
-            try {
-                const buf = await blob.arrayBuffer(); const salt = new Uint8Array(buf.slice(0, 16)); const iv = new Uint8Array(buf.slice(16, 28)); const ct = buf.slice(28);
-                const key = await this.deriveKey(pass, salt); const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct);
-                return new Blob([pt]);
-            } catch (e) { throw new Error("ENC_FAILED"); }
-        }
+        async deriveKey(pass, salt) { const encoder = new TextEncoder(); const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]); return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 600000, hash: "SHA-256" }, baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]); },
+        async encrypt(blob, pass) { const salt = crypto.getRandomValues(new Uint8Array(16)); const iv = crypto.getRandomValues(new Uint8Array(12)); const key = await this.deriveKey(pass, salt); const data = await blob.arrayBuffer(); const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data); return new Blob([salt, iv, new Uint8Array(ct)]); },
+        async decrypt(blob, pass) { try { const buf = await blob.arrayBuffer(); const salt = new Uint8Array(buf.slice(0, 16)); const iv = new Uint8Array(buf.slice(16, 28)); const ct = buf.slice(28); const key = await this.deriveKey(pass, salt); const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct); return new Blob([pt]); } catch (e) { throw new Error("ENC_FAILED"); } }
     };
 
     function showCryptoModal() { 
         if(isEncrypted) { isEncrypted = false; aesKey = ""; document.getElementById('crypto-password').value = ""; checkStrength(""); updateLockUI(); return; } 
-        const pwdInput = document.getElementById('crypto-password');
-        pwdInput.type = "password";
-        const toggle = document.querySelector('#crypto-modal .pwd-toggle');
-        if(toggle) toggle.innerText = "🙈";
-        document.getElementById('send-fingerprint').innerText = "";
-        document.getElementById('send-fingerprint').style.display = 'none';
-        document.getElementById('send-hash-hint').style.display = 'none';
+        const pwdInput = document.getElementById('crypto-password'); pwdInput.type = "password"; const toggle = document.querySelector('#crypto-modal .pwd-toggle'); if(toggle) toggle.innerText = "🙈";
+        document.getElementById('send-fingerprint').style.display = 'none'; document.getElementById('send-hash-hint').style.display = 'none';
         document.getElementById('crypto-modal').style.display = 'flex'; 
     }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
-    function checkStrength(p) {
-        const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text');
-        let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; }
-        score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10;
-        if (score > 100) score = 100;
-        const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`;
-        const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1;
-        txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`;
-    }
-    function confirmEncryption() {
-        const p = document.getElementById('crypto-password').value;
-        const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8;
-        if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; }
-        aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal();
-    }
+    function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
+    function confirmEncryption() { const p = document.getElementById('crypto-password').value; const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8; if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; } aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal(); }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
     
-    // [Bug 修复] 添加文件后，重置 Input 的 value
-    function handleFiles(files) { 
-        stagedFiles = stagedFiles.concat(Array.from(files)); 
-        renderStagedList();
-        document.getElementById('fileInput').value = ''; 
-    }
-
-    function getFileIcon(name) {
-        const ext = name.split('.').pop().toLowerCase();
-        if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️';
-        if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬';
-        if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵';
-        if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦';
-        if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻';
-        if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄';
-        return '📁'; 
-    }
-
+    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); document.getElementById('fileInput').value = ''; }
+    function getFileIcon(name) { const ext = name.split('.').pop().toLowerCase(); if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️'; if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬'; if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵'; if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦'; if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻'; if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄'; return '📁'; }
     function renderStagedList() { 
         const list = document.getElementById('stagedList'); 
-        
-        if (stagedFiles.length === 0) {
-            list.style.display = 'none';
-            document.getElementById('file-count-badge').style.display = 'none';
-            AIEngine.renderTags({ tags: [], risk: false }); 
-        } else {
-            list.style.display = 'block';
-            const badge = document.getElementById('file-count-badge');
-            badge.style.display = 'block';
-            badge.innerText = `${stagedFiles.length} File${stagedFiles.length > 1 ? 's' : ''}`;
-            list.innerHTML = stagedFiles.map((f, i) => 
-                `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`
-            ).join('');
-            
-            const aiTags = AIEngine.analyze(stagedFiles);
-            AIEngine.renderTags(aiTags);
-        }
+        if (stagedFiles.length === 0) { list.style.display = 'none'; document.getElementById('file-count-badge').style.display = 'none'; AIEngine.renderTags({ tags: [], risk: false }); } 
+        else { list.style.display = 'block'; const badge = document.getElementById('file-count-badge'); badge.style.display = 'block'; badge.innerText = `${stagedFiles.length} File${stagedFiles.length > 1 ? 's' : ''}`; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); const aiTags = AIEngine.analyze(stagedFiles); AIEngine.renderTags(aiTags); }
     }
+    function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
+    function typeWriterEffect(element, text) { element.innerText = ""; let i = 0; const badge = document.getElementById('recv-text-count'); const scrollBox = document.getElementById('recv-scroll-box'); if(badge) badge.style.display = 'block'; const step = Math.max(1, Math.floor(text.length / 50)); function type() { if (i < text.length) { const chunk = text.slice(i, i + step); element.innerText += chunk; i += step; if(badge) badge.innerText = Math.min(i, text.length) + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; requestAnimationFrame(type); } else { element.innerText = text; if(badge) badge.innerText = text.length + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; } } type(); }
 
-    function updateTextCount(el) {
-        const len = el.value.length;
-        const badge = document.getElementById('text-count-badge');
-        if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } 
-        else { badge.style.display = 'none'; }
-    }
-
-    function typeWriterEffect(element, text) {
-        element.innerText = "";
-        let i = 0;
-        const badge = document.getElementById('recv-text-count');
-        const scrollBox = document.getElementById('recv-scroll-box'); 
-        if(badge) badge.style.display = 'block';
-        const step = Math.max(1, Math.floor(text.length / 50)); 
-        function type() {
-            if (i < text.length) {
-                const chunk = text.slice(i, i + step);
-                element.innerText += chunk;
-                i += step;
-                if(badge) badge.innerText = Math.min(i, text.length) + " Chars";
-                if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight;
-                requestAnimationFrame(type);
-            } else {
-                element.innerText = text;
-                if(badge) badge.innerText = text.length + " Chars";
-                if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight;
-            }
-        }
-        type();
-    }
-
-    /* [新增] 检查 URL 参数并自动切换到接收模式 */
+    /* [新增] 检查 URL 参数自动跳转 */
     function checkUrlCode() {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('c');
-        if (code) {
-            // 切换到 Receive 标签页
-            document.getElementById('tab-receive').click();
-            // 自动填充验证码
-            document.getElementById('targetCode').value = code;
-            // 可选：清理 URL，让看着更舒服，或者保留方便刷新
-            // window.history.replaceState({}, document.title, window.location.pathname);
-        }
+        if (code) { document.getElementById('tab-receive').click(); document.getElementById('targetCode').value = code; }
     }
 
     async function initSender() {
         if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
-        
         document.getElementById('ai-suggestions').style.display = 'none';
-
         peer.on('open', () => {
             const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); }
             document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; 
             new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 });
             
-            /* [新增] COPY LINK 按钮逻辑：生成带验证码的链接 */
+            /* [新增] 复制带验证码的链接 */
             document.getElementById('btn-copy-link').onclick = () => {
                 const link = `${window.location.origin}${window.location.pathname}?c=${code}`;
-                navigator.clipboard.writeText(link).then(() => {
-                    showCustomAlert("Link Copied! Send it to friend.");
-                });
+                navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied! Send it to friend."); });
             };
-
             startExpiryTimer();
         });
-        
         peer.on('connection', c => {
-            c.on('data', d => { 
-                if (d.type === 'security_burn') { showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); resetSender(); return; }
-                if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } 
-            });
+            c.on('data', d => { if (d.type === 'security_burn') { showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); resetSender(); return; } if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } });
             c.on('open', async () => {
                 let textValue = document.getElementById('quickText').value.trim(); 
-                if(textValue) {
-                    if(isEncrypted) { const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); const reader = new FileReader(); reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); reader.readAsDataURL(encryptedTextBlob); } 
-                    else { c.send({ type: 'text', data: textValue, encrypted: false }); }
-                    addHistory("Sent: Text", "text");
-                }
-                if(stagedFiles && stagedFiles.length > 0) {
-                    let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip";
-                    if (stagedFiles.length === 1) { fb = stagedFiles[0]; } 
-                    else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); }
-                    if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; }
-                    c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted });
-                    const arrayBuffer = await fb.arrayBuffer();
-                    for (let i = 0; i < fb.size; i += CHUNK_SIZE) {
-                        while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); }
-                        c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) });
-                    }
-                    c.send({ type: 'done' }); 
-                    addHistory("Sent: " + fn, "file");
-                }
+                if(textValue) { if(isEncrypted) { const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); const reader = new FileReader(); reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); reader.readAsDataURL(encryptedTextBlob); } else { c.send({ type: 'text', data: textValue, encrypted: false }); } addHistory("Sent: Text", "text"); }
+                if(stagedFiles && stagedFiles.length > 0) { let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip"; if (stagedFiles.length === 1) { fb = stagedFiles[0]; } else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); } if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; } c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted }); const arrayBuffer = await fb.arrayBuffer(); for (let i = 0; i < fb.size; i += CHUNK_SIZE) { while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); } c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) }); } c.send({ type: 'done' }); addHistory("Sent: " + fn, "file"); }
             });
         });
     }
 
     function startReceiving() {
-        const code = document.getElementById('targetCode').value;
-        const rPeer = new Peer();
-        const pgBar = document.getElementById('receive-pg-bar');
+        const code = document.getElementById('targetCode').value; const rPeer = new Peer(); const pgBar = document.getElementById('receive-pg-bar');
         document.getElementById('receive-pg-container').style.display = 'block';
-        
-        const btn = document.getElementById('btn-connect');
-        btn.disabled = true; btn.style.opacity = "0.7";
-        let dots = 0; if(downloadDotsIdx) clearInterval(downloadDotsIdx);
-        downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400);
-
+        const btn = document.getElementById('btn-connect'); btn.disabled = true; btn.style.opacity = "0.7"; let dots = 0; if(downloadDotsIdx) clearInterval(downloadDotsIdx); downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400);
         rPeer.on('open', () => {
-            const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn;
-            let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
-            
+            const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn; let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0;
             conn.on('data', async d => {
                 if(d.type === 'text') {
-                    if(downloadDotsIdx) clearInterval(downloadDotsIdx);
-                    const label = d.encrypted ? I18N[currLang].decryptRecv : I18N[currLang].recv;
-                    const bg = d.encrypted ? "#f59e0b" : "#10b981";
-                    btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1";
-                    
+                    if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = d.encrypted ? I18N[currLang].decryptRecv : I18N[currLang].recv; const bg = d.encrypted ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1";
                     btn.onclick = async () => {
                         let finalTxt = d.data;
-                        if(d.encrypted) {
-                            let attempts = 0;
-                            while(true) {
-                                const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined);
-                                if(!pass) return; 
-                                try {
-                                    const res = await fetch(d.data); const blob = await res.blob();
-                                    const ptBlob = await FlashDropCrypto.decrypt(blob, pass);
-                                    finalTxt = await ptBlob.text();
-                                    document.getElementById('pass-input-modal').style.display = 'none';
-                                    break; 
-                                } catch(e) {
-                                    attempts++;
-                                    if(attempts >= 3) { 
-                                        document.getElementById('pass-input-modal').style.display = 'none';
-                                        conn.send({ type: 'security_burn' }); 
-                                        showCustomAlert("❌ SECURITY BREACH: Data Wiped."); 
-                                        resetReceiver(); return; 
-                                    }
-                                }
-                            }
-                        }
-                        const textBox = document.getElementById('receivedText');
-                        document.getElementById('receivedText-container').style.display = 'block';
-                        typeWriterEffect(textBox, finalTxt);
-                        pgBar.style.width = '100%';
-                        btn.onclick = () => triggerAd('receive');
-                        btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)";
-                        if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
+                        if(d.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if(!pass) return; try { const res = await fetch(d.data); const blob = await res.blob(); const ptBlob = await FlashDropCrypto.decrypt(blob, pass); finalTxt = await ptBlob.text(); document.getElementById('pass-input-modal').style.display = 'none'; break; } catch(e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } }
+                        const textBox = document.getElementById('receivedText'); document.getElementById('receivedText-container').style.display = 'block'; typeWriterEffect(textBox, finalTxt); pgBar.style.width = '100%'; btn.onclick = () => triggerAd('receive'); btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)"; if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
                     };
-                }
-                else if(d.type === 'meta') { 
-                    meta = d; startTime = Date.now(); 
-                    const stats = document.getElementById('receiveNerdStats'); stats.style.display = 'flex';
-                    const warnTextMap = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" };
-                    const warnText = warnTextMap[currLang] || warnTextMap.en;
-                    stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">${warnText}</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`;
-                }
-                else if(d.type === 'chunk') { 
-                    chunks.push(d.data); 
-                    totalRecv += d.data.byteLength;
-                    if(meta) {
-                        pgBar.style.width = (totalRecv / meta.size * 100) + '%';
-                        const now = Date.now();
-                        if (now - lastUpdate > 500 || totalRecv === meta.size) {
-                            const duration = (now - startTime) / 1000; 
-                            const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; 
-                            const remainingBytes = meta.size - totalRecv;
-                            const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; 
-                            const spdEl = document.getElementById('nerd-speed'); const etaEl = document.getElementById('nerd-eta');
-                            if(spdEl) spdEl.innerText = speed.toFixed(1) + ' MB/s';
-                            if(etaEl) etaEl.innerText = 'ETA: ' + Math.ceil(eta) + 's';
-                            lastUpdate = now;
-                        }
-                    }
-                }
+                } else if(d.type === 'meta') { meta = d; startTime = Date.now(); const stats = document.getElementById('receiveNerdStats'); stats.style.display = 'flex'; const warnText = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" }[currLang] || "Downloading... Keep Open!"; stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">${warnText}</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`; }
+                else if(d.type === 'chunk') { chunks.push(d.data); totalRecv += d.data.byteLength; if(meta) { pgBar.style.width = (totalRecv / meta.size * 100) + '%'; const now = Date.now(); if (now - lastUpdate > 500 || totalRecv === meta.size) { const duration = (now - startTime) / 1000; const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; const remainingBytes = meta.size - totalRecv; const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; const spdEl = document.getElementById('nerd-speed'); const etaEl = document.getElementById('nerd-eta'); if(spdEl) spdEl.innerText = speed.toFixed(1) + ' MB/s'; if(etaEl) etaEl.innerText = 'ETA: ' + Math.ceil(eta) + 's'; lastUpdate = now; } } }
                 else if(d.type === 'done') {
-                    if(downloadDotsIdx) clearInterval(downloadDotsIdx);
-                    const label = (meta && meta.encrypted) ? I18N[currLang].decryptSave : I18N[currLang].save;
-                    const bg = (meta && meta.encrypted) ? "#f59e0b" : "#10b981";
-                    btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1";
-                    const stats = document.getElementById('receiveNerdStats');
-                    if(stats) stats.innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`;
-                    pgBar.style.width = '100%';
-                    let finalBlob = new Blob(chunks);
-
+                    if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = (meta && meta.encrypted) ? I18N[currLang].decryptSave : I18N[currLang].save; const bg = (meta && meta.encrypted) ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1"; document.getElementById('receiveNerdStats').innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`; pgBar.style.width = '100%'; let finalBlob = new Blob(chunks);
                     btn.onclick = async () => {
-                        if (meta && meta.encrypted) {
-                            let attempts = 0;
-                            while(true) {
-                                const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined);
-                                if (!pass) return; 
-                                try {
-                                    finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass);
-                                    document.getElementById('pass-input-modal').style.display = 'none';
-                                    btn.innerText = I18N[currLang].saveNow || "💾 SAVE NOW";
-                                    btn.style.background = "#10b981";
-                                    
-                                    btn.onclick = () => {
-                                        const u = window.URL.createObjectURL(finalBlob);
-                                        const a = document.createElement('a'); a.href = u;
-                                        a.download = meta.name.replace('.enc', ''); a.click();
-                                        if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
-                                        addHistory("Received: " + meta.name.replace('.enc', ''), "file");
-                                        setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
-                                    };
-                                    return;
-                                } catch (e) {
-                                    attempts++;
-                                    if(attempts >= 3) { 
-                                        document.getElementById('pass-input-modal').style.display = 'none';
-                                        conn.send({ type: 'security_burn' }); 
-                                        showCustomAlert("❌ SECURITY BREACH: Data Wiped."); 
-                                        resetReceiver(); return; 
-                                    }
-                                }
-                            }
-                        } else {
-                            const u = window.URL.createObjectURL(finalBlob);
-                            const a = document.createElement('a'); a.href = u;
-                            a.download = meta.name.replace('.enc', ''); a.click();
-                            if (conn && conn.open) { conn.send({ type: 'confirm_save' }); }
-                            addHistory("Received: " + meta.name.replace('.enc', ''), "file");
-                            setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000);
-                        }
+                        if (meta && meta.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if (!pass) return; try { finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass); document.getElementById('pass-input-modal').style.display = 'none'; btn.innerText = "💾 SAVE NOW"; btn.style.background = "#10b981"; btn.onclick = () => { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); }; return; } catch (e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } } else { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); }
                     };
                 }
             });
         });
     }
 
-    function addHistory(name, type) {
-        let h = JSON.parse(localStorage.getItem('fd_history') || "[]");
-        h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type });
-        h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory();
-    }
-    function renderHistory() {
-        const list = document.getElementById('history-list');
-        const h = JSON.parse(localStorage.getItem('fd_history') || "[]");
-        list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join('');
-    }
-    function copyReceivedText() { 
-        navigator.clipboard.writeText(document.getElementById('receivedText').innerText); 
-        showCustomAlert("Copied!"); 
-        document.getElementById('receivedText').innerText = "";
-        document.getElementById('receivedText-container').style.display = 'none';
-        const badge = document.getElementById('recv-text-count');
-        if(badge) badge.style.display = 'none';
-        if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); }
-        resetReceiver(); 
-    }
-    function detectAdBlock() {
-        if(isAdBlockIgnored) return false;
-        setTimeout(() => {
-            if(isAdBlockIgnored) return;
-            const topAd = document.getElementById('top-ad-zone');
-            const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0;
-            if (topAd.offsetHeight < 20 || !hasContent) {
-                document.getElementById('safety-notice-view').style.display = 'flex';
-                document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none');
-            }
-        }, 4000); 
-        return false;
-    }
-
+    function addHistory(name, type) { let h = JSON.parse(localStorage.getItem('fd_history') || "[]"); h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type }); h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory(); }
+    function renderHistory() { const list = document.getElementById('history-list'); const h = JSON.parse(localStorage.getItem('fd_history') || "[]"); list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join(''); }
+    function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); showCustomAlert("Copied!"); document.getElementById('receivedText').innerText = ""; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); } resetReceiver(); }
+    function detectAdBlock() { if(isAdBlockIgnored) return false; setTimeout(() => { if(isAdBlockIgnored) return; const topAd = document.getElementById('top-ad-zone'); const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0; if (topAd.offsetHeight < 20 || !hasContent) { document.getElementById('safety-notice-view').style.display = 'flex'; document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); } }, 4000); return false; }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
-    
-    function resetSender() { 
-        if(peer) peer.destroy(); 
-        document.getElementById('senderCodeArea').style.display = 'none'; 
-        stagedFiles = []; 
-        renderStagedList(); 
-        document.getElementById('ai-suggestions').style.display = 'none';
-        const quickText = document.getElementById('quickText');
-        quickText.value = ""; quickText.blur();
-        updateTextCount(quickText);
-        if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
-        window.scrollTo({ top: 0, behavior: 'smooth' }); 
-        setTimeout(() => window.scrollTo(0,0), 300);
-        // [修改] 移除 resetSender 里的离线状态强制切换
-    }
-    
-    function resetReceiver() { 
-        if(downloadDotsIdx) clearInterval(downloadDotsIdx);
-        const btn = document.getElementById('btn-connect');
-        btn.innerText = I18N[currLang].connect;
-        btn.style.background = "var(--primary)";
-        btn.disabled = false; btn.style.opacity = "1";
-        btn.onclick = () => triggerAd('receive'); 
-
-        document.getElementById('targetCode').value = ""; 
-        document.getElementById('receive-pg-container').style.display = 'none'; 
-        document.getElementById('receiveNerdStats').style.display = 'none'; 
-        document.getElementById('receivedText-container').style.display = 'none'; 
-        const badge = document.getElementById('recv-text-count');
-        if(badge) badge.style.display = 'none';
-        activeConn = null; 
-        // [修改] 移除 resetReceiver 里的离线状态强制切换
-    }
+    function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('ai-suggestions').style.display = 'none'; const quickText = document.getElementById('quickText'); quickText.value = ""; quickText.blur(); updateTextCount(quickText); if(expiryTimerIdx) clearInterval(expiryTimerIdx); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => window.scrollTo(0,0), 300); }
+    function resetReceiver() { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const btn = document.getElementById('btn-connect'); btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)"; btn.disabled = false; btn.style.opacity = "1"; btn.onclick = () => triggerAd('receive'); document.getElementById('targetCode').value = ""; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receiveNerdStats').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; activeConn = null; }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
-    
     async function toggleTorch() { if (!videoTrack) return; torchOn = !torchOn; try { await videoTrack.applyConstraints({ advanced: [{ torch: torchOn }] }); } catch (e) {} }
     async function openScanner() { document.getElementById('scanner-modal').style.display='flex'; try { const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }); const video = document.getElementById('video-preview'); video.srcObject = stream; videoTrack = stream.getVideoTracks()[0]; video.play(); requestAnimationFrame(tickScanner); } catch (e) { showCustomAlert("Camera failed"); closeScanner(); } }
     function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
-    
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); updateNetworkStatus(); checkUrlCode(); };
 </script>
 </body>
