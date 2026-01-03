@@ -975,7 +975,7 @@
     const PREFIX = "fd-pro-";
     const CHUNK_SIZE = 64 * 1024; 
 
-    /* --- [AI 引擎升级：实时检测与清空联动] --- */
+    /* --- [AI 引擎：实时联动] --- */
     const AIEngine = {
         analyze(files) {
             const tags = new Set();
@@ -991,7 +991,6 @@
                 zip: ['zip','rar','7z','tar','gz','iso','dmg','pkg']
             };
 
-            // 敏感词库 (多语言混合)
             const sensitiveKeywords = [
                 'id', 'passport', 'visa', 'resume', 'cv', 'address', 'phone', 'email', 'secret', 'bank', 'statement', 'tax', 'ssn', 'insurance', 'contract',
                 '身份证', '护照', '简历', '住址', '房产', '银行', '账单', '税', '保险', '合同', '指纹', '姓名', '性别', '民族',
@@ -1003,7 +1002,6 @@
                 const name = f.name.toLowerCase();
                 const ext = name.split('.').pop();
                 
-                // 1. 类型分析
                 if(exts.img.includes(ext)) tags.add('img');
                 else if(exts.vid.includes(ext)) tags.add('vid');
                 else if(exts.doc.includes(ext)) tags.add('doc');
@@ -1012,7 +1010,6 @@
                 
                 if(f.size > 100 * 1024 * 1024) tags.add('big'); 
 
-                // 2. 隐私检测
                 if (!hasPrivacyRisk) {
                     for (const kw of sensitiveKeywords) {
                         if (name.includes(kw)) {
@@ -1031,7 +1028,7 @@
             const wrapper = document.getElementById('ai-suggestions');
             const alertBox = document.getElementById('ai-privacy-alert');
 
-            // [核心修复] 如果没有标签（即文件被清空），强制隐藏整个 AI 区域
+            // [逻辑保持] 无数据则隐藏
             if(!data || !data.tags || data.tags.length === 0) { 
                 wrapper.style.display = 'none'; 
                 alertBox.style.display = 'none';
@@ -1040,7 +1037,6 @@
             
             wrapper.style.display = 'block';
             
-            // 渲染隐私警告
             if (data.risk) {
                 alertBox.style.display = 'block';
                 const d = I18N[currLang] || I18N['en'];
@@ -1049,13 +1045,11 @@
                 alertBox.style.display = 'none';
             }
 
-            // 渲染标签
             const dict = (I18N[currLang] || I18N['en']).aiTags;
             container.innerHTML = data.tags.map(t => `<span class="ai-smart-tag">${dict[t] || t}</span>`).join('');
         }
     };
 
-    /* [核心] 网络状态检测逻辑：只看设备是否联网 */
     function updateNetworkStatus() {
         const isOnline = navigator.onLine;
         const dot = document.getElementById('status-dot');
@@ -1257,7 +1251,13 @@
     }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
     
-    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); }
+    // [Bug 修复核心] 添加文件后，重置 Input 的 value，允许重复选择同一文件
+    function handleFiles(files) { 
+        stagedFiles = stagedFiles.concat(Array.from(files)); 
+        renderStagedList();
+        // 这里的修复：清空文件选择器
+        document.getElementById('fileInput').value = ''; 
+    }
 
     function getFileIcon(name) {
         const ext = name.split('.').pop().toLowerCase();
@@ -1270,15 +1270,12 @@
         return '📁'; 
     }
 
-    // [核心修复] renderStagedList 负责调用 AI 引擎
     function renderStagedList() { 
         const list = document.getElementById('stagedList'); 
         
-        // 即使 stagedFiles 为空，也要执行逻辑来清空 UI
         if (stagedFiles.length === 0) {
             list.style.display = 'none';
             document.getElementById('file-count-badge').style.display = 'none';
-            // 关键：传空数据给 AIEngine，它会自动隐藏 AI 区域
             AIEngine.renderTags({ tags: [], risk: false }); 
         } else {
             list.style.display = 'block';
@@ -1289,7 +1286,6 @@
                 `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`
             ).join('');
             
-            // 有文件时，正常分析并显示 AI
             const aiTags = AIEngine.analyze(stagedFiles);
             AIEngine.renderTags(aiTags);
         }
@@ -1330,7 +1326,6 @@
         if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000);
         peer = new Peer(PREFIX + code);
         
-        // [保持] 点击发送后，立即隐藏 AI Insights 面板
         document.getElementById('ai-suggestions').style.display = 'none';
 
         peer.on('open', () => {
