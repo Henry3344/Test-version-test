@@ -321,17 +321,12 @@
     <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;" id="drop-text">DROP TO STAGE</h2></div>
 
     <div class="ad-space ad-top" id="top-ad-zone">
-        <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
-        <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+        
     </div>
 
     <div class="main-wrapper">
         <div class="ad-side" id="left-ad-zone">
-            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
-            
-            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+
         </div>
 
         <div class="content-area">
@@ -506,17 +501,12 @@
             <div class="history-box"><div class="history-title" id="history-title-text">Recent History</div><div id="history-list"></div></div>
             
             <div class="ad-space ad-bottom" id="bottom-ad-zone">
-                <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
-                <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+
             </div>
         </div>
 
         <div class="ad-side" id="right-ad-zone">
-            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
-            
-            <script>atOptions={'key':'bd9abdb5a8bd5a53648a9afb54343727','format':'iframe','height':600,'width':160,'params':{}};</script>
-            <script src="https://www.highperformanceformat.com/bd9abdb5a8bd5a53648a9afb54343727/invoke.js"></script>
+
         </div>
     </div>
     <div style="width: 100%; max-width: 900px; margin: 0 auto; padding: 0 15px;">
@@ -552,8 +542,7 @@
     </div>
 
     <div class="ad-space" id="faq-top-ad" style="margin: 40px auto 10px auto; max-width: 728px; display:flex; justify-content:center;">
-        <script>atOptions={'key':'fabada29768bc51cc0a6a76937a99ba9','format':'iframe','height':90,'width':728,'params':{}};</script>
-        <script src="https://www.highperformanceformat.com/fabada29768bc51cc0a6a76937a99ba9/invoke.js"></script>
+        
     </div>
 
     <footer class="legal-footer">
@@ -607,8 +596,7 @@
         <div id="ad-pg-bar" style="height: 100%; width: 0%; background: var(--primary); transition: width 0.1s linear;"></div>
     </div>
     <div id="ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
-        <script>atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
-        <script src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
+
     </div>
 </div>
 
@@ -619,8 +607,6 @@
         <div id="ocr-pg-bar" style="height: 100%; width: 0%; background: var(--ai); transition: width 0.1s linear;"></div>
     </div>
     <div id="ocr-ad-container" style="width:300px; height:250px; background:white; border-radius:20px; overflow:hidden;">
-        <script>atOptions={'key':'05aeca9dfc228cb50e7ad828813cd55b','format':'iframe','height':250,'width':300,'params':{}};</script>
-        <script src="https://www.highperformanceformat.com/05aeca9dfc228cb50e7ad828813cd55b/invoke.js"></script>
     </div>
 </div>
 
@@ -819,29 +805,10 @@
     }
 
     /* --- [OCR 核心与广告逻辑 - 更新真诚提示语] --- */
-    function runOCRWithAd(imageBlob) {
-        if(detectAdBlock()) return; 
-        const modal = document.getElementById('ocrAdModal');
-        const pgBar = document.getElementById('ocr-pg-bar');
-        const timerText = document.getElementById('ocr-timer-text');
-        
-        // [更新] 设置真诚的广告提示语
-        const title = document.getElementById('ocr-ad-title');
-        title.innerText = (I18N[currLang] || I18N['en']).adWait;
-
-        modal.style.display = 'flex'; pgBar.style.width = '0%';
-        let elapsed = 0; const totalMs = 5000;
-        const itv = setInterval(() => { 
-            elapsed += 100; const pct = (elapsed / totalMs) * 100; 
-            const rem = Math.ceil((totalMs - elapsed) / 1000);
-            pgBar.style.width = pct + '%'; timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`;
-            if(elapsed >= totalMs) { 
-                clearInterval(itv); modal.style.display = 'none'; 
-                document.getElementById('ocrLoadingModal').style.display = 'flex';
-                setTimeout(() => performOCR(imageBlob), 100);
-            } 
-        }, 100);
-    }
+function runOCRWithAd(imageBlob) {
+    // 直接识别，不要等待
+    performOCR(imageBlob);
+}
 
     async function performOCR(imageBlob) {
         try {
@@ -945,34 +912,10 @@
     function dismissAdBlock() { isAdBlockIgnored = true; document.getElementById('safety-notice-view').style.display = 'none'; document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); }
     
     /* --- [关键更新] 触发广告 (文案已改为真诚提示) --- */
-    function triggerAd(mode) { 
-        if(mode === 'receive') { document.getElementById('targetCode').blur(); const codeVal = document.getElementById('targetCode').value; if(!codeVal || codeVal.length < 6) { showCustomAlert(I18N[currLang].inputErr); return; } } 
-        if(mode === 'send-file' && stagedFiles.length === 0) { showCustomAlert(I18N[currLang].fileErr); return; } 
-        if(mode === 'send-text' && !document.getElementById('quickText').value.trim()) { showCustomAlert(I18N[currLang].textErr); return; } 
-        if(isAdBlockIgnored) { mode.startsWith('send') ? initSender() : startReceiving(); return; } 
-        if(detectAdBlock()) return; 
-        
-        const modal = document.getElementById('adModal'); 
-        const adPg = document.getElementById('ad-pg-bar'); 
-        const timerText = document.getElementById('ad-timer-text'); 
-        
-        // [更新] 设置真诚广告语
-        const title = document.getElementById('ad-wait-title'); 
-        title.innerText = (I18N[currLang] || I18N['en']).adWait;
-
-        modal.style.display = 'flex'; adPg.style.width = '0%'; 
-        let elapsed = 0; const totalMs = 5000; 
-        const itv = setInterval(() => { 
-            elapsed += 100; const pct = (elapsed / totalMs) * 100; 
-            const rem = Math.ceil((totalMs - elapsed) / 1000); 
-            adPg.style.width = pct + '%'; 
-            timerText.innerText = `Remaining: ${rem > 0 ? rem : 0}s`; 
-            if(elapsed >= totalMs) { 
-                clearInterval(itv); modal.style.display = 'none'; 
-                mode.startsWith('send') ? initSender() : startReceiving(); 
-            } 
-        }, 100); 
-    }
+function triggerAd(mode) { 
+    // 删掉所有计时逻辑，直接运行功能
+    mode.startsWith('send') ? initSender() : startReceiving(); 
+}
 
     let isEncrypted = false, aesKey = "";
     const FlashDropCrypto = { async deriveKey(pass, salt) { const encoder = new TextEncoder(); const baseKey = await crypto.subtle.importKey("raw", encoder.encode(pass), "PBKDF2", false, ["deriveKey"]); return crypto.subtle.deriveKey({ name: "PBKDF2", salt: salt, iterations: 600000, hash: "SHA-256" }, baseKey, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]); }, async encrypt(blob, pass) { const salt = crypto.getRandomValues(new Uint8Array(16)); const iv = crypto.getRandomValues(new Uint8Array(12)); const key = await this.deriveKey(pass, salt); const data = await blob.arrayBuffer(); const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, data); return new Blob([salt, iv, new Uint8Array(ct)]); }, async decrypt(blob, pass) { try { const buf = await blob.arrayBuffer(); const salt = new Uint8Array(buf.slice(0, 16)); const iv = new Uint8Array(buf.slice(16, 28)); const ct = buf.slice(28); const key = await this.deriveKey(pass, salt); const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, ct); return new Blob([pt]); } catch (e) { throw new Error("ENC_FAILED"); } } };
@@ -997,7 +940,6 @@
     function addHistory(name, type) { let h = JSON.parse(localStorage.getItem('fd_history') || "[]"); h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type }); h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory(); }
     function renderHistory() { const list = document.getElementById('history-list'); const h = JSON.parse(localStorage.getItem('fd_history') || "[]"); list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join(''); }
     function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); showCustomAlert("Copied!"); document.getElementById('receivedText').innerText = ""; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); } resetReceiver(); }
-    function detectAdBlock() { if(isAdBlockIgnored) return false; setTimeout(() => { if(isAdBlockIgnored) return; const topAd = document.getElementById('top-ad-zone'); const hasContent = topAd.getElementsByTagName('iframe').length > 0 || topAd.getElementsByTagName('ins').length > 0; if (topAd.offsetHeight < 20 || !hasContent) { document.getElementById('safety-notice-view').style.display = 'flex'; document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); } }, 4000); return false; }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('ai-suggestions').style.display = 'none'; 
@@ -1013,7 +955,7 @@
     function closeScanner() { document.getElementById('scanner-modal').style.display='none'; if(videoTrack) videoTrack.stop(); torchOn = false; }
     function tickScanner() { const v = document.getElementById('video-preview'); if(v.readyState === v.HAVE_ENOUGH_DATA) { const cvs = document.createElement("canvas"); cvs.width = v.videoWidth; cvs.height = v.videoHeight; const ctx = cvs.getContext("2d"); ctx.drawImage(v, 0, 0); const data = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height); if(data) { const c = new URL(data.data).searchParams.get("c"); if(c) { document.getElementById('targetCode').value = c; closeScanner(); triggerAd('receive'); return; } } } if(document.getElementById('scanner-modal').style.display === 'flex') requestAnimationFrame(tickScanner); }
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
-    window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); detectAdBlock(); updateNetworkStatus(); checkUrlCode(); };
+    window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); updateNetworkStatus(); checkUrlCode(); };
 </script>
 </body>
 </html>
