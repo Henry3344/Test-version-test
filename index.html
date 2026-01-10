@@ -54,45 +54,21 @@
         .ai-badge { border-color: var(--ai) !important; color: #d8b4fe !important; background: rgba(139, 92, 246, 0.15) !important; box-shadow: 0 0 10px rgba(139, 92, 246, 0.3); }
 
         /* --- 布局容器 --- */
-/* 1. 確保大容器橫向排列，且所有東西都「靠頂」 */
-.main-wrapper {
-    display: flex !important;
-    justify-content: center;
-    align-items: flex-start; /* 關鍵：強制所有側邊欄從頂部開始，不再錯位 */
-    gap: 30px;
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-/* 3. 讓中間區域自適應，但不准擠掉兩邊 */
-.content-area {
-    flex: 1; /* 佔據剩餘的所有空間 */
-    min-width: 0; /* 防止中間內容爆開擠走側欄 */
-    max-width: 800px; /* 保持高手建議的「聚焦感」 */
-}
+        .main-wrapper { display: flex; width: 100%; margin: 0 auto; justify-content: center; align-items: flex-start; gap: 20px; padding: 0 15px; }
+        .content-area { flex: 1; min-width: 300px; max-width: 600px; display: flex; flex-direction: column; align-items: center; z-index: 50; }
         
         /* [修改] 侧边广告栏增加间距，因为现在有两个广告了 */
-/* 2. 限制側邊欄寬度，防止它把中間擠走 */
-.ad-side {
-    width: 200px; /* 根據你目前的標題長度，200px 最專業 */
-    flex-shrink: 0; /* 關鍵：不允許側邊欄被壓縮，保持形狀 */
-    margin-top: 20px; /* 讓它跟主標題對齊得更好看 */
-}
+        .ad-side { 
+            width: 160px; min-width: 160px; position: sticky; top: 130px; 
+            display: flex; flex-direction: column; align-items: center; 
+            border-radius: 12px; background: transparent; overflow: hidden; 
+            transition: 0.3s; gap: 20px; /* 两个广告之间的间距 */
+        }
         .ad-space { background: transparent; display: flex; justify-content: center; align-items: center; border-radius: 12px; overflow: hidden; width: 100%; transition: 0.3s; }
         .ad-top { min-height: 0; margin-bottom: 15px; }
         .ad-bottom { min-height: 0; margin-top: 20px; margin-bottom: 25px; }
-/* 手機端自動變回單列，不影響移動端體驗 */
-@media (max-width: 1100px) {
-    .main-wrapper {
-        flex-direction: column;
-        align-items: center;
-    }
-    .ad-side {
-        width: 100%;
-        display: none; /* 手機端按建議隱藏側欄，保持清爽 */
-    }
-}
+        @media (max-width: 880px) { .ad-side { display: none !important; } }
+        
         /* --- Hero 区域样式 --- */
         .hero-bullets { display: flex; gap: 10px; justify-content: center; margin-top: 15px; flex-wrap: wrap; }
         .hero-bullets span { background: rgba(99, 102, 241, 0.15); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; color: #c7d2fe; border: 1px solid rgba(99, 102, 241, 0.3); white-space: nowrap; box-shadow: 0 0 10px rgba(99, 102, 241, 0.1); }
@@ -321,8 +297,7 @@
         
         .step-item:first-child .step-dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
         .step-item:first-child span { color: white; }
-        
-        /* --- Henry的原生推荐块专用样式 (开始) --- */
+                /* --- Henry的原生推荐块专用样式 (开始) --- */
 .native-promo-container {
     background: linear-gradient(135deg, #1a1a2a 0%, #2d2d44 100%);
     border: 1px solid #3f3f5a;
@@ -399,47 +374,6 @@
     }
 }
 /* --- Henry的原生推荐块专用样式 (结束) --- */
-        
-/* Notion 風格目錄 - 全站統一樣式 */
-.sidebar-section {
-    margin-bottom: 25px;
-    padding: 0 10px;
-    text-align: left; /* 確保文字靠左，顯得專業 */
-}
-
-.sidebar-section h4 {
-    color: #6366f1; /* 使用你站點的紫色系 */
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1.2px;
-    margin-bottom: 12px;
-    opacity: 0.8;
-}
-
-.sidebar-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.sidebar-list li {
-    margin-bottom: 8px;
-}
-
-.sidebar-list a {
-    color: #a0a0b0; 
-    text-decoration: none;
-    font-size: 12.5px;
-    line-height: 1.4;
-    transition: all 0.2s ease;
-    display: block;
-}
-
-.sidebar-list a:hover {
-    color: #ffffff;
-    padding-left: 5px; /* 滑過時有個小位移，像目錄跳轉 */
-}
     </style>
 </head>
 <body>
@@ -462,7 +396,7 @@
     </nav>
 
     <div id="drop-zone"><h2 style="font-size:36px; color:white; font-weight:900;" id="drop-text">DROP TO STAGE</h2></div>
-
+    
 <div class="native-promo-container">
     <div class="promo-content">
         <div class="promo-icon">🛡️</div>
@@ -477,35 +411,8 @@
 </div>
 
     <div class="main-wrapper">
-        
-<div class="sidebar-section">
-    <h4>🔍 VPN Guides</h4>
-    <ul class="sidebar-list">
-        <li><a href="guide-best-vpn.html">Best VPN for Your Country</a></li>
-        <li><a href="guide-vpn-vs-proxy.html">VPN vs Proxy: Key Differences</a></li>
-        <li><a href="guide-legality.html">Is VPN Legal in My Country?</a></li>
-        <li><a href="guide-speed.html">Does VPN Affect Download Speed?</a></li>
-        <li><a href="guide-myths.html">VPN Myths You Should Ignore</a></li>
-    </ul>
-</div>
-<div class="sidebar-section">
-    <h4>🛡️ Security Basics</h4>
-    <ul class="sidebar-list">
-        <li><a href="guide-encryption.html">What Is End-to-End Encryption?</a></li>
-        <li><a href="guide-aes256.html">How AES-256 Encryption Works</a></li>
-        <li><a href="guide-no-logs.html">No-Logs Policy Explained</a></li>
-        <li><a href="guide-risks.html">Risks of Cloud File Sharing</a></li>
-    </ul>
-</div>
-<div class="sidebar-section">
-    <h4>💼 Usage Scenarios</h4>
-    <ul class="sidebar-list">
-        <li><a href="guide-remote-work.html">Secure Sharing for Remote Work</a></li>
-        <li><a href="guide-public-wifi.html">Protect Data on Public Wi-Fi</a></li>
-        <li><a href="guide-travel.html">File Transfer While Traveling</a></li>
-    </ul>
-</div>
-        
+        <div class="ad-side" id="left-ad-zone">
+
         </div>
 
         <div class="content-area">
@@ -683,33 +590,9 @@
 
             </div>
         </div>
-    
-<div class="sidebar-section">
-    <h4>🌍 Popular Regions</h4>
-    <ul class="sidebar-list">
-        <li><a href="#top-ad-zone">VPN for United States</a></li>
-        <li><a href="#top-ad-zone">VPN for United Kingdom</a></li>
-        <li><a href="#top-ad-zone">VPN for Japan & Asia</a></li>
-        <li><a href="#top-ad-zone">VPN for Germany & EU</a></li>
-    </ul>
-</div>
-<div class="sidebar-section">
-    <h4>🎯 Regional Use Cases</h4>
-    <ul class="sidebar-list">
-        <li><a href="#top-ad-zone">VPN for US Remote Workers</a></li>
-        <li><a href="#top-ad-zone">VPN for UK Privacy Laws</a></li>
-        <li><a href="#top-ad-zone">VPN for Asia Travelers</a></li>
-        <li><a href="#top-ad-zone">VPN for International Transfers</a></li>
-    </ul>
-</div>
-<div class="sidebar-section">
-    <h4>⚡ Quick Decisions</h4>
-    <ul class="sidebar-list">
-        <li><a href="#top-ad-zone">Do I Need a VPN Right Now?</a></li>
-        <li><a href="#top-ad-zone">Which VPN Fits My Country?</a></li>
-    </ul>
-</div>
-    
+
+        <div class="ad-side" id="right-ad-zone">
+
         </div>
     </div>
     <div style="width: 100%; max-width: 900px; margin: 0 auto; padding: 0 15px;">
