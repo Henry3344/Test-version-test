@@ -21,8 +21,10 @@
 
         /* 导航栏 */
         .navbar { position: fixed; top: 0; left: 0; right: 0; height: 70px; background: var(--nav-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 1000; backdrop-filter: blur(15px); }
-        .nav-logo { font-size: 20px; font-weight: 900; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; }
-        .nav-logo img { height: 35px; width: auto; }
+        .nav-logo { display: flex; align-items: center; text-decoration: none; }
+        .nav-logo img { height: 40px; width: auto; transition: 0.3s; }
+        .nav-logo:hover img { transform: scale(1.05); filter: drop-shadow(0 0 5px var(--primary)); }
+        
         .nav-back { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 800; border: 1.5px solid rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 12px; transition: 0.3s; display: flex; align-items: center; gap: 5px; }
         .nav-back:hover { background: var(--primary); color: white; border-color: var(--primary); }
 
@@ -70,6 +72,9 @@
         .cta-btn { display: inline-flex; align-items: center; justify-content: center; background: white; color: var(--primary); font-weight: 900; padding: 16px 32px; border-radius: 14px; text-decoration: none; margin-top: 25px; transition: 0.3s; font-size: 16px; box-shadow: 0 5px 20px rgba(255,255,255,0.2); }
         .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(255,255,255,0.3); }
 
+        /* 底部版权 */
+        .article-footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 12px; color: var(--text-muted); opacity: 0.6; }
+
         @media (max-width: 600px) {
             h1 { font-size: 26px; }
             .article-wrapper { margin-top: 90px; }
@@ -84,9 +89,8 @@
     <nav class="navbar">
         <a href="../index.html" class="nav-logo">
             <img src="../image/logo.png" alt="FlashDrop Pro">
-            <span>FlashDrop Pro</span>
         </a>
-        <a href="../index.html" class="nav-back" id="nav-back">← Back</a>
+        <a href="../index.html" class="nav-back" id="nav-back">← Back to Home</a>
     </nav>
 
     <div class="article-wrapper">
@@ -96,7 +100,7 @@
                 <span class="tag" id="tag-security">Cybersecurity</span>
             </div>
             <h1 id="article-title">Best VPN for Your Country – Privacy Protection Behind Secure File Transfers</h1>
-            <div class="meta-date">2026.01.10 • FlashDrop Team</div>
+            <div class="meta-date">2026.01.10 • FlashDrop Pro Team</div>
         </header>
 
         <div class="content-body">
@@ -202,7 +206,7 @@
                 </ul>
             </div>
 
-            <h2 id="h2_scenario">How to Choose a VPN Based on FlashDrop Pro Usage Scenarios?</h2>
+            <h2 id="h2_scenario">How to Choose a VPN Based on FlashDrop Pro Scenarios?</h2>
             <p id="p_fd_intro">The features of FlashDrop Pro are:</p>
             <ul style="background: rgba(255,255,255,0.05); padding: 20px 20px 20px 40px; border-radius: 12px;">
                 <li id="li_fd_1">P2P encrypted file transfer</li>
@@ -210,7 +214,7 @@
                 <li id="li_fd_3">Serverless storage, data does not stay in the cloud</li>
                 <li id="li_fd_4">Local OCR and auto-wipe functions</li>
             </ul>
-            <p id="p_fd_limit">These features mean that when you use FlashDrop to transfer sensitive files, its security foundation is very solid. But it is not responsible for:</p>
+            <p id="p_fd_limit">These features mean that when you use FlashDrop Pro to transfer sensitive files, its security foundation is very solid. But it is not responsible for:</p>
             <ul>
                 <li id="li_limit_1">Hiding your real source IP</li>
                 <li id="li_limit_2">Encrypting the entire network link itself</li>
@@ -219,7 +223,7 @@
             <p id="p_fd_bridge"><strong>This is exactly the part that a VPN can complete:</strong></p>
 
             <div class="tip-box">
-                <h3 style="margin-top:0; color:var(--success); margin-bottom:20px;" id="h3_advantages">Advantages of Using VPN with FlashDrop</h3>
+                <h3 style="margin-top:0; color:var(--success); margin-bottom:20px;" id="h3_advantages">Advantages of Using VPN with FlashDrop Pro</h3>
                 
                 <div class="tip-item">
                     <div class="tip-icon">✅</div>
@@ -277,6 +281,10 @@
                 <a href="../index.html" class="cta-btn" id="cta_btn">View Personalized Recommendations →</a>
             </div>
 
+            <footer class="article-footer" id="footer-copy">
+                © 2026 FlashDrop Pro. All rights reserved. Unauthorized reproduction is prohibited.
+            </footer>
+
         </div>
     </div>
 
@@ -300,7 +308,7 @@
             zh: {
                 title: "Best VPN for Your Country – 安全文件传输背后的隐私守护",
                 tag_guide: "隐私指南", tag_sec: "网络安全",
-                nav_back: "← 返回应用",
+                nav_back: "← 返回首页",
                 intro1: "现代的互联网环境给我们带来了前所未有的便利——文件可以瞬间到达世界另一端，工作协作可以跨国无缝进行。然而，正如一把双刃剑，数据传输的便利也伴随着隐私风险：你的 IP 位置、网络行为甚至敏感文件内容都有可能在传输中暴露或被截获。这也是为什么越来越多用户开始关注 VPN（Virtual Private Network，虚拟私人网络）的原因。",
                 intro2: "但「什么是最适合我的 VPN？」这个问题并没有一个统一答案。不同国家的网络环境、隐私法规和用户需求都有所不同。本篇文章将结合 FlashDrop Pro 的安全文件传输特点，为你整理出一份按国家优化的 VPN 使用指南，帮助你在保护自身隐私的同时，提升传输安全性和效率。",
                 h2_why: "为什么需要为你的国家选择合适的 VPN？",
@@ -361,13 +369,13 @@
                 fd_2: "可选 AES-256 加密",
                 fd_3: "无服务器存储，数据不经过云端停留",
                 fd_4: "本地 OCR 与自动清除功能",
-                fd_limit: "这些特性意味着，你在使用 FlashDrop 传输敏感文件时，其安全基础非常扎实。但它并不负责：",
+                fd_limit: "这些特性意味着，你在使用 FlashDrop Pro 传输敏感文件时，其安全基础非常扎实。但它并不负责：",
                 lim_1: "隐藏你的真实源 IP",
                 lim_2: "加密整个网络链接本身",
                 lim_3: "替你对抗 ISP 或网络监控",
                 fd_bridge: "<strong>这正是 VPN 能补齐的部分：</strong>",
                 
-                h3_adv: "结合 FlashDrop 使用 VPN 带来的优势",
+                h3_adv: "结合 FlashDrop Pro 使用 VPN 带来的优势",
                 adv_1t: "全程保护你的设备 IP 和位置",
                 adv_1d: "VPN 会将你的网络流量通过远端服务器转发，让任何第三方难以追踪你的真实来源。",
                 adv_2t: "在公共网络环境中防止中间人攻击",
@@ -396,12 +404,13 @@
 
                 cta_title: "想知道最适合你国家的 VPN？",
                 cta_desc: "我们已经为 FlashDrop Pro 用户整理了一系列按照国家 & 使用场景优化的 VPN 建议 —— 不偏激、不硬卖，只帮助你做出更安全的选择。点击上方的 “Best VPN for Your Country” 一览，查看针对你所在地的个性化推荐。",
-                cta_btn: "查看针对你所在地的个性化推荐 →"
+                cta_btn: "查看针对你所在地的个性化推荐 →",
+                footer_copy: "© 2026 FlashDrop Pro. 保留所有权利。未经允许，禁止转载。"
             },
             en: {
                 title: "Best VPN for Your Country – Privacy Protection Behind Secure File Transfers",
                 tag_guide: "Privacy Guide", tag_sec: "Cybersecurity",
-                nav_back: "← Back to App",
+                nav_back: "← Back to Home",
                 intro1: "The modern internet environment has brought us unprecedented convenience—files can reach the other side of the world instantly, and work collaboration can happen seamlessly across borders. However, just like a double-edged sword, the convenience of data transfer comes with privacy risks: your IP location, online behavior, and even sensitive file contents can potentially be exposed or intercepted during transmission. This is why more and more users are beginning to pay attention to VPNs (Virtual Private Networks).",
                 intro2: "But \"What is the best VPN for me?\" is a question that does not have a single unified answer. Internet environments, privacy laws, and user needs vary by country. This article, combined with the secure file transfer features of FlashDrop Pro, will organize a country-optimized VPN usage guide for you, helping you improve transfer security and efficiency while protecting your own privacy.",
                 h2_why: "Why Do You Need to Choose a Suitable VPN for Your Country?",
@@ -462,13 +471,13 @@
                 fd_2: "Optional AES-256 encryption",
                 fd_3: "Serverless storage, data does not stay in the cloud",
                 fd_4: "Local OCR and auto-wipe functions",
-                fd_limit: "These features mean that when you use FlashDrop to transfer sensitive files, its security foundation is very solid. But it is not responsible for:",
+                fd_limit: "These features mean that when you use FlashDrop Pro to transfer sensitive files, its security foundation is very solid. But it is not responsible for:",
                 lim_1: "Hiding your real source IP",
                 lim_2: "Encrypting the entire network link itself",
                 lim_3: "Combating ISP or network surveillance for you",
                 fd_bridge: "<strong>This is exactly the part that a VPN can complete:</strong>",
                 
-                h3_adv: "Advantages of Using VPN with FlashDrop",
+                h3_adv: "Advantages of Using VPN with FlashDrop Pro",
                 adv_1t: "Protect your device IP and location throughout",
                 adv_1d: "VPNs forward your network traffic through remote servers, making it difficult for any third party to track your true origin.",
                 adv_2t: "Prevent Man-in-the-Middle attacks in public network environments",
@@ -497,12 +506,13 @@
 
                 cta_title: "Want to know the VPN best suited for your country?",
                 cta_desc: "We have organized a series of VPN suggestions optimized by country & usage scenario for FlashDrop Pro users — no bias, no hard selling, just helping you make a safer choice. Click 'Best VPN for Your Country' above to view personalized recommendations for your location.",
-                cta_btn: "View Personalized Recommendations →"
+                cta_btn: "View Personalized Recommendations →",
+                footer_copy: "© 2026 FlashDrop Pro. All rights reserved. Unauthorized reproduction is prohibited."
             },
             ja: {
                 title: "Best VPN for Your Country – 安全なファイル転送の背後にあるプライバシー保護",
                 tag_guide: "プライバシーガイド", tag_sec: "サイバーセキュリティ",
-                nav_back: "← アプリに戻る",
+                nav_back: "← ホームに戻る",
                 intro1: "現代のインターネット環境は私たちにかつてない利便性をもたらしました。ファイルは瞬時に地球の裏側へ届き、仕事の連携は国境を越えてシームレスに行われます。しかし、「諸刃の剣」のように、データ転送の利便性にはプライバシーリスクも伴います。IP位置情報、オンライン行動、さらには機密ファイルの内容までもが、転送中に漏洩したり傍受されたりする可能性があります。これが、ますます多くのユーザーがVPN（Virtual Private Network、仮想プライベートネットワーク）に関心を持ち始めている理由です。",
                 intro2: "しかし、「自分に最適なVPNは何か？」という問いに統一された答えはありません。国によってインターネット環境、プライバシー法規制、ユーザーのニーズは異なります。この記事では、FlashDrop Proの安全なファイル転送機能を踏まえ、あなたのために国別に最適化されたVPN利用ガイドを整理しました。自身のプライバシーを保護しながら、転送の安全性と効率を向上させる手助けをします。",
                 h2_why: "なぜ自分の国に適したVPNを選ぶ必要があるのか？",
@@ -563,13 +573,13 @@
                 fd_2: "オプションのAES-256暗号化",
                 fd_3: "サーバーレスストレージ、データはクラウドに滞留しない",
                 fd_4: "ローカルOCRと自動消去機能",
-                fd_limit: "これらの機能は、FlashDropを使用して機密ファイルを転送する際、そのセキュリティ基盤が非常に強固であることを意味します。しかし、以下のことは担当していません：",
+                fd_limit: "これらの機能は、FlashDrop Proを使用して機密ファイルを転送する際、そのセキュリティ基盤が非常に強固であることを意味します。しかし、以下のことは担当していません：",
                 lim_1: "実際の送信元IPを隠すこと",
                 lim_2: "ネットワークリンク自体全体を暗号化すること",
                 lim_3: "ISPやネットワーク監視に対抗すること",
                 fd_bridge: "<strong>これこそが、VPNが補完できる部分です：</strong>",
                 
-                h3_adv: "FlashDropとVPNを組み合わせて使用する利点",
+                h3_adv: "FlashDrop ProとVPNを組み合わせて使用する利点",
                 adv_1t: "デバイスのIPと位置情報を全行程で保護",
                 adv_1d: "VPNはネットワークトラフィックを遠隔サーバー経由で転送するため、第三者があなたの本当の送信元を追跡することを困難にします。",
                 adv_2t: "公共ネットワーク環境での中間者攻撃を防止",
@@ -598,12 +608,13 @@
 
                 cta_title: "あなたの国に最適なVPNを知りたいですか？",
                 cta_desc: "FlashDrop Proユーザー向けに、国と利用シーンに合わせて最適化された一連のVPN提案を整理しました。偏見や押し売りはなく、より安全な選択をするためのお手伝いです。上の「Best VPN for Your Country」をクリックして、あなたの地域に合わせたパーソナライズされた推奨を確認してください。",
-                cta_btn: "地域別のパーソナライズされた推奨を見る →"
+                cta_btn: "地域別のパーソナライズされた推奨を見る →",
+                footer_copy: "© 2026 FlashDrop Pro. All rights reserved. 無断転載を禁じます。"
             },
             ko: {
                 title: "Best VPN for Your Country – 안전한 파일 전송 뒤의 개인정보 수호자",
                 tag_guide: "개인정보 가이드", tag_sec: "사이버 보안",
-                nav_back: "← 앱으로 돌아가기",
+                nav_back: "← 홈으로 돌아가기",
                 intro1: "현대 인터넷 환경은 우리에게 전례 없는 편리함을 가져다주었습니다. 파일은 순식간에 지구 반대편으로 도달하고, 업무 협업은 국경을 넘어 매끄럽게 진행됩니다. 그러나 '양날의 검'처럼 데이터 전송의 편리함은 개인정보 위험도 동반합니다. 사용자의 IP 위치, 온라인 행동, 심지어 민감한 파일 내용까지 전송 중에 노출되거나 가로채질 수 있습니다. 이것이 점점 더 많은 사용자가 VPN(가상 사설망)에 관심을 갖는 이유입니다.",
                 intro2: "하지만 '나에게 가장 적합한 VPN은 무엇인가?'라는 질문에 정해진 정답은 없습니다. 국가마다 인터넷 환경, 개인정보 보호 법규, 사용자 요구가 다르기 때문입니다. 이 글에서는 FlashDrop Pro의 안전한 파일 전송 특징과 결합하여, 당신을 위해 국가별 최적화된 VPN 사용 가이드를 정리해 드립니다. 이를 통해 개인정보를 보호하면서 전송 보안과 효율성을 높일 수 있습니다.",
                 h2_why: "왜 내 국가에 맞는 VPN을 선택해야 할까요?",
@@ -664,13 +675,13 @@
                 fd_2: "선택적 AES-256 암호화",
                 fd_3: "서버리스 저장소, 데이터가 클라우드에 머물지 않음",
                 fd_4: "로컬 OCR 및 자동 삭제 기능",
-                fd_limit: "이러한 특징은 FlashDrop을 사용하여 민감한 파일을 전송할 때 보안 기반이 매우 탄탄함을 의미합니다. 하지만 다음은 책임지지 않습니다:",
+                fd_limit: "이러한 특징은 FlashDrop Pro를 사용하여 민감한 파일을 전송할 때 보안 기반이 매우 탄탄함을 의미합니다. 하지만 다음은 책임지지 않습니다:",
                 lim_1: "실제 소스 IP 숨기기",
                 lim_2: "네트워크 링크 자체 전체 암호화",
                 lim_3: "ISP 또는 네트워크 감시 대항",
                 fd_bridge: "<strong>이것이 바로 VPN이 보완해 줄 수 있는 부분입니다:</strong>",
                 
-                h3_adv: "FlashDrop과 VPN을 함께 사용할 때의 이점",
+                h3_adv: "FlashDrop Pro와 VPN을 함께 사용할 때의 이점",
                 adv_1t: "기기 IP 및 위치 전체 보호",
                 adv_1d: "VPN은 네트워크 트래픽을 원격 서버를 통해 전달하여 제3자가 실제 출처를 추적하기 어렵게 만듭니다.",
                 adv_2t: "공공 네트워크 환경에서 중간자 공격 방지",
@@ -699,12 +710,13 @@
 
                 cta_title: "내 국가에 가장 적합한 VPN을 알고 싶으신가요?",
                 cta_desc: "FlashDrop Pro 사용자를 위해 국가 및 사용 시나리오별로 최적화된 일련의 VPN 제안을 정리했습니다. 편향되거나 강매하지 않으며, 더 안전한 선택을 돕기 위함입니다. 상단의 'Best VPN for Your Country'를 클릭하여 거주 지역에 맞는 맞춤형 추천을 확인해 보세요.",
-                cta_btn: "지역별 맞춤 추천 보기 →"
+                cta_btn: "지역별 맞춤 추천 보기 →",
+                footer_copy: "© 2026 FlashDrop Pro. All rights reserved. 무단 전재 금지."
             },
             es: {
                 title: "Best VPN for Your Country – La guardia de privacidad detrás de la transferencia segura de archivos",
                 tag_guide: "Guía de Privacidad", tag_sec: "Ciberseguridad",
-                nav_back: "← Volver a la aplicación",
+                nav_back: "← Volver al Inicio",
                 intro1: "El entorno moderno de Internet nos ha brindado una conveniencia sin precedentes: los archivos pueden llegar al otro lado del mundo al instante y la colaboración laboral puede realizarse sin problemas a través de las fronteras. Sin embargo, como un arma de doble filo, la conveniencia de la transferencia de datos también conlleva riesgos de privacidad: tu ubicación IP, comportamiento en línea e incluso el contenido de archivos sensibles pueden quedar expuestos o ser interceptados durante la transmisión. Esta es la razón por la que cada vez más usuarios comienzan a interesarse por las VPN (Redes Privadas Virtuales).",
                 intro2: "Pero, '¿Cuál es la mejor VPN para mí?' es una pregunta que no tiene una única respuesta. El entorno de red, las leyes de privacidad y las necesidades de los usuarios varían según el país. Este artículo, combinado con las características de transferencia segura de archivos de FlashDrop Pro, organiza una guía de uso de VPN optimizada por país para ti, ayudándote a proteger tu privacidad mientras mejoras la seguridad y eficiencia de la transferencia.",
                 h2_why: "¿Por qué necesitas elegir una VPN adecuada para tu país?",
@@ -765,13 +777,13 @@
                 fd_2: "Cifrado AES-256 opcional",
                 fd_3: "Almacenamiento sin servidor; los datos no permanecen en la nube",
                 fd_4: "OCR local y funciones de borrado automático",
-                fd_limit: "Estas características significan que cuando transfieres archivos sensibles usando FlashDrop, su base de seguridad es muy sólida. Pero no se encarga de:",
+                fd_limit: "Estas características significan que cuando transfieres archivos sensibles usando FlashDrop Pro, su base de seguridad es muy sólida. Pero no se encarga de:",
                 lim_1: "Ocultar tu IP de origen real",
                 lim_2: "Cifrar el enlace de red completo en sí mismo",
                 lim_3: "Combatir la vigilancia del ISP o de la red por ti",
                 fd_bridge: "<strong>Esto es exactamente la parte que una VPN puede completar:</strong>",
                 
-                h3_adv: "Ventajas de usar VPN con FlashDrop",
+                h3_adv: "Ventajas de usar VPN con FlashDrop Pro",
                 adv_1t: "Proteger la IP y ubicación de tu dispositivo en todo el proceso",
                 adv_1d: "Una VPN reenvía tu tráfico de red a través de servidores remotos, dificultando que terceros rastreen tu origen real.",
                 adv_2t: "Prevenir ataques de intermediarios en entornos de red pública",
@@ -800,12 +812,13 @@
 
                 cta_title: "¿Quieres saber cuál es la VPN más adecuada para tu país?",
                 cta_desc: "Hemos organizado una serie de sugerencias de VPN optimizadas por país y escenario de uso para usuarios de FlashDrop Pro: sin sesgos, sin ventas agresivas, solo para ayudarte a tomar una decisión más segura. Haz clic en 'Best VPN for Your Country' arriba para ver recomendaciones personalizadas para tu ubicación.",
-                cta_btn: "Ver recomendaciones personalizadas →"
+                cta_btn: "Ver recomendaciones personalizadas →",
+                footer_copy: "© 2026 FlashDrop Pro. Todos los derechos reservados. Prohibida su reproducción no autorizada."
             },
             hi: {
                 title: "Best VPN for Your Country – सुरक्षित फ़ाइल ट्रांसफ़र के पीछे गोपनीयता रक्षक",
                 tag_guide: "गोपनीयता गाइड", tag_sec: "साइबर सुरक्षा",
-                nav_back: "← वापस ऐप पर जाएं",
+                nav_back: "← होम पर वापस जाएं",
                 intro1: "आधुनिक इंटरनेट वातावरण ने हमें अभूतपूर्व सुविधा दी है—फ़ाइलें पल भर में दुनिया के दूसरे छोर तक पहुँच सकती हैं, और काम का सहयोग सीमाओं के पार निर्बाध रूप से हो सकता है। हालाँकि, दोधारी तलवार की तरह, डेटा ट्रांसफ़र की सुविधा गोपनीयता जोखिमों के साथ भी आती है: आपका IP स्थान, ऑनलाइन व्यवहार और यहाँ तक कि संवेदनशील फ़ाइल सामग्री भी ट्रांसमिशन के दौरान उजागर या इंटरसेप्ट की जा सकती है। यही कारण है कि अधिक से अधिक उपयोगकर्ता VPN (वर्चुअल प्राइवेट नेटवर्क) पर ध्यान दे रहे हैं।",
                 intro2: "लेकिन 'मेरे लिए सबसे अच्छा VPN कौन सा है?' इस प्रश्न का कोई एक उत्तर नहीं है। विभिन्न देशों के नेटवर्क वातावरण, गोपनीयता कानून और उपयोगकर्ता की ज़रूरतें अलग-अलग हैं। यह लेख FlashDrop Pro की सुरक्षित फ़ाइल ट्रांसफ़र विशेषताओं के साथ मिलकर, आपके लिए एक देश के अनुसार अनुकूलित VPN उपयोग गाइड व्यवस्थित करेगा, ताकि आप अपनी गोपनीयता की रक्षा करते हुए ट्रांसफ़र सुरक्षा और दक्षता में सुधार कर सकें।",
                 h2_why: "आपको अपने देश के लिए उपयुक्त VPN चुनने की आवश्यकता क्यों है?",
@@ -866,13 +879,13 @@
                 fd_2: "वैकल्पिक AES-256 एन्क्रिप्शन",
                 fd_3: "सर्वर-रहित स्टोरेज, डेटा क्लाउड में नहीं रहता",
                 fd_4: "लोकल OCR और ऑटो-वाइप फ़ंक्शन",
-                fd_limit: "इन विशेषताओं का मतलब है कि जब आप FlashDrop का उपयोग करके संवेदनशील फ़ाइलें भेजते हैं, तो इसकी सुरक्षा नींव बहुत ठोस होती है। लेकिन यह इसके लिए जिम्मेदार नहीं है:",
+                fd_limit: "इन विशेषताओं का मतलब है कि जब आप FlashDrop Pro का उपयोग करके संवेदनशील फ़ाइलें भेजते हैं, तो इसकी सुरक्षा नींव बहुत ठोस होती है। लेकिन यह इसके लिए जिम्मेदार नहीं है:",
                 lim_1: "अपने वास्तविक स्रोत IP को छिपाना",
                 lim_2: "पूरे नेटवर्क लिंक को ही एन्क्रिप्ट करना",
                 lim_3: "आपके लिए ISP या नेटवर्क निगरानी का मुकाबला करना",
                 fd_bridge: "<strong>यही वह हिस्सा है जिसे VPN पूरा कर सकता है:</strong>",
                 
-                h3_adv: "FlashDrop के साथ VPN का उपयोग करने के लाभ",
+                h3_adv: "FlashDrop Pro के साथ VPN का उपयोग करने के लाभ",
                 adv_1t: "पूरी प्रक्रिया में अपने डिवाइस IP और स्थान की सुरक्षा करें",
                 adv_1d: "VPN आपके नेटवर्क ट्रैफ़िक को रिमोट सर्वर के माध्यम से फॉरवर्ड करता है, जिससे किसी भी तीसरे पक्ष के लिए आपके वास्तविक स्रोत को ट्रैक करना मुश्किल हो जाता है।",
                 adv_2t: "सार्वजनिक नेटवर्क वातावरण में 'मैन-इन-द-मिडल' हमलों को रोकें",
@@ -901,7 +914,8 @@
 
                 cta_title: "क्या आप अपने देश के लिए सबसे उपयुक्त VPN जानना चाहते हैं?",
                 cta_desc: "हमने FlashDrop Pro उपयोगकर्ताओं के लिए देश और उपयोग परिदृश्य द्वारा अनुकूलित VPN सुझावों की एक श्रृंखला व्यवस्थित की है — कोई पूर्वाग्रह नहीं, कोई जबरदस्ती बिक्री नहीं, बस आपको सुरक्षित विकल्प चुनने में मदद करने के लिए। अपने स्थान के लिए व्यक्तिगत सिफारिशें देखने के लिए ऊपर 'Best VPN for Your Country' पर क्लिक करें।",
-                cta_btn: "व्यक्तिगत सिफारिशें देखें →"
+                cta_btn: "व्यक्तिगत सिफारिशें देखें →",
+                footer_copy: "© 2026 FlashDrop Pro. सर्वाधिकार सुरक्षित। अनधिकृत पुनरुत्पादन निषिद्ध है।"
             }
         };
 
@@ -1032,6 +1046,9 @@
             document.getElementById('cta_title').innerText = d.cta_title;
             document.getElementById('cta_desc').innerText = d.cta_desc;
             document.getElementById('cta_btn').innerText = d.cta_btn;
+
+            // 11. Footer
+            document.getElementById('footer-copy').innerText = d.footer_copy;
         }
 
         window.onload = () => {
