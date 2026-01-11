@@ -479,6 +479,57 @@
     color: white; /* 悬停变亮 */
     transform: translateX(3px); /* 悬停微微右移，增加交互感 */
 }
+        /* 将这段 CSS 放在 <style> 标签里，或者直接就在这里 */
+    .limit-selector-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        background: #1e293b; /* 与左边按钮一致的背景 */
+        border: 1.5px solid #334155;
+        border-radius: 8px;
+        height: 40px;
+        padding: 0 10px;
+        transition: 0.2s;
+        min-width: 140px;
+    }
+    
+    .limit-selector-wrap:hover {
+        border-color: #6366f1; /* 悬停变亮 */
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+    }
+
+    .limit-icon {
+        font-size: 14px;
+        margin-right: 8px;
+        pointer-events: none;
+    }
+
+    .custom-select {
+        appearance: none; /* 去掉默认丑陋样式 */
+        -webkit-appearance: none;
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+    }
+
+    /* 让下拉菜单的选项也是深色的 */
+    .custom-select option {
+        background: #0f172a;
+        color: white;
+        padding: 10px;
+    }
+
+    .limit-arrow {
+        font-size: 10px;
+        color: #94a3b8;
+        pointer-events: none;
+        margin-left: 5px;
+    }
     </style>
 </head>
 <body>
@@ -684,15 +735,16 @@
                             </div>
                         </div>
 
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span id="limit-label" style="font-size:13px; color:#94a3b8; font-weight:700;">Limit:</span>
-                            <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
-                                <option value="1">1 Time</option>
-                                <option value="3">3 Times</option>
-                                <option value="5">5 Times</option>
-                                <option value="999">Unlimited</option>
-                            </select>
-                        </div>
+                        <div class="limit-selector-wrap">
+    <span class="limit-icon">🎯</span>
+    <select id="downloadLimit" class="custom-select">
+        <option value="1">1 Download</option>
+        <option value="3">3 Downloads</option>
+        <option value="5">5 Downloads</option>
+        <option value="999">Unlimited</option>
+    </select>
+    <span class="limit-arrow">▼</span>
+</div>
                     </div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
                     <div id="senderCodeArea">
