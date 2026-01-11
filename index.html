@@ -1334,23 +1334,27 @@ function runOCRWithAd(imageBlob) {
     function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
     function confirmEncryption() { const p = document.getElementById('crypto-password').value; const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8; if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; } aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal(); }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
-   /* --- [增强版] 文件处理：带漏斗动画 --- */
+/* --- [最终增强版] 文件处理：强制显示漏斗动画 --- */
     async function handleFiles(files) {
         // 0. 如果没选文件，直接退出
         if (!files || files.length === 0) return;
 
-        // 1. 立即显示漏斗弹窗
+        // 1. 立即显示漏斗弹窗 (强制显示)
         const modal = document.getElementById('processingModal');
-        if (modal) modal.style.display = 'flex';
+        if (modal) {
+            modal.style.display = 'flex';
+            // 强制重绘：这一行看似没用，但能强迫浏览器立刻渲染出弹窗
+            modal.offsetHeight; 
+        }
 
-        // 2. 【关键一步】强制让程序暂停 100毫秒
-        // 这给了浏览器时间去渲染“漏斗动画”，否则界面会直接卡死在这一步
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // 2. 【关键】强制暂停 200毫秒
+        // 这段时间足够浏览器把“沙漏”画出来，避免界面卡死
+        await new Promise(resolve => setTimeout(resolve, 200));
 
-        // 3. 开始处理繁重的文件分析任务 (AI识别敏感词等)
+        // 3. 开始繁重的处理任务
         try {
             stagedFiles = stagedFiles.concat(Array.from(files));
-            // renderStagedList 里包含了 AI 分析，是大文件卡顿的源头
+            // 这一步包含 AI 分析，是最耗时的部分
             renderStagedList(); 
             document.getElementById('fileInput').value = '';
         } catch (e) {
@@ -1358,7 +1362,7 @@ function runOCRWithAd(imageBlob) {
             showCustomAlert("Error processing files.");
         }
 
-        // 4. 全部搞定，关闭漏斗
+        // 4. 全部搞定后，再关闭漏斗
         if (modal) modal.style.display = 'none';
     }
     function getFileIcon(name) { const ext = name.split('.').pop().toLowerCase(); if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️'; if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬'; if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵'; if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦'; if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻'; if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄'; return '📁'; }
