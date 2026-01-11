@@ -1270,34 +1270,58 @@ function runOCRWithAd(imageBlob) {
     function requestPassword(attemptsLeft) { return new Promise((resolve) => { const modal = document.getElementById('pass-input-modal'); const inp = document.getElementById('alert-password-input'); const errDiv = document.getElementById('pass-error-msg'); const btnOk = document.getElementById('btn-pass-confirm'); const btnCancel = document.getElementById('btn-pass-cancel'); inp.type = "password"; const toggle = modal.querySelector('.pwd-toggle'); if(toggle) toggle.innerText = "🙈"; document.getElementById('recv-fingerprint').style.display = 'none'; document.getElementById('recv-hash-hint').style.display = 'none'; if (attemptsLeft !== undefined) { errDiv.innerText = `${I18N[currLang].passWrong} ${attemptsLeft} ${I18N[currLang].passRemaining}`; inp.classList.add('input-error'); setTimeout(() => inp.classList.remove('input-error'), 500); } else { errDiv.innerText = ""; inp.value = ""; } modal.style.display = 'flex'; inp.focus(); const cleanup = () => { btnOk.onclick = null; btnCancel.onclick = null; inp.onkeydown = null; }; const confirm = () => { const val = inp.value; if(val) { cleanup(); resolve(val); } }; btnOk.onclick = confirm; btnCancel.onclick = () => { cleanup(); modal.style.display = 'none'; resolve(null); }; inp.onkeydown = (e) => { if(e.key === 'Enter') confirm(); }; }); }
     function initDragAndDrop() { const dz = document.getElementById('drop-zone'); document.body.addEventListener('dragenter', (e) => { if (e.dataTransfer.types && e.dataTransfer.types.includes('Files')) { e.preventDefault(); dz.style.display = 'flex'; } }); ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(name => { document.body.addEventListener(name, (e) => { e.preventDefault(); e.stopPropagation(); }, false); }); dz.addEventListener('dragleave', (e) => { if(e.target === dz) dz.style.display = 'none'; }); dz.addEventListener('drop', (e) => { dz.style.display = 'none'; handleFiles(e.dataTransfer.files); document.getElementById('tab-send').click(); }); }
     function dismissAdBlock() { isAdBlockIgnored = true; document.getElementById('safety-notice-view').style.display = 'none'; document.querySelectorAll('.ad-space, .ad-side').forEach(el => el.style.display = 'none'); }
-    
-/* --- [关键更新] 触发广告 (带空状态拦截验证) --- */
+  
+   /* --- [修改版] 触发逻辑 (带按钮延时反馈) --- */
     function triggerAd(mode) { 
         const d = I18N[currLang] || I18N['en'];
 
-        // 1. 发送文件模式：必须有文件
+        // 1. 发送文件模式
         if (mode === 'send-file') {
             if (!stagedFiles || stagedFiles.length === 0) {
                 showCustomAlert(d.fileErr || "Please select files first.");
-                return; // 拦截，不继续
+                return; 
             }
-            initSender();
+            
+            // 按钮视觉反馈：强制显示连接中，防止闪烁
+            const btn = document.getElementById('btn-share-files');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Connecting...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true; // 防止重复点击
+
+            // 延迟 50ms 执行，确保 UI 渲染
+            setTimeout(() => {
+                initSender(); // 执行核心逻辑
+                
+                // 强制等待 2秒 再恢复按钮，让用户确信点击生效了
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.opacity = "1";
+                    btn.disabled = false;
+                }, 2000);
+            }, 50);
         }
-        // 2. 发送文字模式：必须有文字
+        // 2. 发送文字模式
         else if (mode === 'send-text') {
             const textVal = document.getElementById('quickText').value.trim();
             if (!textVal) {
                 showCustomAlert(d.textErr || "Please enter text first.");
-                return; // 拦截，不继续
+                return; 
             }
+            const btn = document.getElementById('btn-share-text');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳...";
+            
             initSender();
+            
+            setTimeout(() => btn.innerText = originalText, 2000);
         }
-        // 3. 接收模式：验证码必须够6位
+        // 3. 接收模式
         else if (mode === 'receive') {
             const codeVal = document.getElementById('targetCode').value.trim();
             if (!codeVal || codeVal.length < 6) {
                 showCustomAlert(d.inputErr || "Enter 6-digit code.");
-                return; // 拦截，不继续
+                return; 
             }
             startReceiving();
         }
@@ -1310,7 +1334,29 @@ function runOCRWithAd(imageBlob) {
     function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
     function confirmEncryption() { const p = document.getElementById('crypto-password').value; const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8; if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; } aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal(); }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
-    function handleFiles(files) { stagedFiles = stagedFiles.concat(Array.from(files)); renderStagedList(); document.getElementById('fileInput').value = ''; }
+    /* --- [修改版] 文件处理 (带漏斗动画) --- */
+    async function handleFiles(files) { 
+        if (!files || files.length === 0) return;
+
+        // 1. 打开漏斗动画
+        const modal = document.getElementById('processingModal');
+        if(modal) modal.style.display = 'flex';
+
+        // 2. 强制等待 100ms，让浏览器有时间把弹窗画出来
+        await new Promise(r => setTimeout(r, 100));
+
+        // 3. 开始繁重的处理任务 (文件列表 + AI分析)
+        try {
+            stagedFiles = stagedFiles.concat(Array.from(files)); 
+            renderStagedList(); 
+            document.getElementById('fileInput').value = '';
+        } catch(e) {
+            console.error(e);
+        }
+
+        // 4. 处理完毕，关闭动画
+        if(modal) modal.style.display = 'none';
+    }
     function getFileIcon(name) { const ext = name.split('.').pop().toLowerCase(); if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️'; if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬'; if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵'; if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦'; if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻'; if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄'; return '📁'; }
     function renderStagedList() { const list = document.getElementById('stagedList'); if (stagedFiles.length === 0) { list.style.display = 'none'; document.getElementById('file-count-badge').style.display = 'none'; AIEngine.renderTags({ tags: [], risk: false }); } else { list.style.display = 'block'; const badge = document.getElementById('file-count-badge'); badge.style.display = 'block'; badge.innerText = `${stagedFiles.length} File${stagedFiles.length > 1 ? 's' : ''}`; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); const aiTags = AIEngine.analyze(stagedFiles); AIEngine.renderTags(aiTags); } }
     function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
@@ -1343,5 +1389,17 @@ function runOCRWithAd(imageBlob) {
     function initStars() { const c = document.getElementById('stars'); for(let i=0; i<80; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.width = s.style.height = Math.random()*2+'px'; s.style.left = Math.random()*100+'%'; s.style.top = Math.random()*100+'%'; s.style.animationDuration = Math.random()*20+20+'s'; c.appendChild(s); } }
     window.onload = () => { initStars(); applyI18N(); initDragAndDrop(); renderHistory(); updateNetworkStatus(); checkUrlCode(); };
 </script>
+    <div class="modal-overlay" id="processingModal" style="z-index: 20000;">
+    <div style="font-size: 50px; margin-bottom: 20px; animation: hourglass 2s infinite;">⏳</div>
+    <div style="color:white; font-weight:bold; font-size:18px;">Processing...</div>
+    <div style="font-size:12px; color:#94a3b8; margin-top:5px;">Analyzing files & preparing security</div>
+</div>
+<style>
+    @keyframes hourglass { 
+        0% { transform: rotate(0deg); } 
+        50% { transform: rotate(180deg); } 
+        100% { transform: rotate(180deg); } 
+    }
+</style>
 </body>
 </html>
