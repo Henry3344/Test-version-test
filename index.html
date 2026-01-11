@@ -479,92 +479,57 @@
     color: white; /* 悬停变亮 */
     transform: translateX(3px); /* 悬停微微右移，增加交互感 */
 }
-/* --- [修改/新增] 选择器按钮组美化样式 --- */
-.control-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* 按钮之间的间距 */
-    margin: 15px 0;
-    flex-wrap: wrap; /* 手机屏幕小的时候自动换行 */
-}
+        /* 将这段 CSS 放在 <style> 标签里，或者直接就在这里 */
+    .limit-selector-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        background: #1e293b; /* 与左边按钮一致的背景 */
+        border: 1.5px solid #334155;
+        border-radius: 8px;
+        height: 40px;
+        padding: 0 10px;
+        transition: 0.2s;
+        min-width: 140px;
+    }
+    
+    .limit-selector-wrap:hover {
+        border-color: #6366f1; /* 悬停变亮 */
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
+    }
 
-/* 统一的选择器容器样式 */
-.selector-wrap {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    background: rgba(30, 41, 59, 0.6); /* 半透明深色背景 */
-    border: 1.5px solid #334155;
-    border-radius: 12px; /* 更圆润一点 */
-    height: 46px; /* 增加一点高度，更方便点击 */
-    padding: 0 12px;
-    transition: all 0.2s ease;
-    flex: 1; /* 让它们自动平分宽度 */
-    min-width: 120px;
-    cursor: pointer;
-}
+    .limit-icon {
+        font-size: 14px;
+        margin-right: 8px;
+        pointer-events: none;
+    }
 
-/* 悬停时的发光效果 */
-.selector-wrap:hover {
-    border-color: #6366f1;
-    background: rgba(30, 41, 59, 0.9);
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
-    transform: translateY(-1px);
-}
+    .custom-select {
+        appearance: none; /* 去掉默认丑陋样式 */
+        -webkit-appearance: none;
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 13px;
+        font-weight: 700;
+        width: 100%;
+        cursor: pointer;
+        outline: none;
+    }
 
-.selector-icon {
-    font-size: 16px;
-    margin-right: 8px;
-    filter: grayscale(0.5); /* 图标稍微低调点 */
-    transition: 0.2s;
-}
-.selector-wrap:hover .selector-icon {
-    filter: grayscale(0); /* 悬停时图标变亮 */
-    transform: scale(1.1);
-}
+    /* 让下拉菜单的选项也是深色的 */
+    .custom-select option {
+        background: #0f172a;
+        color: white;
+        padding: 10px;
+    }
 
-/* 隐藏原生下拉框的丑陋边框 */
-.custom-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 13px;
-    font-weight: 700;
-    width: 100%;
-    cursor: pointer;
-    outline: none;
-    z-index: 2; /* 确保点击能触发 */
-}
-
-/* 下拉选项的背景色（防止在大白背景下刺眼） */
-.custom-select option {
-    background: #0f172a;
-    color: #cbd5e1;
-    padding: 10px;
-}
-
-.selector-arrow {
-    font-size: 10px;
-    color: #64748b;
-    pointer-events: none;
-    margin-left: auto; /* 强制靠右 */
-    transition: 0.2s;
-}
-.selector-wrap:hover .selector-arrow {
-    color: white;
-}
-
-/* 针对AES按钮的微调，让它和另外两个高度一致 */
-.protection-btn {
-    height: 46px !important; 
-    border-radius: 12px !important;
-    margin-right: 0 !important; /* 既然用了gap，就不需要margin-right了 */
-    flex: 1;
-    min-width: 130px;
-}
+    .limit-arrow {
+        font-size: 10px;
+        color: #94a3b8;
+        pointer-events: none;
+        margin-left: 5px;
+    }
     </style>
 </head>
 <body>
@@ -728,73 +693,57 @@
                         </div>
                     </div>
 
-                    <div style="margin: 15px 0;">
-    
-    <div class="control-row">
-        <label class="protection-btn" onclick="event.preventDefault(); showCryptoModal()">
-            <input type="checkbox" id="protection-toggle-input"> 
-            <span class="btn-content">
-                <span class="state off" style="color:#f59e0b; display:flex; align-items:center; gap:6px; justify-content:center;">
-                    <span>⚠️</span> <span id="aes-off-txt">AES OFF</span>
-                </span>
-                <span class="state on" style="color:#fff; display:none; align-items:center; gap:6px; justify-content:center;">
-                    <span>🛡️</span> <span id="aes-on-txt">AES ON</span>
-                </span>
-            </span>
-        </label>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; flex-wrap:wrap;">
+                        <label class="protection-btn" onclick="event.preventDefault(); showCryptoModal()">
+                            <input type="checkbox" id="protection-toggle-input"> <span class="btn-content">
+                                <span class="state off" style="color:#f59e0b; display:flex; align-items:center; gap:6px;">
+                                    <span>⚠️</span> <span id="aes-off-txt">AES-256 OFF</span>
+                                </span>
+                                <span class="state on" style="color:#fff; display:none; align-items:center; gap:6px;">
+                                    <span>🛡️</span> <span id="aes-on-txt">AES-256 ON</span>
+                                </span>
+                            </span>
+                        </label>
 
-        <div class="selector-wrap" title="Set Expiration Time">
-            <span class="selector-icon">⏳</span>
-            <select id="expiryTime" class="custom-select">
-                <option value="1">1 Min</option>
-                <option value="10" selected>10 Mins</option>
-                <option value="20">20 Mins</option>
-            </select>
-            <span class="selector-arrow">▼</span>
-        </div>
+                        <div id="crypto-modal" class="crypto-modal">
+                            <div class="crypto-modal-card">
+                                <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
+                                
+                                <div class="pwd-group">
+                                    <input type="password" id="crypto-password" placeholder="Type a strong password..." 
+                                           oninput="checkStrength(this.value)" 
+                                           onkeyup="updateFingerprint(this.value, 'send-fingerprint', 'send-hash-hint')" 
+                                           autocomplete="new-password">
+                                    <div class="pwd-divider"></div>
+                                    <div class="pwd-toggle" onclick="togglePwd('crypto-password', this)">🙈</div>
+                                </div>
+                                
+                                <p id="send-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
+                                
+                                <div id="send-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));"></div>
 
-        <div class="selector-wrap" title="Set Download Limit">
-            <span class="selector-icon">🎯</span>
-            <select id="downloadLimit" class="custom-select">
-                <option value="1">1 Download</option>
-                <option value="3">3 Downloads</option>
-                <option value="5">5 Downloads</option>
-                <option value="999">Unlimited</option>
-            </select>
-            <span class="selector-arrow">▼</span>
-        </div>
-    </div>
+                                <div class="strength-wrapper">
+                                    <div class="strength-track">
+                                        <div id="strength-bar-fill"></div>
+                                    </div>
+                                    <div id="strength-text" style="opacity:0.8">Empty</div>
+                                </div>
+                                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                                    <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 12px; margin:0;" onclick="confirmEncryption()">ENABLE</button>
+                                    <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 12px; background: #334155; margin:0;" onclick="closeCryptoModal()">CANCEL</button>
+                                </div>
+                            </div>
+                        </div>
 
-    <div id="crypto-modal" class="crypto-modal">
-        <div class="crypto-modal-card">
-            <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
-            
-            <div class="pwd-group">
-                <input type="password" id="crypto-password" placeholder="Type a strong password..." 
-                       oninput="checkStrength(this.value)" 
-                       onkeyup="updateFingerprint(this.value, 'send-fingerprint', 'send-hash-hint')" 
-                       autocomplete="new-password">
-                <div class="pwd-divider"></div>
-                <div class="pwd-toggle" onclick="togglePwd('crypto-password', this)">🙈</div>
-            </div>
-            
-            <p id="send-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
-            
-            <div id="send-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));"></div>
-
-            <div class="strength-wrapper">
-                <div class="strength-track">
-                    <div id="strength-bar-fill"></div>
-                </div>
-                <div id="strength-text" style="opacity:0.8">Empty</div>
-            </div>
-            <div style="display: flex; gap: 10px; margin-top: 10px;">
-                <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 12px; margin:0;" onclick="confirmEncryption()">ENABLE</button>
-                <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 12px; background: #334155; margin:0;" onclick="closeCryptoModal()">CANCEL</button>
-            </div>
-        </div>
-    </div>
-
+                        <div class="limit-selector-wrap">
+    <span class="limit-icon">🎯</span>
+    <select id="downloadLimit" class="custom-select">
+        <option value="1">1 Download</option>
+        <option value="3">3 Downloads</option>
+        <option value="5">5 Downloads</option>
+        <option value="999">Unlimited</option>
+    </select>
+    <span class="limit-arrow">▼</span>
 </div>
                     </div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
@@ -1490,26 +1439,7 @@ function runOCRWithAd(imageBlob) {
     function renderHistory() { const list = document.getElementById('history-list'); const h = JSON.parse(localStorage.getItem('fd_history') || "[]"); list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join(''); }
     function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); showCustomAlert("Copied!"); document.getElementById('receivedText').innerText = ""; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); } resetReceiver(); }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
-   // [修改] 倒计时逻辑，根据用户选择的时间来设定
-function startExpiryTimer() { 
-    // 获取用户选择的分钟数 (默认10)
-    const mins = parseInt(document.getElementById('expiryTime').value) || 10;
-    let sec = mins * 60; // 转换成秒
-    
-    if(expiryTimerIdx) clearInterval(expiryTimerIdx);
-    
-    // 立即更新一次显示，避免延迟1秒
-    document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`;
-
-    expiryTimerIdx = setInterval(() => { 
-        sec--; 
-        // 格式化时间显示 (MM:SS)
-        document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; 
-        
-        // 时间到，重置发送端
-        if(sec <= 0) resetSender(); 
-    }, 1000); 
-}
+    function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
     function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('ai-suggestions').style.display = 'none'; 
         // [修复] 安全清理 text panel
         const textPanel = document.getElementById('text-ai-suggestions');
