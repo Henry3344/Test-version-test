@@ -298,12 +298,12 @@
         .step-item:first-child .step-dot { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
         .step-item:first-child span { color: white; }
 
-/* --- VPN 横幅专用样式 (升级版) --- */
+/* --- VPN 横幅专用样式 (手机优化版) --- */
 .native-promo-container {
     background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%);
     border: 1px solid rgba(99, 102, 241, 0.3); /* 边框发光 */
     border-radius: 16px;
-    padding: 20px 25px;
+    padding: 15px 20px; /* 减小内边距 */
     display: flex;
     flex-direction: row; /* 电脑端横向排列 */
     align-items: center;
@@ -313,10 +313,10 @@
     position: relative;
     overflow: hidden;
     box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
-    gap: 20px;
+    gap: 15px; /* 减小间距 */
 }
 
-/* 背景网格装饰 (不抢眼，但增加质感) */
+/* 背景网格装饰 */
 .promo-bg-grid {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
@@ -326,20 +326,22 @@
     pointer-events: none;
 }
 
+/* 图标+文字 容器 */
 .promo-content {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    z-index: 1; /* 确保在背景之上 */
+    align-items: center; /* 垂直居中 */
+    gap: 15px; /* 图标和文字的间距 */
+    z-index: 1;
     flex: 1;
+    text-align: left; /* 强制左对齐 */
 }
 
-/* 图标容器 */
+/* 图标容器 (固定大小) */
 .promo-icon-box {
     position: relative;
-    width: 50px;
-    height: 50px;
-    flex-shrink: 0;
+    width: 40px; /* 稍微调小一点，适配手机 */
+    height: 40px;
+    flex-shrink: 0; /* 防止被挤压 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -349,25 +351,23 @@
 .floating-shield {
     width: 100%;
     height: 100%;
-    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.6)); /* 发光效果 */
-    animation: floatShield 3s ease-in-out infinite; /* 浮动动画 */
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+    animation: floatShield 3s ease-in-out infinite;
 }
 
-/* 浮动关键帧 */
 @keyframes floatShield {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    50% { transform: translateY(-4px); } /* 浮动幅度减小 */
 }
 
-/* 图标底部光晕 */
 .icon-glow {
     position: absolute;
-    bottom: -5px;
-    width: 30px;
-    height: 10px;
+    bottom: -3px;
+    width: 24px;
+    height: 8px;
     background: rgba(99, 102, 241, 0.4);
     border-radius: 50%;
-    filter: blur(5px);
+    filter: blur(4px);
     animation: shadowScale 3s ease-in-out infinite;
 }
 
@@ -376,11 +376,13 @@
     50% { transform: scale(0.6); opacity: 0.2; }
 }
 
+/* 文字部分 */
 .promo-text h3 {
     color: #ffffff;
-    margin: 0 0 4px 0;
-    font-size: 18px;
+    margin: 0 0 2px 0;
+    font-size: 16px; /* 字体稍微调小 */
     font-weight: 800;
+    line-height: 1.2;
     background: linear-gradient(90deg, #fff, #c7d2fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -389,8 +391,8 @@
 .promo-text p {
     color: #94a3b8;
     margin: 0;
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 12px;
+    line-height: 1.3;
 }
 
 /* 按钮样式 */
@@ -398,15 +400,16 @@
     background: #6366f1;
     color: white;
     text-decoration: none;
-    padding: 12px 24px;
+    padding: 10px 16px;
     border-radius: 10px;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     white-space: nowrap;
     transition: all 0.2s;
     box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     z-index: 1;
     text-align: center;
+    flex-shrink: 0; /* 按钮不许被挤压 */
 }
 
 .promo-btn:hover {
@@ -415,24 +418,29 @@
     box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
 }
 
-/* 移动端适配：变为垂直排列 */
+/* 📱 移动端适配 (关键修改) */
 @media (max-width: 768px) {
     .native-promo-container {
-        flex-direction: column;
-        text-align: center;
-        padding: 20px;
-        gap: 15px;
+        flex-direction: column; /* 整体还是上下排：上面是(图+文)，下面是按钮 */
+        align-items: stretch; /* 拉伸占满宽度 */
+        gap: 12px;
+        padding: 15px;
     }
     
     .promo-content {
-        flex-direction: column;
-        gap: 10px;
+        flex-direction: row; /* 【重点】手机上，图标和文字依然横向并排 */
+        justify-content: flex-start;
+        text-align: left; /* 文字左对齐 */
         width: 100%;
     }
 
+    .promo-icon-box {
+        margin-right: 0; /* 移除多余间距 */
+    }
+
     .promo-btn {
-        width: 100%;
-        padding: 14px 0;
+        width: 100%; /* 按钮占满一行，方便点击 */
+        padding: 12px 0;
     }
 }
 /* --- Henry的原生推荐块专用样式 (结束) --- */
@@ -1334,36 +1342,34 @@ function runOCRWithAd(imageBlob) {
     function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
     function confirmEncryption() { const p = document.getElementById('crypto-password').value; const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8; if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; } aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal(); }
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
-/* --- [最终增强版] 文件处理：强制显示漏斗动画 --- */
-    async function handleFiles(files) {
-        // 0. 如果没选文件，直接退出
+/* --- [最终修正] 文件处理：强制先出动画，再处理文件 --- */
+    function handleFiles(files) {
         if (!files || files.length === 0) return;
 
-        // 1. 立即显示漏斗弹窗 (强制显示)
+        // 1. 立即显示动画
         const modal = document.getElementById('processingModal');
         if (modal) {
             modal.style.display = 'flex';
-            // 强制重绘：这一行看似没用，但能强迫浏览器立刻渲染出弹窗
-            modal.offsetHeight; 
+            // 强制浏览器重绘 (Reflow)，确保弹窗立刻出现
+            void modal.offsetWidth; 
         }
 
-        // 2. 【关键】强制暂停 200毫秒
-        // 这段时间足够浏览器把“沙漏”画出来，避免界面卡死
-        await new Promise(resolve => setTimeout(resolve, 200));
-
-        // 3. 开始繁重的处理任务
-        try {
-            stagedFiles = stagedFiles.concat(Array.from(files));
-            // 这一步包含 AI 分析，是最耗时的部分
-            renderStagedList(); 
-            document.getElementById('fileInput').value = '';
-        } catch (e) {
-            console.error("File processing error:", e);
-            showCustomAlert("Error processing files.");
-        }
-
-        // 4. 全部搞定后，再关闭漏斗
-        if (modal) modal.style.display = 'none';
+        // 2. 关键：把繁重任务扔进 setTimeout
+        // 这会强迫浏览器先把上面的“显示弹窗”执行并渲染完，再回来执行下面的任务
+        setTimeout(() => {
+            try {
+                // 3. 执行繁重任务 (文件读取 + AI分析)
+                // 此时界面上已经有漏斗在转了，用户不会觉得卡死
+                stagedFiles = stagedFiles.concat(Array.from(files));
+                renderStagedList(); 
+                document.getElementById('fileInput').value = '';
+            } catch (e) {
+                console.error(e);
+            } finally {
+                // 4. 任务跑完，关闭动画
+                if (modal) modal.style.display = 'none';
+            }
+        }, 200); // 延时 200ms，给人眼足够的时间看到动画弹出
     }
     function getFileIcon(name) { const ext = name.split('.').pop().toLowerCase(); if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️'; if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬'; if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵'; if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦'; if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻'; if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄'; return '📁'; }
     function renderStagedList() { const list = document.getElementById('stagedList'); if (stagedFiles.length === 0) { list.style.display = 'none'; document.getElementById('file-count-badge').style.display = 'none'; AIEngine.renderTags({ tags: [], risk: false }); } else { list.style.display = 'block'; const badge = document.getElementById('file-count-badge'); badge.style.display = 'block'; badge.innerText = `${stagedFiles.length} File${stagedFiles.length > 1 ? 's' : ''}`; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); const aiTags = AIEngine.analyze(stagedFiles); AIEngine.renderTags(aiTags); } }
