@@ -689,11 +689,12 @@
             </button>
 
             <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:11px; color:#64748b; font-weight:700;">Limit:</span>
+                <span id="limit-label" style="font-size:13px; color:#94a3b8; font-weight:700;">Limit:</span>
                 <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
                     <option value="1">1 Time</option>
+                    <option value="3">3 Times</option>
                     <option value="5">5 Times</option>
-                    <option value="999">∞</option>
+                    <option value="999">Unlimited</option>
                 </select>
             </div>
         </div>
@@ -701,6 +702,7 @@
         <div id="crypto-modal" class="crypto-modal">
             <div class="crypto-modal-card">
                 <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
+                
                 <div class="pwd-group">
                     <input type="password" id="crypto-password" placeholder="Type a strong password..." 
                            oninput="checkStrength(this.value)" 
@@ -709,10 +711,15 @@
                     <div class="pwd-divider"></div>
                     <div class="pwd-toggle" onclick="togglePwd('crypto-password', this)">🙈</div>
                 </div>
+                
                 <p id="send-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
+                
                 <div id="send-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));"></div>
+
                 <div class="strength-wrapper">
-                    <div class="strength-track"><div id="strength-bar-fill"></div></div>
+                    <div class="strength-track">
+                        <div id="strength-bar-fill"></div>
+                    </div>
                     <div id="strength-text" style="opacity:0.8">Empty</div>
                 </div>
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -725,40 +732,49 @@
         <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
         
         <div id="senderCodeArea">
-            <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ SECURE CHANNEL OPEN</div>
+            <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED CHANNEL</div>
             <div id="qrcode"></div>
+            
             <div class="code-display" id="myCode" style="font-size: 48px; letter-spacing: 6px;">00000000</div>
+            
             <div class="totp-container">
                 <div id="sender-totp-emojis" class="totp-emojis">Loading...</div>
                 <div class="totp-progress-bg"><div id="sender-totp-bar" class="totp-progress-bar"></div></div>
                 <div style="font-size:9px; color:#64748b; margin-top:4px; text-transform:uppercase;">Visual Verification (Syncs every 10s)</div>
             </div>
-            <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin:18px 0; line-height:1.5;"></p>
-            <button class="action-btn" id="btn-copy-link" style="background:#4f46e5;">📋 COPY LINK</button>
-            <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:10px;">STOP SHARING</button>
+
+            <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin:18px 0 10px 0; line-height:1.5;"></p>
+            <div id="expiryTimer" style="display:none; font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
+            
+            <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
+            <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
         </div>
     </div>
     
     <div id="panel-receive" class="panel">
         <div style="display:flex; flex-direction:column; align-items:center;">
             <div class="receive-input-container">
-                <input type="text" id="targetCode" placeholder="Enter ID / Password" 
-                       style="font-size: 22px; text-align:center;"
+                <input type="text" id="targetCode" placeholder="Enter ID" 
+                       style="font-size: 24px; text-align:center; text-transform:uppercase;"
                        oninput="handleReceiverInput(this.value)" 
                        onkeydown="if(event.key==='Enter') triggerAd('receive')">
-                <button id="btn-scan" onclick="openScanner()">📷</button>
+                <button id="btn-scan" onclick="openScanner()">or scan 📷</button>
             </div>
             
             <div id="receiver-totp-area" class="totp-container" style="display:none; margin-top:15px;">
                 <div id="receiver-totp-emojis" class="totp-emojis"></div>
                 <div class="totp-progress-bg"><div id="receiver-totp-bar" class="totp-progress-bar"></div></div>
-                <div style="font-size:9px; color:#64748b; margin-top:4px;">EMOJIS MUST MATCH SENDER</div>
+                <div style="font-size:9px; color:#64748b; margin-top:4px;">VERIFY MATCH WITH SENDER</div>
             </div>
-
+            
             <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
             
             <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
-            <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
+            <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;">
+                <span id="nerd-speed">0.0 MB/s</span>
+                <span class="blink-warn">Downloading... Keep Open!</span>
+                <span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>
+            </div>
             
             <div id="receivedText-container">
                 <div class="text-zone readonly">
