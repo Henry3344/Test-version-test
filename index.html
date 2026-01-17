@@ -514,6 +514,32 @@
     transition: width 0.1s linear; 
     box-shadow: 0 0 10px #10b981;
 }
+        /* [Henry Fix] 强制修复接收端输入框样式 */
+.receive-input-container input#targetCode {
+    flex: 1;
+    padding: 18px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 32px !important; /* 强制大字体 */
+    text-align: center;
+    outline: none;
+    min-width: 0;
+    font-weight: 900;
+    letter-spacing: 4px; /* 增加字间距，更有科技感 */
+    text-transform: uppercase; /* 强制大写，看起来整齐 */
+}
+
+/* 修复手机端可能出现的边框问题 */
+.receive-input-container {
+    border: 2.5px solid var(--border);
+    border-radius: 20px;
+    background: #0f172a;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); /* 加点发光 */
+}
     </style>
 </head>
 <body>
@@ -1476,165 +1502,54 @@ function runOCRWithAd(imageBlob) {
     function showCryptoModal() { if(isEncrypted) { isEncrypted = false; aesKey = ""; document.getElementById('crypto-password').value = ""; checkStrength(""); updateLockUI(); return; } const pwdInput = document.getElementById('crypto-password'); pwdInput.type = "password"; const toggle = document.querySelector('#crypto-modal .pwd-toggle'); if(toggle) toggle.innerText = "🙈"; document.getElementById('send-fingerprint').style.display = 'none'; document.getElementById('send-hash-hint').style.display = 'none'; document.getElementById('crypto-modal').style.display = 'flex'; }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
     function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
-    function confirmEncryption() { 
-    // 1. 获取输入
+    /* [Henry Fix] 修复版加密确认逻辑 */
+/* [Henry Fix] 满血版：强正则校验 + UI 状态修复 */
+function confirmEncryption() { 
     const p = document.getElementById('crypto-password').value; 
     
-    // 2. 密码强度正则验证
+    // --- 1. 强密码正则校验 (恢复硬核模式) ---
     const hasUpper = /[A-Z]/.test(p); 
     const hasLower = /[a-z]/.test(p); 
     const hasNum = /[0-9]/.test(p); 
-    const hasSym = /[^A-Za-z0-9]/.test(p); 
+    const hasSym = /[^A-Za-z0-9]/.test(p); // 检查特殊符号
     const isLongEnough = p.length >= 8; 
     
-    // 3. 不合格则弹窗报错
+    // 如果不满足任意一条，直接弹窗报错并中止
     if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { 
+        // 调用 I18N 里的提示语 (Tell user: 8+ chars, 1 Upper, 1 Lower, 1 Num, 1 Sym)
         showCustomAlert(I18N[currLang].passWeak); 
         return; 
     } 
     
-    // 4. 设置密钥
+    // --- 2. 校验通过，设置密钥 ---
     aesKey = p; 
     isEncrypted = true; 
-    updateLockUI(); // 保持 checkbox 状态同步
+    updateLockUI(); 
     
-    // 5. [UI 更新] 让自定义按钮变绿，显示已激活
+    // --- 3. 强制更新 UI 状态 (变成绿色，明确反馈) ---
     const btn = document.getElementById('btn-custom-aes');
     if(btn) {
-        btn.style.borderColor = '#10b981'; // 绿色边框
-        btn.style.background = 'rgba(16, 185, 129, 0.15)'; // 淡绿背景
+        // 修改边框和背景 (绿色高亮)
+        btn.style.cssText = "border: 1.5px solid #10b981 !important; background: rgba(16, 185, 129, 0.2) !important; padding: 10px; font-size: 12px; display:flex; align-items:center; justify-content:center; gap:8px; flex:1;";
         
+        // 修改图标
         const icon = document.getElementById('aes-status-icon');
         if(icon) icon.innerText = '🔐';
         
+        // 修改文字
         const text = document.getElementById('aes-status-text');
         if(text) {
-            text.innerText = 'AES-256 Active';
-            text.style.color = '#10b981'; // 文字变绿
+            text.innerText = 'AES-256 Secured'; 
+            text.style.color = '#10b981'; 
             text.style.fontWeight = '900';
         }
     }
     
-    // 6. 关闭弹窗
+    // 4. 关闭弹窗
     closeCryptoModal(); 
-}
-    function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
-/* --- [最终修正] 文件处理：强制先出动画，再处理文件 --- */
-    function handleFiles(files) {
-        if (!files || files.length === 0) return;
-
-        // 1. 立即显示动画
-        const modal = document.getElementById('processingModal');
-        if (modal) {
-            modal.style.display = 'flex';
-            // 强制浏览器重绘 (Reflow)，确保弹窗立刻出现
-            void modal.offsetWidth; 
-        }
-
-        // 2. 关键：把繁重任务扔进 setTimeout
-        // 这会强迫浏览器先把上面的“显示弹窗”执行并渲染完，再回来执行下面的任务
-        setTimeout(() => {
-            try {
-                // 3. 执行繁重任务 (文件读取 + AI分析)
-                // 此时界面上已经有漏斗在转了，用户不会觉得卡死
-                stagedFiles = stagedFiles.concat(Array.from(files));
-                renderStagedList(); 
-                document.getElementById('fileInput').value = '';
-            } catch (e) {
-                console.error(e);
-            } finally {
-                // 4. 任务跑完，关闭动画
-                if (modal) modal.style.display = 'none';
-            }
-        }, 200); // 延时 200ms，给人眼足够的时间看到动画弹出
-    }
-    function getFileIcon(name) { const ext = name.split('.').pop().toLowerCase(); if (['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext)) return '🖼️'; if (['mp4','mov','avi','mkv','webm','3gp'].includes(ext)) return '🎬'; if (['mp3','wav','ogg','flac','m4a'].includes(ext)) return '🎵'; if (['zip','rar','7z','tar','gz','iso','dmg'].includes(ext)) return '📦'; if (['html','css','js','py','c','cpp','json','java'].includes(ext)) return '💻'; if (['pdf','doc','docx','xls','xlsx','ppt','txt'].includes(ext)) return '📄'; return '📁'; }
-    function renderStagedList() { const list = document.getElementById('stagedList'); if (stagedFiles.length === 0) { list.style.display = 'none'; document.getElementById('file-count-badge').style.display = 'none'; AIEngine.renderTags({ tags: [], risk: false }); } else { list.style.display = 'block'; const badge = document.getElementById('file-count-badge'); badge.style.display = 'block'; badge.innerText = `${stagedFiles.length} File${stagedFiles.length > 1 ? 's' : ''}`; list.innerHTML = stagedFiles.map((f, i) => `<div class="staged-item"><span>${getFileIcon(f.name)} ${f.name.length > 15 ? f.name.substring(0,12)+'...' : f.name}</span><span style="color:var(--danger); cursor:pointer; font-weight:bold; padding:0 5px;" onclick="stagedFiles.splice(${i},1);renderStagedList()">✕</span></div>`).join(''); const aiTags = AIEngine.analyze(stagedFiles); AIEngine.renderTags(aiTags); } }
-    function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
-    function typeWriterEffect(element, text) { element.innerText = ""; let i = 0; const badge = document.getElementById('recv-text-count'); const scrollBox = document.getElementById('recv-scroll-box'); if(badge) badge.style.display = 'block'; const step = Math.max(1, Math.floor(text.length / 50)); function type() { if (i < text.length) { const chunk = text.slice(i, i + step); element.innerText += chunk; i += step; if(badge) badge.innerText = Math.min(i, text.length) + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; requestAnimationFrame(type); } else { element.innerText = text; if(badge) badge.innerText = text.length + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; } } type(); }
-    function checkUrlCode() { const urlParams = new URLSearchParams(window.location.search); const code = urlParams.get('c'); if (code) { document.getElementById('tab-receive').click(); document.getElementById('targetCode').value = code; } }
-    /* [Henry Fix] initSender 完整替换版 */
-async function initSender() { 
-    if(peer) peer.destroy(); 
-    currentDownloads = 0; 
     
-    // 1. 生成8位码
-    const code = generateSecureID(); 
-    currentSessionCode = code;
-    
-    // 2. 初始化 Peer
-    peer = new Peer(PREFIX + code); 
-    document.getElementById('ai-suggestions').style.display = 'none'; 
-    const textPanel = document.getElementById('text-ai-suggestions');
-    if (textPanel) textPanel.style.display = 'none';
-
-    peer.on('open', () => { 
-        const area = document.getElementById('senderCodeArea'); 
-        if (area) { 
-            area.style.display = 'block'; 
-            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); 
-        } 
-        
-        // 显示8位码和 Emoji
-        document.getElementById('myCode').innerText = code; 
-        startTotpTimer(code, true);
-
-        document.getElementById('qrcode').innerHTML = ""; 
-        new QRCode(document.getElementById('qrcode'), { 
-            text: window.location.origin + window.location.pathname + "?c=" + code, 
-            width: 140, height: 140 
-        }); 
-        
-        document.getElementById('btn-copy-link').onclick = () => { 
-            const link = `${window.location.origin}${window.location.pathname}?c=${code}`; 
-            navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied!"); }); 
-        }; 
-    }); 
-
-    peer.on('connection', c => { 
-        c.on('data', d => { 
-            if (d.type === 'security_burn') { 
-                showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); 
-                resetSender(); return; 
-            } 
-            if(d.type === 'confirm_save') { 
-                currentDownloads++; 
-                if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
-            } 
-        }); 
-        c.on('open', async () => { 
-            let textValue = document.getElementById('quickText').value.trim(); 
-            if(textValue) { 
-                if(isEncrypted) { 
-                    const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); 
-                    const reader = new FileReader(); 
-                    reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); 
-                    reader.readAsDataURL(encryptedTextBlob); 
-                } else { 
-                    c.send({ type: 'text', data: textValue, encrypted: false }); 
-                } 
-                addHistory("Sent: Text", "text"); 
-            } 
-            if(stagedFiles && stagedFiles.length > 0) { 
-                let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip"; 
-                if (stagedFiles.length === 1) { fb = stagedFiles[0]; } 
-                else { 
-                    const zip = new JSZip(); 
-                    stagedFiles.forEach(f => zip.file(f.name, f)); 
-                    fb = await zip.generateAsync({type: "blob"}); 
-                } 
-                if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; } 
-                c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted }); 
-                const arrayBuffer = await fb.arrayBuffer(); 
-                for (let i = 0; i < fb.size; i += CHUNK_SIZE) { 
-                    while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); } 
-                    c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) }); 
-                } 
-                c.send({ type: 'done' }); 
-                addHistory("Sent: " + fn, "file"); 
-            } 
-        }); 
-    }); 
+    // 5. 成功提示
+    showCustomAlert("🔒 AES-256 Armed. Password Strong.");
 }
     function startReceiving() { const code = document.getElementById('targetCode').value; const rPeer = new Peer(); const pgBar = document.getElementById('receive-pg-bar'); document.getElementById('receive-pg-container').style.display = 'block'; const btn = document.getElementById('btn-connect'); btn.disabled = true; btn.style.opacity = "0.7"; let dots = 0; if(downloadDotsIdx) clearInterval(downloadDotsIdx); downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400); rPeer.on('open', () => { const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn; let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0; conn.on('data', async d => { if(d.type === 'text') { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = d.encrypted ? I18N[currLang].decryptRecv : I18N[currLang].recv; const bg = d.encrypted ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1"; btn.onclick = async () => { let finalTxt = d.data; if(d.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if (!pass) return; try { const res = await fetch(d.data); const blob = await res.blob(); const ptBlob = await FlashDropCrypto.decrypt(blob, pass); finalTxt = await ptBlob.text(); document.getElementById('pass-input-modal').style.display = 'none'; break; } catch(e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } } const textBox = document.getElementById('receivedText'); document.getElementById('receivedText-container').style.display = 'block'; typeWriterEffect(textBox, finalTxt); pgBar.style.width = '100%'; btn.onclick = () => triggerAd('receive'); btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)"; if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } }; } else if(d.type === 'meta') { meta = d; startTime = Date.now(); const stats = document.getElementById('receiveNerdStats'); stats.style.display = 'flex'; const warnText = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" }[currLang] || "Downloading... Keep Open!"; stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">${warnText}</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`; } else if(d.type === 'chunk') { chunks.push(d.data); totalRecv += d.data.byteLength; if(meta) { pgBar.style.width = (totalRecv / meta.size * 100) + '%'; const now = Date.now(); if (now - lastUpdate > 500 || totalRecv === meta.size) { const duration = (now - startTime) / 1000; const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; const remainingBytes = meta.size - totalRecv; const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; const spdEl = document.getElementById('nerd-speed'); const etaEl = document.getElementById('nerd-eta'); if(spdEl) spdEl.innerText = speed.toFixed(1) + ' MB/s'; if(etaEl) etaEl.innerText = 'ETA: ' + Math.ceil(eta) + 's'; lastUpdate = now; } } } else if(d.type === 'done') { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = (meta && meta.encrypted) ? I18N[currLang].decryptSave : I18N[currLang].save; const bg = (meta && meta.encrypted) ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1"; document.getElementById('receiveNerdStats').innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`; pgBar.style.width = '100%'; let finalBlob = new Blob(chunks); btn.onclick = async () => { if (meta && meta.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if (!pass) return; try { finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass); document.getElementById('pass-input-modal').style.display = 'none'; btn.innerText = "💾 SAVE NOW"; btn.style.background = "#10b981"; btn.onclick = () => { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); }; return; } catch (e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } } else { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); } }; } }); }); }
     function addHistory(name, type) { let h = JSON.parse(localStorage.getItem('fd_history') || "[]"); h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type }); h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory(); }
