@@ -479,6 +479,41 @@
     color: white; /* 悬停变亮 */
     transform: translateX(3px); /* 悬停微微右移，增加交互感 */
 }
+        /* [Henry Modify] 动态 Emoji 倒计时条样式 */
+.totp-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}
+.totp-emojis {
+    font-size: 28px;
+    letter-spacing: 8px;
+    margin-bottom: 8px;
+    height: 40px;
+    filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.6));
+    transition: all 0.3s;
+}
+.totp-progress-bg {
+    width: 100%;
+    max-width: 160px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.totp-progress-bar {
+    height: 100%;
+    background: #10b981;
+    width: 100%;
+    transition: width 0.1s linear; 
+    box-shadow: 0 0 10px #10b981;
+}
     </style>
 </head>
 <body>
@@ -643,17 +678,22 @@
                     </div>
 
                     <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; flex-wrap:wrap;">
-                        <label class="protection-btn" onclick="event.preventDefault(); showCryptoModal()">
-                            <input type="checkbox" id="protection-toggle-input"> <span class="btn-content">
-                                <span class="state off" style="color:#f59e0b; display:flex; align-items:center; gap:6px;">
-                                    <span>⚠️</span> <span id="aes-off-txt">AES-256 OFF</span>
-                                </span>
-                                <span class="state on" style="color:#fff; display:none; align-items:center; gap:6px;">
-                                    <span>🛡️</span> <span id="aes-on-txt">AES-256 ON</span>
-                                </span>
-                            </span>
-                        </label>
+                        <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; width:100%;">
+    <button id="btn-custom-aes" class="action-btn" onclick="showCryptoModal()" 
+            style="background: #1e293b; border: 1.5px solid #334155; padding: 10px; font-size: 12px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:none; flex:1;">
+        <span id="aes-status-icon">🔓</span> 
+        <span id="aes-status-text">Set Custom Password</span>
+    </button>
 
+    <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:11px; color:#64748b; font-weight:700;">Limit:</span>
+        <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
+            <option value="1">1 Time</option>
+            <option value="5">5 Times</option>
+            <option value="999">∞</option>
+        </select>
+    </div>
+</div>
                         <div id="crypto-modal" class="crypto-modal">
                             <div class="crypto-modal-card">
                                 <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
@@ -696,40 +736,59 @@
                     </div>
                     <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
                     <div id="senderCodeArea">
-                        <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ P2P ENCRYPTED</div>
-                        <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin-bottom:18px; line-height:1.5;"></p>
-                        <div id="qrcode"></div>
-                        <div class="code-display" id="myCode">000000</div>
-                        <div id="expiryTimer" style="font-size:13px; color:var(--danger); font-weight:900; margin-top:10px;">Expires: 10:00</div>
-                        <button class="action-btn" id="btn-copy-link" style="background:#4f46e5; margin-top:15px;">📋 COPY LINK</button>
-                        <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:15px;">STOP</button>
-                    </div>
-                </div>
+    <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ SECURE CHANNEL OPEN</div>
+    
+    <div id="qrcode"></div>
+    
+    <div class="code-display" id="myCode" style="font-size: 48px; letter-spacing: 6px;">00000000</div>
+    
+    <div class="totp-container">
+        <div id="sender-totp-emojis" class="totp-emojis">Loading...</div>
+        <div class="totp-progress-bg"><div id="sender-totp-bar" class="totp-progress-bar"></div></div>
+        <div style="font-size:9px; color:#64748b; margin-top:4px; text-transform:uppercase;">Visual Verification (Syncs every 10s)</div>
+    </div>
+
+    <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin:18px 0; line-height:1.5;"></p>
+    
+    <button class="action-btn" id="btn-copy-link" style="background:#4f46e5;">📋 COPY LINK</button>
+    <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:10px;">STOP SHARING</button>
+</div>
                 
                 <div id="panel-receive" class="panel">
                     <div style="display:flex; flex-direction:column; align-items:center;">
-                        <div class="receive-input-container">
-                            <input type="number" id="targetCode" placeholder="000000" oninput="if(this.value.length>6) this.value=this.value.slice(0,6)" onkeydown="if(event.key==='Enter') triggerAd('receive')">
-                            <button id="btn-scan" onclick="openScanner()">or scan 📷</button>
-                        </div>
-                        
-                        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
-                        
-                        <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
-                        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
-                        
-                        <div id="receivedText-container">
-                            <div class="text-zone readonly">
-                                <div id="recv-text-count" class="zone-badge" style="display:none;">0 Chars</div>
-                                <div id="recv-scroll-box" class="text-content-scroll">
-                                    <div id="receivedText" style="white-space: pre-wrap; word-break: break-all;"></div>
-                                </div>
-                            </div>
-                            <button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()" style="margin-top: 15px;">📋 COPY</button>
-                        </div>
-                    </div>
+                        <div id="panel-receive" class="panel">
+    <div style="display:flex; flex-direction:column; align-items:center;">
+        
+        <div class="receive-input-container">
+            <input type="text" id="targetCode" placeholder="Enter ID / Password" 
+                   style="font-size: 22px; text-align:center;"
+                   oninput="handleReceiverInput(this.value)" 
+                   onkeydown="if(event.key==='Enter') triggerAd('receive')">
+            <button id="btn-scan" onclick="openScanner()">📷</button>
+        </div>
+        
+        <div id="receiver-totp-area" class="totp-container" style="display:none; margin-top:15px;">
+            <div id="receiver-totp-emojis" class="totp-emojis"></div>
+            <div class="totp-progress-bg"><div id="receiver-totp-bar" class="totp-progress-bar"></div></div>
+            <div style="font-size:9px; color:#64748b; margin-top:4px;">EMOJIS MUST MATCH SENDER</div>
+        </div>
+
+        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
+        
+        <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
+        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
+        
+        <div id="receivedText-container">
+            <div class="text-zone readonly">
+                <div id="recv-text-count" class="zone-badge" style="display:none;">0 Chars</div>
+                <div id="recv-scroll-box" class="text-content-scroll">
+                    <div id="receivedText" style="white-space: pre-wrap; word-break: break-all;"></div>
                 </div>
             </div>
+            <button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()" style="margin-top: 15px;">📋 COPY</button>
+        </div>
+    </div>
+</div>
             <div class="history-box"><div class="history-title" id="history-title-text">Recent History</div><div id="history-list"></div></div>
             
             <div class="ad-space ad-bottom" id="bottom-ad-zone">
@@ -1022,6 +1081,84 @@
     let downloadDotsIdx = null; 
     const PREFIX = "fd-pro-";
     const CHUNK_SIZE = 64 * 1024; 
+
+    /* --- [Henry Modify] 核心逻辑更新：动态 Emoji 引擎 --- */
+let totpInterval = null;
+
+// 生成8位随机大写ID (Sender默认用)
+function generateSecureID() {
+    const chars = "23456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+    const array = new Uint8Array(8);
+    window.crypto.getRandomValues(array);
+    let res = "";
+    for(let i=0; i<8; i++) res += chars[array[i] % chars.length];
+    return res;
+}
+
+// 动态 Emoji 计算器 (ID + 时间 = Emoji)
+async function updateTotpUI(code, emojiElId, barElId) {
+    if (!code) return;
+    
+    // 10秒一个周期
+    const now = Date.now();
+    const period = 10000; 
+    const timeSlot = Math.floor(now / period); // 算出当前是第几个10秒
+    const progress = 1 - ((now % period) / period); // 倒计时进度 1->0
+    
+    // 更新进度条
+    const bar = document.getElementById(barElId);
+    if(bar) {
+        bar.style.width = (progress * 100) + '%';
+        bar.style.background = progress < 0.2 ? '#ef4444' : '#10b981'; // 最后2秒变红
+    }
+
+    // 计算 Hash: Code + timeSlot
+    // 只要 Sender 和 Receiver 的 code 一样，且时间一样，算出来的 Emoji 就绝对一样
+    const msg = code + timeSlot; 
+    const encoder = new TextEncoder();
+    const data = encoder.encode(msg);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    
+    // 映射成 Emoji
+    const emojis = ["⚡","🛡️","🚀","🤖","💎","🔥","🌟","🌊","🐯","🐵","🍎","🍀","🎲","🧩","🔮","🎵","👻","🌵","🍕","🌙","☀️","❄️","🎸","🚗"];
+    let res = "";
+    for(let i=0; i<4; i++) res += emojis[hashArray[i] % emojis.length];
+    
+    // 更新 UI
+    const emojiEl = document.getElementById(emojiElId);
+    if(emojiEl && emojiEl.innerText !== res) {
+        emojiEl.style.opacity = 0;
+        setTimeout(() => {
+            emojiEl.innerText = res;
+            emojiEl.style.opacity = 1;
+        }, 150); // 增加一点淡入淡出动画，显得高级
+    }
+}
+
+// 启动定时器
+function startTotpTimer(code, isSender) {
+    if(totpInterval) clearInterval(totpInterval);
+    const emojiId = isSender ? 'sender-totp-emojis' : 'receiver-totp-emojis';
+    const barId = isSender ? 'sender-totp-bar' : 'receiver-totp-bar';
+    
+    updateTotpUI(code, emojiId, barId);
+    totpInterval = setInterval(() => {
+        updateTotpUI(code, emojiId, barId);
+    }, 100);
+}
+
+// 接收方输入监听 (无限长度，有输入就显示Emoji)
+function handleReceiverInput(val) {
+    // 移除之前的长度限制，只要有内容就显示预览
+    if (val && val.length > 0) {
+        document.getElementById('receiver-totp-area').style.display = 'flex';
+        startTotpTimer(val, false);
+    } else {
+        document.getElementById('receiver-totp-area').style.display = 'none';
+        if(totpInterval) clearInterval(totpInterval);
+    }
+}
 
     /* --- [AI 引擎 - 文件分析] --- */
     const AIEngine = {
@@ -1340,7 +1477,48 @@ function runOCRWithAd(imageBlob) {
     function showCryptoModal() { if(isEncrypted) { isEncrypted = false; aesKey = ""; document.getElementById('crypto-password').value = ""; checkStrength(""); updateLockUI(); return; } const pwdInput = document.getElementById('crypto-password'); pwdInput.type = "password"; const toggle = document.querySelector('#crypto-modal .pwd-toggle'); if(toggle) toggle.innerText = "🙈"; document.getElementById('send-fingerprint').style.display = 'none'; document.getElementById('send-hash-hint').style.display = 'none'; document.getElementById('crypto-modal').style.display = 'flex'; }
     function closeCryptoModal() { document.getElementById('crypto-modal').style.display = 'none'; }
     function checkStrength(p) { const bar = document.getElementById('strength-bar-fill'); const txt = document.getElementById('strength-text'); let score = 0; if(!p) { bar.style.width = '0%'; bar.style.backgroundColor = '#ef4444'; txt.innerText = 'Empty'; return; } score += p.length * 3; if (/[A-Z]/.test(p)) score += 10; if (/[a-z]/.test(p)) score += 10; if (/[0-9]/.test(p)) score += 10; if (/[^A-Za-z0-9]/.test(p)) score += 10; if (score > 100) score = 100; const hue = Math.floor((score / 100) * 120); bar.style.width = `${score}%`; bar.style.backgroundColor = `hsl(${hue}, 90%, 45%)`; const levels = I18N[currLang].strengthLevels; let idx = Math.floor(score / 14.5); if(idx >= levels.length) idx = levels.length - 1; txt.innerText = levels[idx]; txt.style.color = `hsl(${hue}, 80%, 40%)`; }
-    function confirmEncryption() { const p = document.getElementById('crypto-password').value; const hasUpper = /[A-Z]/.test(p); const hasLower = /[a-z]/.test(p); const hasNum = /[0-9]/.test(p); const hasSym = /[^A-Za-z0-9]/.test(p); const isLongEnough = p.length >= 8; if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { showCustomAlert(I18N[currLang].passWeak); return; } aesKey = p; isEncrypted = true; updateLockUI(); closeCryptoModal(); }
+    function confirmEncryption() { 
+    // 1. 获取输入
+    const p = document.getElementById('crypto-password').value; 
+    
+    // 2. 密码强度正则验证
+    const hasUpper = /[A-Z]/.test(p); 
+    const hasLower = /[a-z]/.test(p); 
+    const hasNum = /[0-9]/.test(p); 
+    const hasSym = /[^A-Za-z0-9]/.test(p); 
+    const isLongEnough = p.length >= 8; 
+    
+    // 3. 不合格则弹窗报错
+    if (!isLongEnough || !hasUpper || !hasLower || !hasNum || !hasSym) { 
+        showCustomAlert(I18N[currLang].passWeak); 
+        return; 
+    } 
+    
+    // 4. 设置密钥
+    aesKey = p; 
+    isEncrypted = true; 
+    updateLockUI(); // 保持 checkbox 状态同步
+    
+    // 5. [UI 更新] 让自定义按钮变绿，显示已激活
+    const btn = document.getElementById('btn-custom-aes');
+    if(btn) {
+        btn.style.borderColor = '#10b981'; // 绿色边框
+        btn.style.background = 'rgba(16, 185, 129, 0.15)'; // 淡绿背景
+        
+        const icon = document.getElementById('aes-status-icon');
+        if(icon) icon.innerText = '🔐';
+        
+        const text = document.getElementById('aes-status-text');
+        if(text) {
+            text.innerText = 'AES-256 Active';
+            text.style.color = '#10b981'; // 文字变绿
+            text.style.fontWeight = '900';
+        }
+    }
+    
+    // 6. 关闭弹窗
+    closeCryptoModal(); 
+}
     function updateLockUI() { document.getElementById('protection-toggle-input').checked = isEncrypted; }
 /* --- [最终修正] 文件处理：强制先出动画，再处理文件 --- */
     function handleFiles(files) {
@@ -1376,24 +1554,162 @@ function runOCRWithAd(imageBlob) {
     function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
     function typeWriterEffect(element, text) { element.innerText = ""; let i = 0; const badge = document.getElementById('recv-text-count'); const scrollBox = document.getElementById('recv-scroll-box'); if(badge) badge.style.display = 'block'; const step = Math.max(1, Math.floor(text.length / 50)); function type() { if (i < text.length) { const chunk = text.slice(i, i + step); element.innerText += chunk; i += step; if(badge) badge.innerText = Math.min(i, text.length) + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; requestAnimationFrame(type); } else { element.innerText = text; if(badge) badge.innerText = text.length + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; } } type(); }
     function checkUrlCode() { const urlParams = new URLSearchParams(window.location.search); const code = urlParams.get('c'); if (code) { document.getElementById('tab-receive').click(); document.getElementById('targetCode').value = code; } }
-    async function initSender() { if(peer) peer.destroy(); currentDownloads = 0; const code = Math.floor(100000 + Math.random() * 900000); peer = new Peer(PREFIX + code); document.getElementById('ai-suggestions').style.display = 'none'; 
-        // [修复] 确保在重置时隐藏 text 面板，并且不会因为元素不存在而报错
-        const textPanel = document.getElementById('text-ai-suggestions');
-        if (textPanel) textPanel.style.display = 'none';
+    async function initSender() { 
+    // 1. 清理旧连接
+    if(peer) peer.destroy(); 
+    currentDownloads = 0; 
+    
+    // 2. 生成8位随机大写ID (你是发送方)
+    const code = generateSecureID(); 
+    currentSessionCode = code; // 保存到全局变量，方便后续校验
+    
+    // 3. 初始化 P2P
+    peer = new Peer(PREFIX + code); 
+    
+    // 4. 界面重置：隐藏 AI 建议面板
+    document.getElementById('ai-suggestions').style.display = 'none'; 
+    const textPanel = document.getElementById('text-ai-suggestions');
+    if (textPanel) textPanel.style.display = 'none';
+
+    // 5. 监听：连接打开 (Peer Open)
+    peer.on('open', () => { 
+        const area = document.getElementById('senderCodeArea'); 
+        if (area) { 
+            area.style.display = 'block'; 
+            setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); 
+        } 
         
-        peer.on('open', () => { const area = document.getElementById('senderCodeArea'); if (area) { area.style.display = 'block'; setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); } document.getElementById('myCode').innerText = code; document.getElementById('qrcode').innerHTML = ""; new QRCode(document.getElementById('qrcode'), { text: window.location.origin + window.location.pathname + "?c=" + code, width: 140, height: 140 }); document.getElementById('btn-copy-link').onclick = () => { const link = `${window.location.origin}${window.location.pathname}?c=${code}`; navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied! Send it to friend."); }); }; startExpiryTimer(); }); peer.on('connection', c => { c.on('data', d => { if (d.type === 'security_burn') { showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); resetSender(); return; } if(d.type === 'confirm_save') { currentDownloads++; if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); } }); c.on('open', async () => { let textValue = document.getElementById('quickText').value.trim(); if(textValue) { if(isEncrypted) { const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); const reader = new FileReader(); reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); reader.readAsDataURL(encryptedTextBlob); } else { c.send({ type: 'text', data: textValue, encrypted: false }); } addHistory("Sent: Text", "text"); } if(stagedFiles && stagedFiles.length > 0) { let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip"; if (stagedFiles.length === 1) { fb = stagedFiles[0]; } else { const zip = new JSZip(); stagedFiles.forEach(f => zip.file(f.name, f)); fb = await zip.generateAsync({type: "blob"}); } if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; } c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted }); const arrayBuffer = await fb.arrayBuffer(); for (let i = 0; i < fb.size; i += CHUNK_SIZE) { while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); } c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) }); } c.send({ type: 'done' }); addHistory("Sent: " + fn, "file"); } }); }); }
+        // 显示8位码
+        document.getElementById('myCode').innerText = code; 
+        
+        // 启动动态 Emoji 引擎 (每10秒变一次)
+        startTotpTimer(code, true);
+        
+        // 生成二维码 (把8位码编进去)
+        document.getElementById('qrcode').innerHTML = ""; 
+        new QRCode(document.getElementById('qrcode'), { 
+            text: window.location.origin + window.location.pathname + "?c=" + code, 
+            width: 140, 
+            height: 140 
+        }); 
+        
+        // 绑定复制按钮
+        document.getElementById('btn-copy-link').onclick = () => { 
+            const link = `${window.location.origin}${window.location.pathname}?c=${code}`; 
+            navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied! Send it to friend."); }); 
+        }; 
+        
+        // (可选) 如果你还保留了旧的倒计时函数，可以在这里启动，或者直接依赖TOTP
+        // startExpiryTimer(); 
+    }); 
+
+    // 6. 监听：对方连接进来 (Connection)
+    peer.on('connection', c => { 
+        c.on('data', d => { 
+            // 安全熔断逻辑
+            if (d.type === 'security_burn') { 
+                showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); 
+                resetSender(); 
+                return; 
+            } 
+            // 下载计数逻辑
+            if(d.type === 'confirm_save') { 
+                currentDownloads++; 
+                if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
+            } 
+        }); 
+
+        // 7. 连接建立后，立即发送数据
+        c.on('open', async () => { 
+            // --- 发送文字 ---
+            let textValue = document.getElementById('quickText').value.trim(); 
+            if(textValue) { 
+                if(isEncrypted) { 
+                    const encryptedTextBlob = await FlashDropCrypto.encrypt(new Blob([textValue]), aesKey); 
+                    const reader = new FileReader(); 
+                    reader.onload = () => c.send({ type: 'text', data: reader.result, encrypted: true }); 
+                    reader.readAsDataURL(encryptedTextBlob); 
+                } else { 
+                    c.send({ type: 'text', data: textValue, encrypted: false }); 
+                } 
+                addHistory("Sent: Text", "text"); 
+            } 
+
+            // --- 发送文件 ---
+            if(stagedFiles && stagedFiles.length > 0) { 
+                let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip"; 
+                
+                // 打包处理
+                if (stagedFiles.length === 1) { 
+                    fb = stagedFiles[0]; 
+                } else { 
+                    const zip = new JSZip(); 
+                    stagedFiles.forEach(f => zip.file(f.name, f)); 
+                    fb = await zip.generateAsync({type: "blob"}); 
+                } 
+                
+                // 加密处理
+                if(isEncrypted) { 
+                    fb = await FlashDropCrypto.encrypt(fb, aesKey); 
+                    fn += ".enc"; 
+                } 
+                
+                // 发送元数据
+                c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted }); 
+                
+                // 分块发送 (Chunking)
+                const arrayBuffer = await fb.arrayBuffer(); 
+                for (let i = 0; i < fb.size; i += CHUNK_SIZE) { 
+                    // 流控：如果缓存满了就暂停一下，防止崩溃
+                    while (c.bufferSize > 1024 * 1024) { 
+                        await new Promise(r => setTimeout(r, 50)); 
+                    } 
+                    c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) }); 
+                } 
+                
+                // 发送完成信号
+                c.send({ type: 'done' }); 
+                addHistory("Sent: " + fn, "file"); 
+            } 
+        }); 
+    }); 
+}
     function startReceiving() { const code = document.getElementById('targetCode').value; const rPeer = new Peer(); const pgBar = document.getElementById('receive-pg-bar'); document.getElementById('receive-pg-container').style.display = 'block'; const btn = document.getElementById('btn-connect'); btn.disabled = true; btn.style.opacity = "0.7"; let dots = 0; if(downloadDotsIdx) clearInterval(downloadDotsIdx); downloadDotsIdx = setInterval(() => { dots = (dots + 1) % 4; btn.innerText = "Downloading" + ".".repeat(dots); }, 400); rPeer.on('open', () => { const conn = rPeer.connect(PREFIX + code, { reliable: true }); activeConn = conn; let meta = null, chunks = [], totalRecv = 0, startTime = Date.now(), lastUpdate = 0; conn.on('data', async d => { if(d.type === 'text') { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = d.encrypted ? I18N[currLang].decryptRecv : I18N[currLang].recv; const bg = d.encrypted ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1"; btn.onclick = async () => { let finalTxt = d.data; if(d.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if (!pass) return; try { const res = await fetch(d.data); const blob = await res.blob(); const ptBlob = await FlashDropCrypto.decrypt(blob, pass); finalTxt = await ptBlob.text(); document.getElementById('pass-input-modal').style.display = 'none'; break; } catch(e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } } const textBox = document.getElementById('receivedText'); document.getElementById('receivedText-container').style.display = 'block'; typeWriterEffect(textBox, finalTxt); pgBar.style.width = '100%'; btn.onclick = () => triggerAd('receive'); btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)"; if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } }; } else if(d.type === 'meta') { meta = d; startTime = Date.now(); const stats = document.getElementById('receiveNerdStats'); stats.style.display = 'flex'; const warnText = { en: "Downloading... Keep Open!", zh: "正在下载... 请勿关闭页面！" }[currLang] || "Downloading... Keep Open!"; stats.innerHTML = `<span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">${warnText}</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span>`; } else if(d.type === 'chunk') { chunks.push(d.data); totalRecv += d.data.byteLength; if(meta) { pgBar.style.width = (totalRecv / meta.size * 100) + '%'; const now = Date.now(); if (now - lastUpdate > 500 || totalRecv === meta.size) { const duration = (now - startTime) / 1000; const speed = duration > 0 ? (totalRecv / 1024 / 1024 / duration) : 0; const remainingBytes = meta.size - totalRecv; const eta = speed > 0 ? (remainingBytes / 1024 / 1024 / speed) : 0; const spdEl = document.getElementById('nerd-speed'); const etaEl = document.getElementById('nerd-eta'); if(spdEl) spdEl.innerText = speed.toFixed(1) + ' MB/s'; if(etaEl) etaEl.innerText = 'ETA: ' + Math.ceil(eta) + 's'; lastUpdate = now; } } } else if(d.type === 'done') { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const label = (meta && meta.encrypted) ? I18N[currLang].decryptSave : I18N[currLang].save; const bg = (meta && meta.encrypted) ? "#f59e0b" : "#10b981"; btn.innerText = label; btn.style.background = bg; btn.disabled = false; btn.style.opacity = "1"; document.getElementById('receiveNerdStats').innerHTML = `<span style="color:var(--success); width:100%; text-align:center;">✅ TRANSFER COMPLETE</span>`; pgBar.style.width = '100%'; let finalBlob = new Blob(chunks); btn.onclick = async () => { if (meta && meta.encrypted) { let attempts = 0; while(true) { const pass = await requestPassword(attempts > 0 ? 3 - attempts : undefined); if (!pass) return; try { finalBlob = await FlashDropCrypto.decrypt(finalBlob, pass); document.getElementById('pass-input-modal').style.display = 'none'; btn.innerText = "💾 SAVE NOW"; btn.style.background = "#10b981"; btn.onclick = () => { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); }; return; } catch (e) { attempts++; if(attempts >= 3) { document.getElementById('pass-input-modal').style.display = 'none'; conn.send({ type: 'security_burn' }); showCustomAlert("❌ SECURITY BREACH: Data Wiped."); resetReceiver(); return; } } } } else { const u = window.URL.createObjectURL(finalBlob); const a = document.createElement('a'); a.href = u; a.download = meta.name.replace('.enc', ''); a.click(); if (conn && conn.open) { conn.send({ type: 'confirm_save' }); } addHistory("Received: " + meta.name.replace('.enc', ''), "file"); setTimeout(() => { resetReceiver(); rPeer.destroy(); }, 1000); } }; } }); }); }
     function addHistory(name, type) { let h = JSON.parse(localStorage.getItem('fd_history') || "[]"); h.unshift({ name: name.substring(0,25), time: new Date().toLocaleTimeString(), type: type }); h = h.slice(0, 5); localStorage.setItem('fd_history', JSON.stringify(h)); renderHistory(); }
     function renderHistory() { const list = document.getElementById('history-list'); const h = JSON.parse(localStorage.getItem('fd_history') || "[]"); list.innerHTML = h.map(i => `<div class="history-item"><span>${i.type==='file'?'📄':'🔤'} ${i.name}</span><span style="opacity:0.5">${i.time}</span></div>`).join(''); }
     function copyReceivedText() { navigator.clipboard.writeText(document.getElementById('receivedText').innerText); showCustomAlert("Copied!"); document.getElementById('receivedText').innerText = ""; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; if(activeConn && activeConn.open) { activeConn.send({ type: 'confirm_save' }); } resetReceiver(); }
     function closePolicy() { document.getElementById('policyModal').style.display = 'none'; }
     function startExpiryTimer() { let sec = 600; if(expiryTimerIdx) clearInterval(expiryTimerIdx); expiryTimerIdx = setInterval(() => { sec--; document.getElementById('expiryTimer').innerText = `${I18N[currLang].exp}${Math.floor(sec/60)}:${(sec%60).toString().padStart(2,'0')}`; if(sec <= 0) resetSender(); }, 1000); }
-    function resetSender() { if(peer) peer.destroy(); document.getElementById('senderCodeArea').style.display = 'none'; stagedFiles = []; renderStagedList(); document.getElementById('ai-suggestions').style.display = 'none'; 
-        // [修复] 安全清理 text panel
-        const textPanel = document.getElementById('text-ai-suggestions');
-        if(textPanel) textPanel.style.display = 'none'; 
-        const quickText = document.getElementById('quickText'); quickText.value = ""; quickText.blur(); updateTextCount(quickText); if(expiryTimerIdx) clearInterval(expiryTimerIdx); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => window.scrollTo(0,0), 300); 
-    }
+    function resetSender() { 
+    // 1. 销毁 P2P 连接
+    if(peer) peer.destroy(); 
+    
+    // 2. 清理 TOTP 计时器 (防止 Emoji 继续在后台跳动)
+    if(totpInterval) clearInterval(totpInterval);
+    
+    // 3. 隐藏界面区域
+    document.getElementById('senderCodeArea').style.display = 'none'; 
+    document.getElementById('ai-suggestions').style.display = 'none'; 
+    const textPanel = document.getElementById('text-ai-suggestions');
+    if(textPanel) textPanel.style.display = 'none'; 
+    
+    // 4. 清空待发送列表
+    stagedFiles = []; 
+    renderStagedList(); 
+    
+    // 5. 清空文字输入
+    const quickText = document.getElementById('quickText'); 
+    quickText.value = ""; 
+    quickText.blur(); 
+    updateTextCount(quickText); 
+    
+    // 6. 清理旧倒计时 (如果有)
+    if(expiryTimerIdx) clearInterval(expiryTimerIdx); 
+    
+    // 7. 滚动回顶部
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+    setTimeout(() => window.scrollTo(0,0), 300); 
+}
     function resetReceiver() { if(downloadDotsIdx) clearInterval(downloadDotsIdx); const btn = document.getElementById('btn-connect'); btn.innerText = I18N[currLang].connect; btn.style.background = "var(--primary)"; btn.disabled = false; btn.style.opacity = "1"; btn.onclick = () => triggerAd('receive'); document.getElementById('targetCode').value = ""; document.getElementById('receive-pg-container').style.display = 'none'; document.getElementById('receiveNerdStats').style.display = 'none'; document.getElementById('receivedText-container').style.display = 'none'; document.getElementById('recv-text-count').style.display = 'none'; activeConn = null; }
     function switchTab(m, e) { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); e.target.classList.add('active'); document.getElementById(`panel-${m}`).classList.add('active'); }
     async function toggleTorch() { if (!videoTrack) return; torchOn = !torchOn; try { await videoTrack.applyConstraints({ advanced: [{ torch: torchOn }] }); } catch (e) {} }
