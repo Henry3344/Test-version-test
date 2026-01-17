@@ -622,170 +622,153 @@
                 <div class="step-item"><div class="step-dot"></div><span id="step-4">Download</span></div>
             </div>
             <div class="card">
-                <div class="tab-group"><div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div><div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div></div>
+    <div class="tab-group">
+        <div id="tab-send" class="tab active" onclick="switchTab('send', event)">Send</div>
+        <div id="tab-receive" class="tab" onclick="switchTab('receive', event)">Receive</div>
+    </div>
+    
+    <div id="panel-send" class="panel active">
+        <div class="share-grid">
+            <div class="column-box">
+                <label class="file-zone" id="file-drop-area" for="fileInput">
+                    <div id="file-count-badge" class="zone-badge" style="display:none;">0 Files</div>
+                    <div style="font-size: 42px;">📂</div>
+                    <div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div>
+                </label>
                 
-                <div id="panel-send" class="panel active">
-                    <div class="share-grid">
-                        <div class="column-box">
-                            <label class="file-zone" id="file-drop-area" for="fileInput">
-                                <div id="file-count-badge" class="zone-badge" style="display:none;">0 Files</div>
-                                <div style="font-size: 42px;">📂</div>
-                                <div id="label-files" style="font-size:13px; margin-top:10px; font-weight:900;">Drop / Click</div>
-                            </label>
-                            
-                            <div id="ai-suggestions" style="font-size: 13px;">
-                                <div style="display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:5px;">
-                                    <strong id="ai-title-file">✨ AI Insights</strong>
-                                    <span id="ai-insight-note" style="font-size:10px; opacity:0.6;">(Selected types)</span>
-                                    <span id="ai-local-file" style="font-size:9px; opacity:0.7; margin-left:auto;">Local Processing</span>
-                                </div>
-                                <div id="ai-privacy-alert"></div>
-                                <div id="ai-tag-container"></div>
-                            </div>
-                            
-                            <div id="stagedList"></div>
-                            <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
-                        </div>
-                        <div class="column-box">
-                            <div class="text-zone">
-                                <div id="text-count-badge" class="zone-badge" style="display:none;">0 Chars</div>
-                                <div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900; margin: 20px 0 0 20px;">Quick Text</div>
-                                <textarea id="quickText" placeholder="Paste..." oninput="updateTextCount(this); checkTextPrivacy(this.value)"></textarea>
-                            </div>
-                            
-                            <div id="text-ai-suggestions" style="display:none; font-size: 13px; margin-bottom: 5px; background: rgba(139, 92, 246, 0.1); padding: 12px 14px; border-radius: 12px; border-left: 3px solid var(--ai); color: #e9d5ff; text-align: left;">
-                                <div style="display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:5px;">
-                                    <strong id="ai-title-text">✨ AI Analysis</strong>
-                                    <span id="ai-local-text" style="font-size:9px; opacity:0.7; margin-left:auto;">Local Processing</span>
-                                </div>
-                                <div id="text-privacy-alert"></div>
-                            </div>
+                <div id="ai-suggestions" style="font-size: 13px;">
+                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:5px;">
+                        <strong id="ai-title-file">✨ AI Insights</strong>
+                        <span id="ai-insight-note" style="font-size:10px; opacity:0.6;">(Selected types)</span>
+                        <span id="ai-local-file" style="font-size:9px; opacity:0.7; margin-left:auto;">Local Processing</span>
+                    </div>
+                    <div id="ai-privacy-alert"></div>
+                    <div id="ai-tag-container"></div>
+                </div>
+                
+                <div id="stagedList"></div>
+                <button class="action-btn" id="btn-share-files" onclick="triggerAd('send-file')">SHARE FILES</button>
+            </div>
 
-                            <div class="text-action-row">
-                                <div class="split-btn">
-                                    <div class="tooltip-wrap" id="tip-scan" data-tip="Scan / Paste">
-                                        <button id="btn-ocr-paste" onclick="triggerOCRAd('scan')">📷</button>
-                                    </div>
-                                    <div class="separator"></div>
-                                    <div class="tooltip-wrap" id="tip-upload" data-tip="Upload Image">
-                                        <button id="btn-ocr-upload" onclick="triggerOCRAd('upload')">📂</button>
-                                    </div>
-                                </div>
-                                <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
-                            </div>
-                            <input type="file" id="ocrInput" accept="image/*" style="display:none;" onchange="handleOCRFiles(this.files)">
+            <div class="column-box">
+                <div class="text-zone">
+                    <div id="text-count-badge" class="zone-badge" style="display:none;">0 Chars</div>
+                    <div id="label-text-hint" style="font-size:12px; color:var(--text-muted); font-weight:900; margin: 20px 0 0 20px;">Quick Text</div>
+                    <textarea id="quickText" placeholder="Paste..." oninput="updateTextCount(this); checkTextPrivacy(this.value)"></textarea>
+                </div>
+                
+                <div id="text-ai-suggestions" style="display:none; font-size: 13px; margin-bottom: 5px; background: rgba(139, 92, 246, 0.1); padding: 12px 14px; border-radius: 12px; border-left: 3px solid var(--ai); color: #e9d5ff; text-align: left;">
+                    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:5px; margin-bottom:5px;">
+                        <strong id="ai-title-text">✨ AI Analysis</strong>
+                        <span id="ai-local-text" style="font-size:9px; opacity:0.7; margin-left:auto;">Local Processing</span>
+                    </div>
+                    <div id="text-privacy-alert"></div>
+                </div>
+
+                <div class="text-action-row">
+                    <div class="split-btn">
+                        <div class="tooltip-wrap" id="tip-scan" data-tip="Scan / Paste">
+                            <button id="btn-ocr-paste" onclick="triggerOCRAd('scan')">📷</button>
+                        </div>
+                        <div class="separator"></div>
+                        <div class="tooltip-wrap" id="tip-upload" data-tip="Upload Image">
+                            <button id="btn-ocr-upload" onclick="triggerOCRAd('upload')">📂</button>
                         </div>
                     </div>
-
-                    <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; flex-wrap:wrap;">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; width:100%;">
-    <button id="btn-custom-aes" class="action-btn" onclick="showCryptoModal()" 
-            style="background: #1e293b; border: 1.5px solid #334155; padding: 10px; font-size: 12px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:none; flex:1;">
-        <span id="aes-status-icon">🔓</span> 
-        <span id="aes-status-text">Set Custom Password</span>
-    </button>
-
-    <div style="display:flex; align-items:center; gap:8px;">
-        <span style="font-size:11px; color:#64748b; font-weight:700;">Limit:</span>
-        <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
-            <option value="1">1 Time</option>
-            <option value="5">5 Times</option>
-            <option value="999">∞</option>
-        </select>
-    </div>
-</div>
-                        <div id="crypto-modal" class="crypto-modal">
-                            <div class="crypto-modal-card">
-                                <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
-                                
-                                <div class="pwd-group">
-                                    <input type="password" id="crypto-password" placeholder="Type a strong password..." 
-                                           oninput="checkStrength(this.value)" 
-                                           onkeyup="updateFingerprint(this.value, 'send-fingerprint', 'send-hash-hint')" 
-                                           autocomplete="new-password">
-                                    <div class="pwd-divider"></div>
-                                    <div class="pwd-toggle" onclick="togglePwd('crypto-password', this)">🙈</div>
-                                </div>
-                                
-                                <p id="send-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
-                                
-                                <div id="send-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));"></div>
-
-                                <div class="strength-wrapper">
-                                    <div class="strength-track">
-                                        <div id="strength-bar-fill"></div>
-                                    </div>
-                                    <div id="strength-text" style="opacity:0.8">Empty</div>
-                                </div>
-                                <div style="display: flex; gap: 10px; margin-top: 10px;">
-                                    <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 12px; margin:0;" onclick="confirmEncryption()">ENABLE</button>
-                                    <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 12px; background: #334155; margin:0;" onclick="closeCryptoModal()">CANCEL</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span id="limit-label" style="font-size:13px; color:#94a3b8; font-weight:700;">Limit:</span>
-                            <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
-                                <option value="1">1 Time</option>
-                                <option value="3">3 Times</option>
-                                <option value="5">5 Times</option>
-                                <option value="999">Unlimited</option>
-                            </select>
-                        </div>
-                    </div>
-                    <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
-                    <div id="senderCodeArea">
-    <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ SECURE CHANNEL OPEN</div>
-    
-    <div id="qrcode"></div>
-    
-    <div class="code-display" id="myCode" style="font-size: 48px; letter-spacing: 6px;">00000000</div>
-    
-    <div class="totp-container">
-        <div id="sender-totp-emojis" class="totp-emojis">Loading...</div>
-        <div class="totp-progress-bg"><div id="sender-totp-bar" class="totp-progress-bar"></div></div>
-        <div style="font-size:9px; color:#64748b; margin-top:4px; text-transform:uppercase;">Visual Verification (Syncs every 10s)</div>
-    </div>
-
-    <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin:18px 0; line-height:1.5;"></p>
-    
-    <button class="action-btn" id="btn-copy-link" style="background:#4f46e5;">📋 COPY LINK</button>
-    <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:10px;">STOP SHARING</button>
-</div>
-                
-                <div id="panel-receive" class="panel">
-                    <div style="display:flex; flex-direction:column; align-items:center;">
-                        <div id="panel-receive" class="panel">
-    <div style="display:flex; flex-direction:column; align-items:center;">
-        
-        <div class="receive-input-container">
-            <input type="text" id="targetCode" placeholder="Enter ID / Password" 
-                   style="font-size: 22px; text-align:center;"
-                   oninput="handleReceiverInput(this.value)" 
-                   onkeydown="if(event.key==='Enter') triggerAd('receive')">
-            <button id="btn-scan" onclick="openScanner()">📷</button>
-        </div>
-        
-        <div id="receiver-totp-area" class="totp-container" style="display:none; margin-top:15px;">
-            <div id="receiver-totp-emojis" class="totp-emojis"></div>
-            <div class="totp-progress-bg"><div id="receiver-totp-bar" class="totp-progress-bar"></div></div>
-            <div style="font-size:9px; color:#64748b; margin-top:4px;">EMOJIS MUST MATCH SENDER</div>
+                    <button class="action-btn" id="btn-share-text" onclick="triggerAd('send-text')">SHARE TEXT</button>
+                </div>
+                <input type="file" id="ocrInput" accept="image/*" style="display:none;" onchange="handleOCRFiles(this.files)">
+            </div>
         </div>
 
-        <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
-        
-        <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
-        <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
-        
-        <div id="receivedText-container">
-            <div class="text-zone readonly">
-                <div id="recv-text-count" class="zone-badge" style="display:none;">0 Chars</div>
-                <div id="recv-scroll-box" class="text-content-scroll">
-                    <div id="receivedText" style="white-space: pre-wrap; word-break: break-all;"></div>
+        <div style="display:flex; align-items:center; justify-content:center; gap:15px; margin: 15px 0; width:100%;">
+            <button id="btn-custom-aes" class="action-btn" onclick="showCryptoModal()" 
+                    style="background: #1e293b; border: 1.5px solid #334155; padding: 10px; font-size: 12px; display:flex; align-items:center; justify-content:center; gap:8px; box-shadow:none; flex:1;">
+                <span id="aes-status-icon">🔓</span> 
+                <span id="aes-status-text">Set Custom Password</span>
+            </button>
+
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:11px; color:#64748b; font-weight:700;">Limit:</span>
+                <select id="downloadLimit" style="background:#0f172a; color:#fff; border:1.5px solid var(--border); padding:0 10px; border-radius:8px; outline:none; height:40px; font-weight:600;">
+                    <option value="1">1 Time</option>
+                    <option value="5">5 Times</option>
+                    <option value="999">∞</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="crypto-modal" class="crypto-modal">
+            <div class="crypto-modal-card">
+                <h3 id="modal-pass-title" style="color: #6366f1; margin: 0 0 10px 0; font-size: 18px;">Set Password</h3>
+                <div class="pwd-group">
+                    <input type="password" id="crypto-password" placeholder="Type a strong password..." 
+                           oninput="checkStrength(this.value)" 
+                           onkeyup="updateFingerprint(this.value, 'send-fingerprint', 'send-hash-hint')" 
+                           autocomplete="new-password">
+                    <div class="pwd-divider"></div>
+                    <div class="pwd-toggle" onclick="togglePwd('crypto-password', this)">🙈</div>
+                </div>
+                <p id="send-hash-hint" style="display:none; font-size:10px; color:#94a3b8; margin: 8px 0 2px 0; text-align:center; line-height:1.4; opacity:0.8;"></p>
+                <div id="send-fingerprint" style="display:none; text-align: center; font-size: 24px; letter-spacing: 8px; margin: 5px 0; min-height: 36px; filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.5));"></div>
+                <div class="strength-wrapper">
+                    <div class="strength-track"><div id="strength-bar-fill"></div></div>
+                    <div id="strength-text" style="opacity:0.8">Empty</div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="action-btn" id="btn-enable-pass" style="flex: 1; padding: 12px; margin:0;" onclick="confirmEncryption()">ENABLE</button>
+                    <button class="action-btn" id="btn-cancel-pass" style="flex: 1; padding: 12px; background: #334155; margin:0;" onclick="closeCryptoModal()">CANCEL</button>
                 </div>
             </div>
-            <button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()" style="margin-top: 15px;">📋 COPY</button>
+        </div>
+
+        <input type="file" id="fileInput" multiple style="display:none;" onchange="handleFiles(this.files)">
+        
+        <div id="senderCodeArea">
+            <div style="font-size:12px; color:var(--success); font-weight:900; margin-bottom:15px;">🛡️ SECURE CHANNEL OPEN</div>
+            <div id="qrcode"></div>
+            <div class="code-display" id="myCode" style="font-size: 48px; letter-spacing: 6px;">00000000</div>
+            <div class="totp-container">
+                <div id="sender-totp-emojis" class="totp-emojis">Loading...</div>
+                <div class="totp-progress-bg"><div id="sender-totp-bar" class="totp-progress-bar"></div></div>
+                <div style="font-size:9px; color:#64748b; margin-top:4px; text-transform:uppercase;">Visual Verification (Syncs every 10s)</div>
+            </div>
+            <p id="guideText" style="font-size:13px; color:var(--primary); font-weight:800; margin:18px 0; line-height:1.5;"></p>
+            <button class="action-btn" id="btn-copy-link" style="background:#4f46e5;">📋 COPY LINK</button>
+            <button class="action-btn" id="btn-stop" onclick="resetSender()" style="background:var(--danger); margin-top:10px;">STOP SHARING</button>
+        </div>
+    </div>
+    
+    <div id="panel-receive" class="panel">
+        <div style="display:flex; flex-direction:column; align-items:center;">
+            <div class="receive-input-container">
+                <input type="text" id="targetCode" placeholder="Enter ID / Password" 
+                       style="font-size: 22px; text-align:center;"
+                       oninput="handleReceiverInput(this.value)" 
+                       onkeydown="if(event.key==='Enter') triggerAd('receive')">
+                <button id="btn-scan" onclick="openScanner()">📷</button>
+            </div>
+            
+            <div id="receiver-totp-area" class="totp-container" style="display:none; margin-top:15px;">
+                <div id="receiver-totp-emojis" class="totp-emojis"></div>
+                <div class="totp-progress-bg"><div id="receiver-totp-bar" class="totp-progress-bar"></div></div>
+                <div style="font-size:9px; color:#64748b; margin-top:4px;">EMOJIS MUST MATCH SENDER</div>
+            </div>
+
+            <button class="action-btn" id="btn-connect" onclick="triggerAd('receive')" style="margin-top: 25px;">DOWNLOAD</button>
+            
+            <div id="receive-pg-container" class="pg-container"><div id="receive-pg-bar" class="pg-bar"></div></div>
+            <div id="receiveNerdStats" class="nerd-stats" style="display:none; width:100%; margin-top:5px;"><span id="nerd-speed">0.0 MB/s</span><span class="blink-warn">Downloading... Keep Open!</span><span id="nerd-eta" style="color:var(--primary)">ETA: --s</span></div>
+            
+            <div id="receivedText-container">
+                <div class="text-zone readonly">
+                    <div id="recv-text-count" class="zone-badge" style="display:none;">0 Chars</div>
+                    <div id="recv-scroll-box" class="text-content-scroll">
+                        <div id="receivedText" style="white-space: pre-wrap; word-break: break-all;"></div>
+                    </div>
+                </div>
+                <button class="action-btn" id="btn-copy-text" onclick="copyReceivedText()" style="margin-top: 15px;">📋 COPY</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1554,24 +1537,21 @@ function runOCRWithAd(imageBlob) {
     function updateTextCount(el) { const len = el.value.length; const badge = document.getElementById('text-count-badge'); if(len > 0) { badge.style.display = 'block'; badge.innerText = `${len} Char${len > 1 ? 's' : ''}`; } else { badge.style.display = 'none'; } }
     function typeWriterEffect(element, text) { element.innerText = ""; let i = 0; const badge = document.getElementById('recv-text-count'); const scrollBox = document.getElementById('recv-scroll-box'); if(badge) badge.style.display = 'block'; const step = Math.max(1, Math.floor(text.length / 50)); function type() { if (i < text.length) { const chunk = text.slice(i, i + step); element.innerText += chunk; i += step; if(badge) badge.innerText = Math.min(i, text.length) + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; requestAnimationFrame(type); } else { element.innerText = text; if(badge) badge.innerText = text.length + " Chars"; if(scrollBox) scrollBox.scrollTop = scrollBox.scrollHeight; } } type(); }
     function checkUrlCode() { const urlParams = new URLSearchParams(window.location.search); const code = urlParams.get('c'); if (code) { document.getElementById('tab-receive').click(); document.getElementById('targetCode').value = code; } }
-    async function initSender() { 
-    // 1. 清理旧连接
+    /* [Henry Fix] initSender 完整替换版 */
+async function initSender() { 
     if(peer) peer.destroy(); 
     currentDownloads = 0; 
     
-    // 2. 生成8位随机大写ID (你是发送方)
+    // 1. 生成8位码
     const code = generateSecureID(); 
-    currentSessionCode = code; // 保存到全局变量，方便后续校验
+    currentSessionCode = code;
     
-    // 3. 初始化 P2P
+    // 2. 初始化 Peer
     peer = new Peer(PREFIX + code); 
-    
-    // 4. 界面重置：隐藏 AI 建议面板
     document.getElementById('ai-suggestions').style.display = 'none'; 
     const textPanel = document.getElementById('text-ai-suggestions');
     if (textPanel) textPanel.style.display = 'none';
 
-    // 5. 监听：连接打开 (Peer Open)
     peer.on('open', () => { 
         const area = document.getElementById('senderCodeArea'); 
         if (area) { 
@@ -1579,49 +1559,34 @@ function runOCRWithAd(imageBlob) {
             setTimeout(() => { area.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 200); 
         } 
         
-        // 显示8位码
+        // 显示8位码和 Emoji
         document.getElementById('myCode').innerText = code; 
-        
-        // 启动动态 Emoji 引擎 (每10秒变一次)
         startTotpTimer(code, true);
-        
-        // 生成二维码 (把8位码编进去)
+
         document.getElementById('qrcode').innerHTML = ""; 
         new QRCode(document.getElementById('qrcode'), { 
             text: window.location.origin + window.location.pathname + "?c=" + code, 
-            width: 140, 
-            height: 140 
+            width: 140, height: 140 
         }); 
         
-        // 绑定复制按钮
         document.getElementById('btn-copy-link').onclick = () => { 
             const link = `${window.location.origin}${window.location.pathname}?c=${code}`; 
-            navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied! Send it to friend."); }); 
+            navigator.clipboard.writeText(link).then(() => { showCustomAlert("Link Copied!"); }); 
         }; 
-        
-        // (可选) 如果你还保留了旧的倒计时函数，可以在这里启动，或者直接依赖TOTP
-        // startExpiryTimer(); 
     }); 
 
-    // 6. 监听：对方连接进来 (Connection)
     peer.on('connection', c => { 
         c.on('data', d => { 
-            // 安全熔断逻辑
             if (d.type === 'security_burn') { 
                 showCustomAlert("⚠️ SECURITY ALERT: Recipient failed authentication 3 times."); 
-                resetSender(); 
-                return; 
+                resetSender(); return; 
             } 
-            // 下载计数逻辑
             if(d.type === 'confirm_save') { 
                 currentDownloads++; 
                 if(currentDownloads >= parseInt(document.getElementById('downloadLimit').value)) resetSender(); 
             } 
         }); 
-
-        // 7. 连接建立后，立即发送数据
         c.on('open', async () => { 
-            // --- 发送文字 ---
             let textValue = document.getElementById('quickText').value.trim(); 
             if(textValue) { 
                 if(isEncrypted) { 
@@ -1634,40 +1599,21 @@ function runOCRWithAd(imageBlob) {
                 } 
                 addHistory("Sent: Text", "text"); 
             } 
-
-            // --- 发送文件 ---
             if(stagedFiles && stagedFiles.length > 0) { 
                 let fb, fn = stagedFiles.length === 1 ? stagedFiles[0].name : "Bundle.zip"; 
-                
-                // 打包处理
-                if (stagedFiles.length === 1) { 
-                    fb = stagedFiles[0]; 
-                } else { 
+                if (stagedFiles.length === 1) { fb = stagedFiles[0]; } 
+                else { 
                     const zip = new JSZip(); 
                     stagedFiles.forEach(f => zip.file(f.name, f)); 
                     fb = await zip.generateAsync({type: "blob"}); 
                 } 
-                
-                // 加密处理
-                if(isEncrypted) { 
-                    fb = await FlashDropCrypto.encrypt(fb, aesKey); 
-                    fn += ".enc"; 
-                } 
-                
-                // 发送元数据
+                if(isEncrypted) { fb = await FlashDropCrypto.encrypt(fb, aesKey); fn += ".enc"; } 
                 c.send({ type: 'meta', name: fn, size: fb.size, encrypted: isEncrypted }); 
-                
-                // 分块发送 (Chunking)
                 const arrayBuffer = await fb.arrayBuffer(); 
                 for (let i = 0; i < fb.size; i += CHUNK_SIZE) { 
-                    // 流控：如果缓存满了就暂停一下，防止崩溃
-                    while (c.bufferSize > 1024 * 1024) { 
-                        await new Promise(r => setTimeout(r, 50)); 
-                    } 
+                    while (c.bufferSize > 1024 * 1024) { await new Promise(r => setTimeout(r, 50)); } 
                     c.send({ type: 'chunk', index: i/CHUNK_SIZE, data: arrayBuffer.slice(i, i + CHUNK_SIZE) }); 
                 } 
-                
-                // 发送完成信号
                 c.send({ type: 'done' }); 
                 addHistory("Sent: " + fn, "file"); 
             } 
